@@ -26,6 +26,18 @@ public class Category {
         this.budget = budget;
     }
 
+    public boolean isValid() {
+        if(name == null) {
+            System.out.println("Category name can't be null");
+            return false;
+        }
+        if(budget < -0.0001) {
+            System.out.println("Category budget amount can't be less than 0");
+            return false;
+        }
+        return true;
+    }
+
     public String getName() {
         return name;
     }

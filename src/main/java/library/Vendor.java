@@ -15,6 +15,7 @@ public class Vendor {
     private String name;
     private ArrayList<String> rawNames;
     private ArrayList<String> tags;
+    private Category category;
 
     public Vendor() {
         this.name = null;
@@ -28,6 +29,18 @@ public class Vendor {
         this.rawNames = rawNames;
         this.tags = tags;
         this.category = category;
+    }
+
+    public boolean isValid() {
+        if(name == null) {
+            System.out.println("Vendor name can't be null");
+            return false;
+        }
+        if(category == null || !category.isValid()) {
+            System.out.println("Category can't be invalid");
+            return false;
+        }
+        return true;
     }
 
     public void addRawName(String rawName) {
@@ -78,6 +91,4 @@ public class Vendor {
     public void setCategory(Category category) {
         this.category = category;
     }
-
-    private Category category;
 }

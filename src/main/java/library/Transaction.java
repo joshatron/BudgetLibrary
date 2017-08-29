@@ -7,7 +7,7 @@ import java.util.Date;
  *
  * Fields include:
  * timestamp: time when transaction took place
- * amount: total amount of transaction
+ * amount: total amount of transaction, negative amount means money was received
  * vendor: vendor for transaction
  */
 public class Transaction {
@@ -25,6 +25,18 @@ public class Transaction {
         this.timestamp = timestamp;
         this.amount = amount;
         this.vendor = vendor;
+    }
+
+    public boolean isValid() {
+        if(timestamp == null) {
+            System.out.println("Transaction timestamp can't be null");
+            return false;
+        }
+        if(vendor == null || !vendor.isValid()) {
+            System.out.println("Vendor can't be invalid");
+            return false;
+        }
+        return true;
     }
 
     public Date getTimestamp() {
