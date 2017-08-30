@@ -28,7 +28,6 @@ The main tables will be the transactions, vendors, and categories, with some oth
 |-----------------|----------------|---------------------------|----------------------------------|
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each tag                   |
 | name            | string         | NOT NULL                  | name of the tag                  |
-| description     | string         |                           | description of the tag           |
 
 ####vendor_taggings
 

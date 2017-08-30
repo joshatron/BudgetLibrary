@@ -37,8 +37,7 @@ public class DatabaseManager {
 
         String vendorTagsTable = "CREATE TABLE IF NOT EXISTS vendor_tags (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "name text NOT NULL," +
-                "description text);";
+                "name text NOT NULL);";
 
         String vendorTaggingsTable = "CREATE TABLE IF NOT EXISTS vendor_taggings (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +

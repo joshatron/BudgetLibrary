@@ -11,10 +11,15 @@ import java.sql.Statement;
  */
 public class InsertHandler {
 
-    //todo: add duplicate testing
+    //add transaction, adding vendor if necessary
     public static boolean addTransaction(Transaction transaction, Connection conn) {
         if(transaction.isValid()) {
+            //transaction already in database
+            if(getTransactionID(transaction, conn) != -1) {
+                return false;
+            }
             int vendorID = getVendorID(transaction.getVendor(), conn);
+            //if vendor doesn't exist, add it
             if(vendorID == -1) {
                 addVendor(transaction.getVendor(), conn);
                 vendorID = getVendorID(transaction.getVendor(), conn);
@@ -26,6 +31,7 @@ public class InsertHandler {
                     vendorID + " );";
 
             try {
+                //add transaction
                 Statement stmt = conn.createStatement();
                 stmt.executeUpdate(insert);
             } catch (SQLException e) {
@@ -36,6 +42,110 @@ public class InsertHandler {
         return false;
     }
 
+    //add vendor, adding category if necessary
+    public static boolean addVendor(Vendor vendor, Connection conn) {
+        if(vendor.isValid()) {
+            //vendor already in database
+            if(getVendorID(vendor, conn) != -1) {
+                return false;
+            }
+
+            int categoryID = getCategoryID(vendor.getCategory(), conn);
+            //category doesn't exist
+            if(categoryID == -1) {
+                addCategory(vendor.getCategory(), conn);
+                categoryID = getCategoryID(vendor.getCategory(), conn);
+            }
+
+            String insertVendor = "INSERT INTO vendors (name, category) " +
+                    "VALUES ( '" + vendor.getName() + "', " + categoryID + " );";
+
+            try {
+                //add vendor
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate(insertVendor);
+
+                int vendorID = getVendorID(vendor, conn);
+
+                //add vendor raw names
+                for(String name : vendor.getRawNames()) {
+                    String insertName = "INSERT INTO vendor_namings (vendor_id, name) " +
+                            "VALUES ( " + vendorID + ", '" + name + "' );";
+                    stmt.executeUpdate(insertName);
+                }
+
+                //add vendor tags
+                for(String tag : vendor.getTags()) {
+                    int tagID = getTagID(tag, conn);
+
+                    if(tagID == -1) {
+                        String insertTag = "INSERT INTO vendor_tags (name) " +
+                                "VALUES ( '" + tag + "' );";
+                        stmt.executeUpdate(insertTag);
+                        tagID = getTagID(tag, conn);
+                    }
+
+                    String insertTagging = "INSERT INTO vendor_taggings (vendor_id, tag_id) " +
+                            "VALUES ( " + vendorID + ", " + tagID + " );";
+                    stmt.executeUpdate(insertTagging);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return false;
+    }
+
+    //add category
+    public static boolean addCategory(Category category, Connection conn) {
+        if(category.isValid()) {
+            //category already in database
+            if(getCategoryID(category, conn) != -1) {
+                return false;
+            }
+
+            String insert = "INSERT INTO categories (category, description, budget) " +
+                    "VALUES ( '" + category.getName() + "', '" + category.getDescription() + "', " + category.getBudget() + " );";
+
+            try {
+                //add category
+                Statement stmt = conn.createStatement();
+                stmt.executeUpdate(insert);
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    private static int getTransactionID(Transaction transaction, Connection conn) {
+        if(transaction.isValid()) {
+            int vendorID = getVendorID(transaction.getVendor(), conn);
+
+            String find = "SELECT id " +
+                    "FROM transactions " +
+                    "WHERE timestamp = '" + transaction.getTimestamp().toString() + "' AND " +
+                    "vendor = " + vendorID + ";";
+
+            try {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(find);
+
+                if(rs.next()) {
+                    return rs.getInt("id");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
+    }
+
+    //find vendor id by searching for name
+    //if none found, return -1
     private static int getVendorID(Vendor vendor, Connection conn) {
         if(vendor.isValid()) {
             String find = "SELECT id " +
@@ -57,37 +167,29 @@ public class InsertHandler {
         return -1;
     }
 
-    //todo: add duplicate testing
-    public static boolean addVendor(Vendor vendor, Connection conn) {
-        if(vendor.isValid()) {
-            int categoryID = getCategoryID(vendor.getCategory(), conn);
-            if(categoryID == -1) {
-                addCategory(vendor.getCategory(), conn);
-                categoryID = getCategoryID(vendor.getCategory(), conn);
+    //find tag id by searching for name
+    //if none found, return -1
+    private static int getTagID(String tag, Connection conn) {
+        String find = "SELECT id " +
+                "FROM vendor_tags " +
+                "WHERE  name = '" + tag + "';";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(find);
+
+            if(rs.next()) {
+                return rs.getInt("id");
             }
-
-            String insertVendor = "INSERT INTO vendors (name, category) " +
-                    "VALUES ( '" + vendor.getName() + "', " + categoryID + " );";
-
-            try {
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(insertVendor);
-
-                int vendorID = getVendorID(vendor, conn);
-                for(String name : vendor.getRawNames()) {
-                    String insertName = "INSERT INTO vendor_namings (vendor_id, name) " +
-                            "VALUES ( " + vendorID + ", '" + name + "' );";
-                    stmt.executeUpdate(insertName);
-                }
-                //todo: add adding tags
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return false;
+
+        return -1;
     }
 
+    //find category id by searching for name
+    //if none found, return -1
     private static int getCategoryID(Category category, Connection conn) {
         if(category.isValid()) {
             String find = "SELECT id " +
@@ -107,23 +209,5 @@ public class InsertHandler {
         }
 
         return -1;
-    }
-
-    //todo: add duplicate testing
-    public static boolean addCategory(Category category, Connection conn) {
-        if(category.isValid()) {
-            String insert = "INSERT INTO categories (category, description, budget) " +
-                    "VALUES ( '" + category.getName() + "', '" + category.getDescription() + "', " + category.getBudget() + " );";
-
-            try {
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(insert);
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
     }
 }
