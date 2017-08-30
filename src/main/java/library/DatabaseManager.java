@@ -51,7 +51,7 @@ public class DatabaseManager {
 
         String categoriesTable = "CREATE TABLE IF NOT EXISTS categories (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "category text NOT NULL," +
+                "name text NOT NULL," +
                 "description text," +
                 "budget real NOT NULL);";
 

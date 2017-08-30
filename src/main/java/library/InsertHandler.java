@@ -26,7 +26,7 @@ public class InsertHandler {
             }
 
             String insert = "INSERT INTO transactions (timestamp, amount, vendor) " +
-                    "VALUES ( '" + transaction.getTimestamp().toString() + "', " +
+                    "VALUES ( '" + transaction.getTimestamp() + "', " +
                     transaction.getAmount() + ", " +
                     vendorID + " );";
 
@@ -44,6 +44,7 @@ public class InsertHandler {
 
     //add vendor, adding category if necessary
     public static boolean addVendor(Vendor vendor, Connection conn) {
+        System.out.println("vendor");
         if(vendor.isValid()) {
             //vendor already in database
             if(getVendorID(vendor, conn) != -1) {
@@ -68,26 +69,30 @@ public class InsertHandler {
                 int vendorID = getVendorID(vendor, conn);
 
                 //add vendor raw names
-                for(String name : vendor.getRawNames()) {
-                    String insertName = "INSERT INTO vendor_namings (vendor_id, name) " +
-                            "VALUES ( " + vendorID + ", '" + name + "' );";
-                    stmt.executeUpdate(insertName);
+                if(vendor.getRawNames() != null) {
+                    for (String name : vendor.getRawNames()) {
+                        String insertName = "INSERT INTO vendor_namings (vendor_id, name) " +
+                                "VALUES ( " + vendorID + ", '" + name + "' );";
+                        stmt.executeUpdate(insertName);
+                    }
                 }
 
                 //add vendor tags
-                for(String tag : vendor.getTags()) {
-                    int tagID = getTagID(tag, conn);
+                if(vendor.getTags() != null) {
+                    for (String tag : vendor.getTags()) {
+                        int tagID = getTagID(tag, conn);
 
-                    if(tagID == -1) {
-                        String insertTag = "INSERT INTO vendor_tags (name) " +
-                                "VALUES ( '" + tag + "' );";
-                        stmt.executeUpdate(insertTag);
-                        tagID = getTagID(tag, conn);
+                        if (tagID == -1) {
+                            String insertTag = "INSERT INTO vendor_tags (name) " +
+                                    "VALUES ( '" + tag + "' );";
+                            stmt.executeUpdate(insertTag);
+                            tagID = getTagID(tag, conn);
+                        }
+
+                        String insertTagging = "INSERT INTO vendor_taggings (vendor_id, tag_id) " +
+                                "VALUES ( " + vendorID + ", " + tagID + " );";
+                        stmt.executeUpdate(insertTagging);
                     }
-
-                    String insertTagging = "INSERT INTO vendor_taggings (vendor_id, tag_id) " +
-                            "VALUES ( " + vendorID + ", " + tagID + " );";
-                    stmt.executeUpdate(insertTagging);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -99,13 +104,14 @@ public class InsertHandler {
 
     //add category
     public static boolean addCategory(Category category, Connection conn) {
+        System.out.println("category");
         if(category.isValid()) {
             //category already in database
             if(getCategoryID(category, conn) != -1) {
                 return false;
             }
 
-            String insert = "INSERT INTO categories (category, description, budget) " +
+            String insert = "INSERT INTO categories (name, description, budget) " +
                     "VALUES ( '" + category.getName() + "', '" + category.getDescription() + "', " + category.getBudget() + " );";
 
             try {
@@ -127,7 +133,7 @@ public class InsertHandler {
 
             String find = "SELECT id " +
                     "FROM transactions " +
-                    "WHERE timestamp = '" + transaction.getTimestamp().toString() + "' AND " +
+                    "WHERE timestamp = '" + transaction.getTimestamp() + "' AND " +
                     "vendor = " + vendorID + ";";
 
             try {

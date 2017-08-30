@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /*
  * Class to handle all printing of data from the database
@@ -19,11 +20,12 @@ public class PrintHandler {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(findTransactions);
 
-            System.out.println("Timestamp\t\t\tAmount\t\tVendor");
+            System.out.println("Timestamp                Amount          Vendor");
             while(rs.next()) {
-                System.out.println(rs.getString("timestamp") + "\t" +
-                        "$" + rs.getDouble("amount") + "\t\t" +
-                        rs.getString("name"));
+                String timestamp = rs.getString("timestamp");
+                double amount = rs.getDouble("amount");
+                String vendor = rs.getString("name");
+                System.out.println(String.format("%-25s$%-15.2f%s", timestamp, amount, vendor));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,7 +33,7 @@ public class PrintHandler {
     }
 
     public static void printVendors(Connection conn) {
-        String findVendors = "SELECT name, nickname, categories.category as category " +
+        String findVendors = "SELECT vendors.name, categories.name as category " +
                 "FROM vendors " +
                 "LEFT OUTER JOIN categories ON vendors.category = categories.id;";
 
@@ -39,11 +41,11 @@ public class PrintHandler {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(findVendors);
 
-            System.out.println("Name\t\tNickname\t\tCategory");
+            System.out.println("Vendor              Category");
             while(rs.next()) {
-                System.out.println(rs.getString("name") + "\t" +
-                        rs.getString("nickname") + "\t\t" +
-                        rs.getString("category"));
+                String name = rs.getString("name");
+                String category = rs.getString("category");
+                System.out.println(String.format("%-20s%s", name, category));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,18 +53,19 @@ public class PrintHandler {
     }
 
     public static void printCategories(Connection conn) {
-        String findCategories = "SELECT category, description, budget " +
+        String findCategories = "SELECT name, description, budget " +
                 "FROM categories;";
 
         try {
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(findCategories);
 
-            System.out.println("Name\t\tBudget\tDescription");
+            System.out.println("Category            Budget          Description");
             while(rs.next()) {
-                System.out.println(rs.getString("category") + "\t" +
-                        "$" + rs.getDouble("budget") + "\t" +
-                        rs.getString("description"));
+                String category = rs.getString("name");
+                double budget = rs.getDouble("budget");
+                String description = rs.getString("description");
+                System.out.println(String.format("%-20s$%-15.2f%s", category, budget, description));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -11,7 +11,7 @@ import java.util.Date;
  * vendor: vendor for transaction
  */
 public class Transaction {
-    private Date timestamp;
+    private String timestamp;
     private double amount;
     private Vendor vendor;
 
@@ -21,7 +21,7 @@ public class Transaction {
         this.vendor = null;
     }
 
-    public Transaction(Date timestamp, double amount, Vendor vendor) {
+    public Transaction(String timestamp, double amount, Vendor vendor) {
         this.timestamp = timestamp;
         this.amount = amount;
         this.vendor = vendor;
@@ -39,11 +39,11 @@ public class Transaction {
         return true;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
