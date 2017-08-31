@@ -22,10 +22,10 @@ public class PrintHandler {
 
             System.out.println("Timestamp                Amount          Vendor");
             while(rs.next()) {
-                String timestamp = rs.getString("timestamp");
+                Timestamp timestamp = new Timestamp(rs.getLong("timestamp"));
                 double amount = rs.getDouble("amount");
                 String vendor = rs.getString("name");
-                System.out.println(String.format("%-25s$%-15.2f%s", timestamp, amount, vendor));
+                System.out.println(String.format("%-25s$%-15.2f%s", timestamp.getTimestampString(), amount, vendor));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -11,7 +11,7 @@ import java.util.Date;
  * vendor: vendor for transaction
  */
 public class Transaction {
-    private String timestamp;
+    private Timestamp timestamp;
     private double amount;
     private Vendor vendor;
 
@@ -21,15 +21,15 @@ public class Transaction {
         this.vendor = null;
     }
 
-    public Transaction(String timestamp, double amount, Vendor vendor) {
+    public Transaction(Timestamp timestamp, double amount, Vendor vendor) {
         this.timestamp = timestamp;
         this.amount = amount;
         this.vendor = vendor;
     }
 
     public boolean isValid() {
-        if(timestamp == null) {
-            System.out.println("Transaction timestamp can't be null");
+        if(timestamp == null || timestamp.getTimestamp() == -1) {
+            System.out.println("Transaction timestamp null");
             return false;
         }
         if(vendor == null || !vendor.isValid()) {
@@ -39,11 +39,11 @@ public class Transaction {
         return true;
     }
 
-    public String getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

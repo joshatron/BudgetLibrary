@@ -26,7 +26,7 @@ public class InsertHandler {
             }
 
             String insert = "INSERT INTO transactions (timestamp, amount, vendor) " +
-                    "VALUES ( '" + transaction.getTimestamp() + "', " +
+                    "VALUES ( " + transaction.getTimestamp() + ", " +
                     transaction.getAmount() + ", " +
                     vendorID + " );";
 
@@ -133,7 +133,7 @@ public class InsertHandler {
 
             String find = "SELECT id " +
                     "FROM transactions " +
-                    "WHERE timestamp = '" + transaction.getTimestamp() + "' AND " +
+                    "WHERE timestamp = " + transaction.getTimestamp() + " AND " +
                     "vendor = " + vendorID + ";";
 
             try {
