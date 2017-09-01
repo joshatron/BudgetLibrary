@@ -26,7 +26,7 @@ public class InsertHandler {
             }
 
             String insert = "INSERT INTO transactions (timestamp, amount, vendor) " +
-                    "VALUES ( " + transaction.getTimestamp() + ", " +
+                    "VALUES ( " + transaction.getTimestamp().getTimestampLong() + ", " +
                     transaction.getAmount() + ", " +
                     vendorID + " );";
 
@@ -44,7 +44,6 @@ public class InsertHandler {
 
     //add vendor, adding category if necessary
     public static boolean addVendor(Vendor vendor, Connection conn) {
-        System.out.println("vendor");
         if(vendor.isValid()) {
             //vendor already in database
             if(getVendorID(vendor, conn) != -1) {
@@ -104,7 +103,6 @@ public class InsertHandler {
 
     //add category
     public static boolean addCategory(Category category, Connection conn) {
-        System.out.println("category");
         if(category.isValid()) {
             //category already in database
             if(getCategoryID(category, conn) != -1) {
@@ -133,7 +131,7 @@ public class InsertHandler {
 
             String find = "SELECT id " +
                     "FROM transactions " +
-                    "WHERE timestamp = " + transaction.getTimestamp() + " AND " +
+                    "WHERE timestamp = " + transaction.getTimestamp().getTimestampLong() + " AND " +
                     "vendor = " + vendorID + ";";
 
             try {

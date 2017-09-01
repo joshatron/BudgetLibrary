@@ -28,7 +28,7 @@ public class Transaction {
     }
 
     public boolean isValid() {
-        if(timestamp == null || timestamp.getTimestamp() == -1) {
+        if(timestamp == null || timestamp.getTimestampLong() == -1) {
             System.out.println("Transaction timestamp null");
             return false;
         }

@@ -24,7 +24,7 @@ public class Timestamp {
         this.timestamp = stringToLong(timestamp);
     }
 
-    public long getTimestamp() {
+    public long getTimestampLong() {
         return this.timestamp;
     }
 
