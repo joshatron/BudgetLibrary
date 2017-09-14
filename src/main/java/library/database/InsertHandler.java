@@ -1,7 +1,10 @@
-package library;
+package library.database;
+
+import library.objects.Category;
+import library.objects.Transaction;
+import library.objects.Vendor;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 

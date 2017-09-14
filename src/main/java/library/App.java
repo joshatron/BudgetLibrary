@@ -1,5 +1,12 @@
 package library;
 
+import library.imports.ImportHandler;
+import library.objects.Category;
+import library.objects.Timestamp;
+import library.objects.Transaction;
+import library.objects.Vendor;
+import library.operations.BudgetLibrary;
+
 import java.util.ArrayList;
 
 public class App {
@@ -20,11 +27,5 @@ public class App {
 
         library.addTransaction(transaction1);
         library.addTransaction(transaction2);
-
-        library.printTransactions();
-        System.out.println();
-        library.printVendors();
-        System.out.println();
-        library.printCategories();
     }
 }

@@ -1,4 +1,10 @@
-package library;
+package library.operations;
+
+import library.database.DatabaseManager;
+import library.database.InsertHandler;
+import library.objects.Category;
+import library.objects.Transaction;
+import library.objects.Vendor;
 
 import java.sql.Connection;
 
@@ -54,17 +60,5 @@ public class BudgetLibrary {
         }
 
         return true;
-    }
-
-    public void printTransactions() {
-        PrintHandler.printTransactions(conn);
-    }
-
-    public void printVendors() {
-        PrintHandler.printVendors(conn);
-    }
-
-    public void printCategories() {
-        PrintHandler.printCategories(conn);
     }
 }

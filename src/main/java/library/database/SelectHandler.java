@@ -1,4 +1,9 @@
-package library;
+package library.database;
+
+import library.objects.Category;
+import library.objects.Timestamp;
+import library.objects.Transaction;
+import library.objects.Vendor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -66,11 +71,43 @@ public class SelectHandler {
     public static ArrayList<Transaction> getTransactionsForVendor(Vendor vendor, Connection conn) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
+        int vendorID = getVendorID(vendor, conn);
+
+        if(vendorID == -1) {
+            return null;
+        }
+
+        String find = "SELECT timestamp, amount, vendor " +
+                "FROM transactions " +
+                "WHERE vendor = " + vendorID + ";";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(find);
+
+            while (rs.next()) {
+                Transaction transaction = new Transaction();
+                transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
+                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setVendor(getVendorFromID(rs.getInt("vendor"), conn));
+
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return transactions;
     }
 
     public static ArrayList<Transaction> getTransactionsForCategory(Category category, Connection conn) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+
+        ArrayList<Vendor> vendors = getVendorsForCategory(category, conn);
+
+        for(Vendor vendor : vendors) {
+            transactions.addAll(getTransactionsForVendor(vendor, conn));
+        }
 
         return transactions;
     }

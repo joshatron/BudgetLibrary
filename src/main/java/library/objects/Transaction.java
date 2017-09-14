@@ -1,6 +1,4 @@
-package library;
-
-import java.util.Date;
+package library.objects;
 
 /*
  * Data held by transaction

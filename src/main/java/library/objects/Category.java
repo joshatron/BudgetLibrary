@@ -1,4 +1,4 @@
-package library;
+package library.objects;
 
 /*
  * Data held by category
