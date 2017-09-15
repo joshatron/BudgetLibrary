@@ -5,12 +5,12 @@ package library.objects;
  *
  * Fields include:
  * timestamp: time when transaction took place
- * amount: total amount of transaction, negative amount means money was received
+ * amount: total amount of transaction, negative amount means money was received, value is in cents
  * vendor: vendor for transaction
  */
 public class Transaction {
     private Timestamp timestamp;
-    private double amount;
+    private int amount;
     private Vendor vendor;
 
     public Transaction() {
@@ -19,19 +19,17 @@ public class Transaction {
         this.vendor = null;
     }
 
-    public Transaction(Timestamp timestamp, double amount, Vendor vendor) {
+    public Transaction(Timestamp timestamp, int amount, Vendor vendor) {
         this.timestamp = timestamp;
         this.amount = amount;
         this.vendor = vendor;
     }
 
     public boolean isValid() {
-        if(timestamp == null || timestamp.getTimestampLong() == -1) {
-            System.out.println("Transaction timestamp null");
+        if (timestamp == null || timestamp.getTimestampLong() == -1) {
             return false;
         }
-        if(vendor == null || !vendor.isValid()) {
-            System.out.println("Vendor can't be invalid");
+        if (vendor == null || !vendor.isValid()) {
             return false;
         }
         return true;
@@ -45,11 +43,11 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public double getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -61,3 +59,4 @@ public class Transaction {
         this.vendor = vendor;
     }
 }
+

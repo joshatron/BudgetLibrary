@@ -29,7 +29,7 @@ public class SelectHandler {
             while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setAmount(rs.getInt("amount"));
                 transaction.setVendor(getVendorFromID(rs.getInt("vendor"), conn));
 
                 transactions.add(transaction);
@@ -56,7 +56,7 @@ public class SelectHandler {
             while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setAmount(rs.getInt("amount"));
                 transaction.setVendor(getVendorFromID(rs.getInt("vendor"), conn));
 
                 transactions.add(transaction);
@@ -88,7 +88,7 @@ public class SelectHandler {
             while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setAmount(rs.getInt("amount"));
                 transaction.setVendor(getVendorFromID(rs.getInt("vendor"), conn));
 
                 transactions.add(transaction);

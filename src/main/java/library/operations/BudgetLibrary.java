@@ -26,6 +26,7 @@ public class BudgetLibrary {
 
     public boolean addTransactions(Transaction[] transactions) {
         for(Transaction transaction : transactions) {
+
             if(!InsertHandler.addTransaction(transaction, conn)) {
                 return false;
             }

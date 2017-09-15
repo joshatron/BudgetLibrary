@@ -33,11 +33,9 @@ public class Vendor {
 
     public boolean isValid() {
         if(name == null) {
-            System.out.println("Vendor name can't be null");
             return false;
         }
         if(category == null || !category.isValid()) {
-            System.out.println("Category can't be invalid");
             return false;
         }
         return true;
