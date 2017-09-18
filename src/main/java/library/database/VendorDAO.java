@@ -8,8 +8,8 @@ import java.util.ArrayList;
 public interface VendorDAO {
 
     public void addVendor(Vendor vendor);
-    public void updateVendor(Vendor vendor);
-    public void deleteVendor(Vendor vendor);
+    public void updateVendor(Vendor vendor, String oldName);
+    public void deleteVendor(String name);
 
     public ArrayList<Vendor> getAllVendors();
     public ArrayList<Vendor> getVendorsForCategory(Category category);

@@ -59,6 +59,7 @@ public class CategoryDAOSqlite implements CategoryDAO {
         }
     }
 
+    //TODO: Need to add protections to not leave abandoned vendors
     @Override
     public void deleteCategory(String name) {
         if(name != null) {

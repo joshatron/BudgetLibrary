@@ -10,11 +10,11 @@ import java.util.ArrayList;
 public interface TransactionDAO {
 
     public void addTransaction(Transaction transaction);
-    public void updateTransaction(Transaction transaction);
+    public void updateTransaction(Transaction transaction, Transaction oldTransaction);
     public void deleteTransaction(Transaction transaction);
 
     public ArrayList<Transaction> getAllTransactions();
     public ArrayList<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end);
-    public ArrayList<Transaction> getTrnsactionsForVendor(Vendor vendor);
+    public ArrayList<Transaction> getTransactionsForVendor(Vendor vendor);
     public ArrayList<Transaction> getTransactionsForCategory(Category category);
 }
