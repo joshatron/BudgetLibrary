@@ -1,6 +1,5 @@
 package library;
 
-import library.imports.ImportHandler;
 import library.objects.Category;
 import library.objects.Timestamp;
 import library.objects.Transaction;

@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public class PrintHandler {
 
     public static void printTransactions(ArrayList<Transaction> transactions) {
-        System.out.println("Timestamp                Amount          Vendor");
+        System.out.println("Timestamp      Amount          Vendor");
         for(Transaction transaction : transactions) {
-            System.out.println(String.format("%-25s$%-15.2f%s", transaction.getTimestamp().getTimestampString(),
-                    transaction.getAmount(), transaction.getVendor().getName()));
+            System.out.println(String.format("%-15s$%-15.2f%s", transaction.getTimestamp().getTimestampString(),
+                    (transaction.getAmount() / 100.), transaction.getVendor().getName()));
         }
     }
 
@@ -29,7 +29,7 @@ public class PrintHandler {
     public static void printCategories(ArrayList<Category> categories) {
         System.out.println("Category            Budget          Description");
         for(Category category : categories) {
-            System.out.println(String.format("%-20s$%-15.2f%s", category.getName(), category.getBudget(), category.getDescription()));
+            System.out.println(String.format("%-20s$%-15.2f%s", category.getName(), (category.getBudget() / 100.), category.getDescription()));
         }
     }
 }

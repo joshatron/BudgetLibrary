@@ -32,7 +32,7 @@ public class Vendor {
     }
 
     public boolean isValid() {
-        if(name == null) {
+        if(name == null || name.equals("")) {
             return false;
         }
         if(category == null || !category.isValid()) {

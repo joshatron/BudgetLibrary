@@ -43,7 +43,7 @@ public class Timestamp {
     //Expects format YYYY-MM-DD HH:MM:SS
     private static long stringToLong(String timestamp) {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = dateFormat.parse(timestamp);
             return date.getTime() / 1000;
         } catch (ParseException e) {
@@ -54,7 +54,7 @@ public class Timestamp {
 
     //Outputs format YYYY-MM-DD HH:MM:SS
     private static String longToString(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(timestamp * 1000L);
         return sdf.format(date);
     }

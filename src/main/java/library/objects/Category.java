@@ -11,7 +11,7 @@ package library.objects;
 public class Category {
     private String name;
     private String description;
-    private double budget;
+    private int budget;
 
     public Category() {
         this.name = null;
@@ -19,17 +19,17 @@ public class Category {
         this.budget = 0;
     }
 
-    public Category(String name, String description, double budget) {
+    public Category(String name, String description, int budget) {
         this.name = name;
         this.description = description;
         this.budget = budget;
     }
 
     public boolean isValid() {
-        if(name == null) {
+        if(name == null || name.equals("")) {
             return false;
         }
-        if(budget < -0.0001) {
+        if(budget <= 0) {
             return false;
         }
         return true;
@@ -51,11 +51,11 @@ public class Category {
         this.description = description;
     }
 
-    public double getBudget() {
+    public int getBudget() {
         return budget;
     }
 
-    public void setBudget(double budget) {
+    public void setBudget(int budget) {
         this.budget = budget;
     }
 }

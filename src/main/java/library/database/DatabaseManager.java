@@ -53,7 +53,7 @@ public class DatabaseManager {
                 "id integer PRIMARY KEY AUTOINCREMENT," +
                 "name text NOT NULL," +
                 "description text," +
-                "budget real NOT NULL);";
+                "budget integer NOT NULL);";
 
         try {
             Statement stmts = conn.createStatement();

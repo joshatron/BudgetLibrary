@@ -1,7 +1,6 @@
 package library.operations;
 
 import library.database.DatabaseManager;
-import library.database.InsertHandler;
 import library.objects.Category;
 import library.objects.Transaction;
 import library.objects.Vendor;
@@ -21,45 +20,26 @@ public class BudgetLibrary {
     }
 
     public boolean addTransaction(Transaction transaction) {
-        return InsertHandler.addTransaction(transaction, conn);
+        return false;
     }
 
     public boolean addTransactions(Transaction[] transactions) {
-        for(Transaction transaction : transactions) {
-
-            if(!InsertHandler.addTransaction(transaction, conn)) {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
 
     public boolean addVendor(Vendor vendor) {
-        return InsertHandler.addVendor(vendor, conn);
+        return false;
     }
 
     public boolean addVendors(Vendor[] vendors) {
-        for(Vendor vendor : vendors) {
-            if(!InsertHandler.addVendor(vendor, conn)) {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
 
     public boolean addCategory(Category category) {
-        return InsertHandler.addCategory(category, conn);
+        return false;
     }
 
     public boolean addCategories(Category[] categories) {
-        for(Category category : categories) {
-            if(!InsertHandler.addCategory(category, conn)) {
-                return false;
-            }
-        }
-
-        return true;
+        return false;
     }
 }

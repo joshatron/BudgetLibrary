@@ -89,7 +89,7 @@ public class CategoryDAOSqlite implements CategoryDAO {
             while (rs.next()) {
                 Category category = new Category();
                 category.setName(rs.getString("name"));
-                category.setBudget(rs.getDouble("budget"));
+                category.setBudget(rs.getInt("budget"));
                 category.setDescription(rs.getString("description"));
                 categories.add(category);
             }
@@ -113,7 +113,7 @@ public class CategoryDAOSqlite implements CategoryDAO {
             if (rs.next()) {
                 Category category = new Category();
                 category.setName(rs.getString("name"));
-                category.setBudget(rs.getDouble("budget"));
+                category.setBudget(rs.getInt("budget"));
                 category.setDescription(rs.getString("description"));
 
                 return category;

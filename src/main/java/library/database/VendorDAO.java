@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 public interface VendorDAO {
 
-    public void addVendor(Vendor vendor);
-    public void updateVendor(Vendor vendor, String oldName);
-    public void deleteVendor(String name);
+    void addVendor(Vendor vendor);
+    void updateVendor(Vendor vendor, String oldName);
+    void deleteVendor(String name);
 
-    public ArrayList<Vendor> getAllVendors();
-    public ArrayList<Vendor> getVendorsForCategory(Category category);
-    public ArrayList<Vendor> getVendorsWithTag(String tag);
-    public Vendor getVendorFromName(String name);
+    ArrayList<Vendor> getAllVendors();
+    ArrayList<Vendor> getVendorsForCategory(Category category);
+    ArrayList<Vendor> getVendorsWithTag(String tag);
+    Vendor getVendorFromName(String name);
 }
