@@ -20,7 +20,6 @@ The main tables will be the transactions, vendors, and categories, with some oth
 |-----------------|----------------|---------------------------|----------------------------------|
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each vendor                |
 | name            | string         | NOT NULL                  | name of the vendor               |
-| category        | int            | NOT NULL                  | The category for the vendor      |
 
 ####vendor_tags
 
@@ -44,12 +43,3 @@ The main tables will be the transactions, vendors, and categories, with some oth
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each naming                |
 | vendor_id       | int            | NOT NULL                  | id of the vendor                 |
 | name            | string         | NOT NULL                  | name of the vendor               |
-
-####categories
-
-| Name            | Data Type      | Parameters                | Description                      |
-|-----------------|----------------|---------------------------|----------------------------------|
-| id              | int            | PRIMARY KEY AUTOINCREMENT | id of each category              |
-| name            | string         | NOT NULL                  | name of the category             |
-| description     | string         |                           | description of the category      |
-| budget          | double         | NOT NULL                  | budget for the category          |

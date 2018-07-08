@@ -1,7 +1,6 @@
 package library.operations;
 
 import library.database.DatabaseManager;
-import library.objects.Category;
 import library.objects.Transaction;
 import library.objects.Vendor;
 
@@ -32,14 +31,6 @@ public class BudgetLibrary {
     }
 
     public boolean addVendors(Vendor[] vendors) {
-        return false;
-    }
-
-    public boolean addCategory(Category category) {
-        return false;
-    }
-
-    public boolean addCategories(Category[] categories) {
         return false;
     }
 }

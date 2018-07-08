@@ -8,13 +8,11 @@ import java.util.ArrayList;
 public class TransactionTest {
 
     private Transaction createTransaction() {
-        Category category = new Category("Food", "food", 100000);
-
         ArrayList<String> rawNames = new ArrayList<String>();
         rawNames.add("Safeway");
         ArrayList<String> tags = new ArrayList<String>();
         tags.add("groceries");
-        Vendor vendor = new Vendor("Safeway", rawNames, tags, category);
+        Vendor vendor = new Vendor("Safeway", rawNames, tags);
 
         Transaction transaction = new Transaction(new Timestamp("2017-09-01"), 10000, vendor);
 
@@ -59,7 +57,7 @@ public class TransactionTest {
     public void testSettersGetters() throws Exception {
         Timestamp timestamp = new Timestamp("2017-09-01");
         int amount = 10000;
-        Vendor vendor = new Vendor("Safeway", null, null, null);
+        Vendor vendor = new Vendor("Safeway", null, null);
         Transaction transaction = new Transaction();
         transaction.setTimestamp(timestamp);
         transaction.setAmount(amount);

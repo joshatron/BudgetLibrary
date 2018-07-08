@@ -1,6 +1,5 @@
 package library.database;
 
-import library.objects.Category;
 import library.objects.Timestamp;
 import library.objects.Transaction;
 import library.objects.Vendor;
@@ -16,5 +15,4 @@ public interface TransactionDAO {
     ArrayList<Transaction> getAllTransactions();
     ArrayList<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end);
     ArrayList<Transaction> getTransactionsForVendor(Vendor vendor);
-    ArrayList<Transaction> getTransactionsForCategory(Category category);
 }

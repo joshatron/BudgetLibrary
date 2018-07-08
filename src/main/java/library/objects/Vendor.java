@@ -9,33 +9,26 @@ import java.util.ArrayList;
  * name: name of vendor
  * rawNames: all names that refer to this vendor
  * tags: tags relating to this vendor
- * category: category of this vendor
  */
 public class Vendor {
     private String name;
     private ArrayList<String> rawNames;
     private ArrayList<String> tags;
-    private Category category;
 
     public Vendor() {
         this.name = null;
         this.rawNames = new ArrayList<String>();
         this.tags = new ArrayList<String>();
-        this.category = null;
     }
 
-    public Vendor(String name, ArrayList<String> rawNames, ArrayList<String> tags, Category category) {
+    public Vendor(String name, ArrayList<String> rawNames, ArrayList<String> tags) {
         this.name = name;
         this.rawNames = rawNames;
         this.tags = tags;
-        this.category = category;
     }
 
     public boolean isValid() {
         if(name == null || name.equals("")) {
-            return false;
-        }
-        if(category == null || !category.isValid()) {
             return false;
         }
         return true;
@@ -80,13 +73,5 @@ public class Vendor {
 
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 }

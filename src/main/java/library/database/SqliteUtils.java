@@ -1,8 +1,6 @@
 package library.database;
 
-import library.objects.Category;
 import library.objects.Transaction;
-import library.objects.Vendor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -76,29 +74,6 @@ public class SqliteUtils {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-
-        return -1;
-    }
-
-    //find category id by searching for name
-    //if none found, return -1
-    public static int getCategoryID(String name, Connection conn) {
-        if(name != null) {
-            String find = "SELECT id " +
-                    "FROM categories " +
-                    "WHERE name = '" + name + "';";
-
-            try {
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(find);
-
-                if(rs.next()) {
-                    return rs.getInt("id");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
 
         return -1;

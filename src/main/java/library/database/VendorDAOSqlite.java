@@ -1,6 +1,5 @@
 package library.database;
 
-import library.objects.Category;
 import library.objects.Vendor;
 
 import java.sql.Connection;
@@ -12,11 +11,9 @@ import java.util.ArrayList;
 public class VendorDAOSqlite implements VendorDAO {
 
     private Connection conn;
-    private CategoryDAO categoryDAO;
 
-    public VendorDAOSqlite(Connection conn, CategoryDAO categoryDAO) {
+    public VendorDAOSqlite(Connection conn) {
         this.conn = conn;
-        this.categoryDAO = categoryDAO;
     }
 
     @Override
@@ -27,15 +24,8 @@ public class VendorDAOSqlite implements VendorDAO {
                 return;
             }
 
-            int categoryID = SqliteUtils.getCategoryID(vendor.getCategory().getName(), conn);
-
-            if(categoryID == -1) {
-                categoryDAO.addCategory(vendor.getCategory());
-                categoryID = SqliteUtils.getCategoryID(vendor.getCategory().getName(), conn);
-            }
-
-            String insertVendor = "INSERT INTO vendors (name, category) " +
-                    "VALUES ( '" + vendor.getName() + "', " + categoryID + " );";
+            String insertVendor = "INSERT INTO vendors (name) " +
+                    "VALUES ( '" + vendor.getName() + "' );";
 
             try {
                 //add vendor
@@ -85,15 +75,8 @@ public class VendorDAOSqlite implements VendorDAO {
                 return;
             }
 
-            int categoryID = SqliteUtils.getCategoryID(vendor.getCategory().getName(), conn);
-
-            if(categoryID == -1) {
-                categoryDAO.addCategory(vendor.getCategory());
-                categoryID = SqliteUtils.getCategoryID(vendor.getCategory().getName(), conn);
-            }
-
             String update = "UPDATE vendors " +
-                    "SET name = '" + vendor.getName() + "', category = " + categoryID + " " +
+                    "SET name = '" + vendor.getName() + "' " +
                     "WHERE name = '" + oldName + "';";
 
             try {
@@ -185,45 +168,6 @@ public class VendorDAOSqlite implements VendorDAO {
 
             while (rs.next()) {
                 Vendor vendor = new Vendor();
-                vendor.setCategory(categoryDAO.getCategoryFromName(rs.getString("category_name")));
-                vendor.setName(rs.getString("name"));
-                vendor.setTags(getVendorTags(vendor.getName()));
-                vendor.setRawNames(getVendorRawNames(vendor.getName()));
-
-                vendors.add(vendor);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return vendors;
-    }
-
-    @Override
-    public ArrayList<Vendor> getVendorsForCategory(Category category) {
-        if(!category.isValid()) {
-            return null;
-        }
-
-        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
-
-        int categoryID = SqliteUtils.getCategoryID(category.getName(), conn);
-
-        if(categoryID == -1) {
-            return null;
-        }
-
-        String find = "SELECT name " +
-                "FROM vendors " +
-                "WHERE category = " + categoryID + ";";
-
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
-
-            while (rs.next()) {
-                Vendor vendor = new Vendor();
-                vendor.setCategory(category);
                 vendor.setName(rs.getString("name"));
                 vendor.setTags(getVendorTags(vendor.getName()));
                 vendor.setRawNames(getVendorRawNames(vendor.getName()));
@@ -259,7 +203,6 @@ public class VendorDAOSqlite implements VendorDAO {
 
             while (rs.next()) {
                 Vendor vendor = new Vendor();
-                vendor.setCategory(categoryDAO.getCategoryFromName(rs.getString("category_name")));
                 vendor.setName(rs.getString("name"));
                 vendor.setTags(getVendorTags(vendor.getName()));
                 vendor.setRawNames(getVendorRawNames(vendor.getName()));
@@ -286,7 +229,6 @@ public class VendorDAOSqlite implements VendorDAO {
 
             if (rs.next()) {
                 Vendor vendor = new Vendor();
-                vendor.setCategory(categoryDAO.getCategoryFromName(rs.getString("category_name")));
                 vendor.setName(rs.getString("name"));
                 vendor.setTags(getVendorTags(vendor.getName()));
                 vendor.setRawNames(getVendorRawNames(vendor.getName()));
@@ -361,13 +303,5 @@ public class VendorDAOSqlite implements VendorDAO {
 
     public void setConnection(Connection conn) {
         this.conn = conn;
-    }
-
-    public CategoryDAO getCategoryDAO() {
-        return categoryDAO;
-    }
-
-    public void setCategoryDAO(CategoryDAO categoryDAO) {
-        this.categoryDAO = categoryDAO;
     }
 }

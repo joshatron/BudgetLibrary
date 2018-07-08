@@ -1,6 +1,5 @@
 package library.operations;
 
-import library.objects.Category;
 import library.objects.Transaction;
 import library.objects.Vendor;
 
@@ -20,16 +19,9 @@ public class PrintHandler {
     }
 
     public static void printVendors(ArrayList<Vendor> vendors) {
-        System.out.println("Vendor              Category");
+        System.out.println("Vendor");
         for(Vendor vendor : vendors) {
-            System.out.println(String.format("%-20s%s", vendor.getName(), vendor.getCategory().getName()));
-        }
-    }
-
-    public static void printCategories(ArrayList<Category> categories) {
-        System.out.println("Category            Budget          Description");
-        for(Category category : categories) {
-            System.out.println(String.format("%-20s$%-15.2f%s", category.getName(), (category.getBudget() / 100.), category.getDescription()));
+            System.out.println(vendor.getName());
         }
     }
 }

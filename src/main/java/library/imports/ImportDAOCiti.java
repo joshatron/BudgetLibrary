@@ -1,6 +1,5 @@
 package library.imports;
 
-import library.database.CategoryDAO;
 import library.database.TransactionDAO;
 import library.database.VendorDAO;
 import library.objects.Timestamp;
@@ -18,12 +17,10 @@ public class ImportDAOCiti implements ImportDAO {
 
     private TransactionDAO transactionDAO;
     private VendorDAO vendorDAO;
-    private CategoryDAO categoryDAO;
 
-    public ImportDAOCiti(TransactionDAO transactionDAO, VendorDAO vendorDAO, CategoryDAO categoryDAO) {
+    public ImportDAOCiti(TransactionDAO transactionDAO, VendorDAO vendorDAO) {
         this.transactionDAO = transactionDAO;
         this.vendorDAO = vendorDAO;
-        this.categoryDAO = categoryDAO;
     }
 
 
@@ -34,8 +31,8 @@ public class ImportDAOCiti implements ImportDAO {
      * 0- status
      * 1- date
      * 2- description
-     * 3- debit
-     * 4- credit
+     * 3- amount lost
+     * 4- amount gained
      */
     @Override
     public ArrayList<Transaction> getTransactions(String file) {

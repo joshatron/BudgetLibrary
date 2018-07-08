@@ -1,6 +1,5 @@
 package library.database;
 
-import library.objects.Category;
 import library.objects.Timestamp;
 import library.objects.Transaction;
 import library.objects.Vendor;
@@ -15,12 +14,10 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
     private Connection conn;
     private VendorDAO vendorDAO;
-    private CategoryDAO categoryDAO;
 
-    public TransactionDAOSqlite(Connection conn, VendorDAO vendorDAO, CategoryDAO categoryDAO) {
+    public TransactionDAOSqlite(Connection conn, VendorDAO vendorDAO) {
         this.conn = conn;
         this.vendorDAO = vendorDAO;
-        this.categoryDAO = categoryDAO;
     }
 
     @Override
@@ -182,51 +179,6 @@ public class TransactionDAOSqlite implements TransactionDAO {
         return transactions;
     }
 
-    @Override
-    public ArrayList<Transaction> getTransactionsForCategory(Category category) {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-
-        ArrayList<Vendor> vendors = vendorDAO.getVendorsForCategory(category);
-
-        String find = "SELECT timestamp, amount, vendors.name as vendor_name " +
-                "FROM transactions " +
-                "WHERE ";
-
-        //add conditions for every vendor in category
-        boolean first = true;
-        for(Vendor vendor : vendors) {
-            int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
-
-            if(first) {
-                find += "vendor = " + vendorID + " ";
-                first = false;
-            }
-            else {
-                find += "OR vendor = " + vendorID + " ";
-            }
-        }
-
-        find += "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
-
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
-
-            while (rs.next()) {
-                Transaction transaction = new Transaction();
-                transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getInt("amount"));
-                transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
-
-                transactions.add(transaction);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
-    }
-
     public Connection getConn() {
         return conn;
     }
@@ -241,13 +193,5 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
     public void setVendorDAO(VendorDAO vendorDAO) {
         this.vendorDAO = vendorDAO;
-    }
-
-    public CategoryDAO getCategoryDAO() {
-        return categoryDAO;
-    }
-
-    public void setCategoryDAO(CategoryDAO categoryDAO) {
-        this.categoryDAO = categoryDAO;
     }
 }
