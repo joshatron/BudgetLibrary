@@ -41,5 +41,5 @@ The main tables will be the transactions, vendors, and categories, with some oth
 | Name            | Data Type      | Parameters                | Description                      |
 |-----------------|----------------|---------------------------|----------------------------------|
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each naming                |
-| vendor_id       | int            | NOT NULL                  | id of the vendor                 |
-| name            | string         | NOT NULL                  | name of the vendor               |
+| vendor          | string         | NOT NULL                  | name of the vendor               |
+| raw             | string         | NOT NULL                  | raw name of the vendor           |

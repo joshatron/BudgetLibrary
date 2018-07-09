@@ -34,15 +34,6 @@ public class VendorDAOSqlite implements VendorDAO {
 
                 int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
 
-                //add vendor raw names
-                if (vendor.getRawNames() != null) {
-                    for (String name : vendor.getRawNames()) {
-                        String insertName = "INSERT INTO vendor_namings (vendor_id, name) " +
-                                "VALUES ( " + vendorID + ", '" + name + "' );";
-                        stmt.executeUpdate(insertName);
-                    }
-                }
-
                 //add vendor tags
                 if (vendor.getTags() != null) {
                     for (String tag : vendor.getTags()) {
@@ -85,21 +76,6 @@ public class VendorDAOSqlite implements VendorDAO {
                 stmt.executeUpdate(update);
 
                 int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
-
-                //delete old raw names
-                String deleteRawNames = "DELETE FROM vendor_namings " +
-                        "WHERE vendor_id = " + vendorID + ";";
-
-                stmt.executeUpdate(deleteRawNames);
-
-                //add vendor raw names
-                if (vendor.getRawNames() != null) {
-                    for (String name : vendor.getRawNames()) {
-                        String insertName = "INSERT INTO vendor_namings (vendor_id, name) " +
-                                "VALUES ( " + vendorID + ", '" + name + "' );";
-                        stmt.executeUpdate(insertName);
-                    }
-                }
 
                 //delete old taggings
                 String deleteTaggings = "DELETE FROM vendor_taggings " +
@@ -155,12 +131,25 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
+    public void addVendorRawMapping(String vendor, String raw) {
+
+        try {
+            String insertVendor = "INSERT INTO vendor_namings (vendor, raw) " +
+                    "VALUES ( '" + vendor + "', '" + raw + "' );";
+
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(insertVendor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public ArrayList<Vendor> getAllVendors() {
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
 
-        String find = "SELECT id, name, categories.name as category_name " +
-                "FROM vendors " +
-                "LEFT OUTER JOIN categories on vendors.category = categories.id;";
+        String find = "SELECT name " +
+                "FROM vendors;";
 
         try {
             Statement stmt = conn.createStatement();
@@ -170,7 +159,6 @@ public class VendorDAOSqlite implements VendorDAO {
                 Vendor vendor = new Vendor();
                 vendor.setName(rs.getString("name"));
                 vendor.setTags(getVendorTags(vendor.getName()));
-                vendor.setRawNames(getVendorRawNames(vendor.getName()));
 
                 vendors.add(vendor);
             }
@@ -191,11 +179,10 @@ public class VendorDAOSqlite implements VendorDAO {
             return null;
         }
 
-        String find = "SELECT vendors.name as name, categories.name as category_name " +
+        String find = "SELECT vendors.name as name " +
                 "FROM vendor_taggings " +
                 "WHERE tag_id = " + tagID + " " +
-                "LEFT OUTER JOIN vendors on vendor_taggings.vendor_id = vendors.id " +
-                "LEFT OUTER JOIN categories on vendors.category = categories.id;";
+                "LEFT OUTER JOIN vendors on vendor_taggings.vendor_id = vendors.id;";
 
         try {
             Statement stmt = conn.createStatement();
@@ -205,7 +192,6 @@ public class VendorDAOSqlite implements VendorDAO {
                 Vendor vendor = new Vendor();
                 vendor.setName(rs.getString("name"));
                 vendor.setTags(getVendorTags(vendor.getName()));
-                vendor.setRawNames(getVendorRawNames(vendor.getName()));
 
                 vendors.add(vendor);
             }
@@ -218,10 +204,9 @@ public class VendorDAOSqlite implements VendorDAO {
 
     @Override
     public Vendor getVendorFromName(String name) {
-        String find = "SELECT name, categories.name as category_name " +
+        String find = "SELECT name " +
                 "FROM vendors " +
-                "WHERE name = '" + name + "' " +
-                "LEFT OUTER JOIN categories on vendors.category = categories.id;";
+                "WHERE name = '" + name + "';";
 
         try {
             Statement stmt = conn.createStatement();
@@ -231,7 +216,30 @@ public class VendorDAOSqlite implements VendorDAO {
                 Vendor vendor = new Vendor();
                 vendor.setName(rs.getString("name"));
                 vendor.setTags(getVendorTags(vendor.getName()));
-                vendor.setRawNames(getVendorRawNames(vendor.getName()));
+
+                return vendor;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Vendor getVendorFromRaw(String name) {
+        String find = "SELECT vendor " +
+                "FROM vendor_namings " +
+                "WHERE raw = '" + name + "';";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(find);
+
+            if (rs.next()) {
+                Vendor vendor = new Vendor();
+                vendor.setName(rs.getString("vendor"));
+                vendor.setTags(getVendorTags(vendor.getName()));
 
                 return vendor;
             }
@@ -268,33 +276,6 @@ public class VendorDAOSqlite implements VendorDAO {
         }
 
         return tags;
-    }
-
-    private ArrayList<String> getVendorRawNames(String name) {
-        ArrayList<String> rawNames = new ArrayList<String>();
-
-        int vendorID = SqliteUtils.getVendorID(name, conn);
-
-        if(vendorID == -1) {
-            return null;
-        }
-
-        String findRawNames = "SELECT name " +
-                "FROM vendor_namings " +
-                "WHERE vendor_id = " + vendorID + ";";
-
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(findRawNames);
-
-            while (rs.next()) {
-                rawNames.add(rs.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return rawNames;
     }
 
     public Connection getConnection() {

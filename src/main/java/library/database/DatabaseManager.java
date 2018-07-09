@@ -45,8 +45,8 @@ public class DatabaseManager {
 
         String vendorNamingsTable = "CREATE TABLE IF NOT EXISTS vendor_namings (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "vendor_id integer NOT NULL," +
-                "name text NOT NULL);";
+                "vendor text NOT NULL," +
+                "raw text NOT NULL);";
 
         try {
             Statement stmts = conn.createStatement();

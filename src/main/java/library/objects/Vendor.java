@@ -7,23 +7,19 @@ import java.util.ArrayList;
  *
  * Fields include:
  * name: name of vendor
- * rawNames: all names that refer to this vendor
  * tags: tags relating to this vendor
  */
 public class Vendor {
     private String name;
-    private ArrayList<String> rawNames;
     private ArrayList<String> tags;
 
     public Vendor() {
         this.name = null;
-        this.rawNames = new ArrayList<String>();
         this.tags = new ArrayList<String>();
     }
 
-    public Vendor(String name, ArrayList<String> rawNames, ArrayList<String> tags) {
+    public Vendor(String name, ArrayList<String> tags) {
         this.name = name;
-        this.rawNames = rawNames;
         this.tags = tags;
     }
 
@@ -34,16 +30,8 @@ public class Vendor {
         return true;
     }
 
-    public void addRawName(String rawName) {
-        this.rawNames.add(rawName);
-    }
-
     public void addtag(String tag) {
         this.tags.add(tag);
-    }
-
-    public void removeRawName(String rawName) {
-        this.rawNames.remove(rawName);
     }
 
     public void removetag(String tag) {
@@ -57,14 +45,6 @@ public class Vendor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public ArrayList<String> getRawNames() {
-        return rawNames;
-    }
-
-    public void setRawNames(ArrayList<String> rawNames) {
-        this.rawNames = rawNames;
     }
 
     public ArrayList<String> getTags() {

@@ -4,6 +4,7 @@ import library.database.TransactionDAO;
 import library.database.VendorDAO;
 import library.objects.Timestamp;
 import library.objects.Transaction;
+import library.objects.Vendor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class ImportDAOCiti implements ImportDAO {
@@ -40,31 +42,63 @@ public class ImportDAOCiti implements ImportDAO {
             ArrayList<Transaction> transactions = new ArrayList<Transaction>();
             BufferedReader br = Files.newBufferedReader(Paths.get(file));
             List<String> lines = br.lines().collect(Collectors.toList());
+            //in case a vendor is not filled out
+            Scanner in = new Scanner(System.in);
 
             boolean first = true;
+            String fullLine = "";
             for(String line : lines) {
                 if(first) {
                     first = false;
                     continue;
                 }
 
-                line = line.replace("\"", "");
-                String[] fields = line.split(",");
+                if(line.charAt(line.length() - 1) == '"') {
+                    fullLine += line;
 
-                //not pending transaction
-                if(fields[0].equals("Cleared")) {
-                    Transaction transaction = new Transaction();
+                    fullLine = fullLine.replace("'", "''");
+                    String[] fields = fullLine.split("\"");
 
-                    //date in format MM/DD/YYYY, needs to be YYYY-MM-DD
-                    String[] date = fields[1].split("/");
-                    transaction.setTimestamp(new Timestamp(date[2] + "-" + date[0] + "-" + date[1]));
+                    //not pending transaction
+                    if (fields[1].equals("Cleared")) {
+                        Transaction transaction = new Transaction();
 
-                    //need to convert double amount to int in cents
-                    transaction.setAmount(Math.round((float)Double.parseDouble(fields[3]) * 100));
+                        //date in format MM/DD/YYYY, needs to be YYYY-MM-DD
+                        String[] date = fields[3].split("/");
+                        transaction.setTimestamp(new Timestamp(date[2] + "-" + date[0] + "-" + date[1]));
 
-                    //TODO: need to add vendor still
+                        //need to convert double amount to int in cents
+                        if(fields[7].length() != 0) {
+                            String amount = fields[7].replace(",", "");
+                            transaction.setAmount(Math.round((float) Double.parseDouble(amount) * 100));
+                        }
+                        else {
+                            String amount = fields[9].replace(",", "");
+                            transaction.setAmount(Math.round((float) Double.parseDouble(amount) * -100));
+                        }
 
-                    transactions.add(transaction);
+                        //get vendor from raw name
+                        Vendor vendor = vendorDAO.getVendorFromRaw(fields[5]);
+                        //if can't find vendor from raw name
+                        if (vendor == null) {
+                            System.out.print("What is the vendor for " + fields[5] + "? ");
+                            String vendorName = in.nextLine();
+                            vendorDAO.addVendorRawMapping(vendorName, fields[5]);
+                            vendor = vendorDAO.getVendorFromName(vendorName);
+
+                            if (vendor == null) {
+                                vendor = new Vendor(vendorName, null);
+                            }
+                        }
+                        transaction.setVendor(vendor);
+
+                        transactions.add(transaction);
+                    }
+
+                    fullLine = "";
+                }
+                else {
+                    fullLine += line;
                 }
             }
 

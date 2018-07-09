@@ -58,5 +58,9 @@ public class Transaction {
     public void setVendor(Vendor vendor) {
         this.vendor = vendor;
     }
+
+    public String toString() {
+        return "Date: " + timestamp.getTimestampString() + " Amount: $" + (amount / 100.) + " Vendor: " + vendor.getName();
+    }
 }
 
