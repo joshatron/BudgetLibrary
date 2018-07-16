@@ -16,7 +16,7 @@ public class App {
         ImportDAO citi = new ImportDAOCiti(transactionDAO, vendorDAO);
 
         System.out.println("starting citi");
-        ArrayList<Transaction> transactions = citi.getTransactions("citi.csv");
+        ArrayList<Transaction> transactions = citi.getTransactions("citi_last_month.csv");
         System.out.println("ending citi");
         System.out.println(transactions.size());
         for(Transaction transaction : transactions) {

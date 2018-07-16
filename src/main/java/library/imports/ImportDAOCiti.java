@@ -77,6 +77,10 @@ public class ImportDAOCiti implements ImportDAO {
                             transaction.setAmount(Math.round((float) Double.parseDouble(amount) * -100));
                         }
 
+                        if(fields[5].charAt(fields[5].length() - 1) == ' ') {
+                            fields[5] = fields[5].substring(0, fields[5].length() - 1);
+                        }
+
                         //get vendor from raw name
                         Vendor vendor = vendorDAO.getVendorFromRaw(fields[5]);
                         //if can't find vendor from raw name
