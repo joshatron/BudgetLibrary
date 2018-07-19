@@ -250,6 +250,27 @@ public class VendorDAOSqlite implements VendorDAO {
         return null;
     }
 
+    @Override
+    public ArrayList<String> getVendorsFromRaw() {
+        ArrayList<String> vendors = new ArrayList<>();
+
+        String find = "SELECT vendor " +
+                "FROM vendor_namings;";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(find);
+
+            while (rs.next()) {
+                vendors.add(rs.getString("vendor"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return vendors;
+    }
+
     private ArrayList<String> getVendorTags(String name) {
         ArrayList<String> tags = new ArrayList<String>();
 

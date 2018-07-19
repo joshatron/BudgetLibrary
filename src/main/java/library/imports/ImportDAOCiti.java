@@ -1,6 +1,7 @@
 package library.imports;
 
 import library.database.TransactionDAO;
+import library.database.VendorCompleter;
 import library.database.VendorDAO;
 import library.objects.Timestamp;
 import library.objects.Transaction;
@@ -17,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class ImportDAOCiti implements ImportDAO {
@@ -51,7 +51,7 @@ public class ImportDAOCiti implements ImportDAO {
             Terminal terminal = TerminalBuilder.terminal();
             LineReader lineReader = LineReaderBuilder.builder()
                     .terminal(terminal)
-                    .completer(new StringsCompleter("apple", "banana"))
+                    .completer(new VendorCompleter(vendorDAO))
                     .build();
 
             boolean first = true;
