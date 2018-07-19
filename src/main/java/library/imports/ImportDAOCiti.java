@@ -5,6 +5,11 @@ import library.database.VendorDAO;
 import library.objects.Timestamp;
 import library.objects.Transaction;
 import library.objects.Vendor;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +48,11 @@ public class ImportDAOCiti implements ImportDAO {
             BufferedReader br = Files.newBufferedReader(Paths.get(file));
             List<String> lines = br.lines().collect(Collectors.toList());
             //in case a vendor is not filled out
-            Scanner in = new Scanner(System.in);
+            Terminal terminal = TerminalBuilder.terminal();
+            LineReader lineReader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .completer(new StringsCompleter("apple", "banana"))
+                    .build();
 
             boolean first = true;
             String fullLine = "";
@@ -85,8 +94,7 @@ public class ImportDAOCiti implements ImportDAO {
                         Vendor vendor = vendorDAO.getVendorFromRaw(fields[5]);
                         //if can't find vendor from raw name
                         if (vendor == null) {
-                            System.out.print("What is the vendor for " + fields[5] + "? ");
-                            String vendorName = in.nextLine();
+                            String vendorName = lineReader.readLine("What is the vendor for " + fields[5] + "? ");
                             vendorDAO.addVendorRawMapping(vendorName, fields[5]);
                             vendor = vendorDAO.getVendorFromName(vendorName);
 
