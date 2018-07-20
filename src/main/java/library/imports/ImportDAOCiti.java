@@ -8,7 +8,6 @@ import library.objects.Transaction;
 import library.objects.Vendor;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
-import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -95,6 +94,7 @@ public class ImportDAOCiti implements ImportDAO {
                         //if can't find vendor from raw name
                         if (vendor == null) {
                             String vendorName = lineReader.readLine("What is the vendor for " + fields[5] + "? ");
+                            vendorName = vendorName.trim();
                             vendorDAO.addVendorRawMapping(vendorName, fields[5]);
                             vendor = vendorDAO.getVendorFromName(vendorName);
 

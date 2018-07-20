@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VendorDAOSqlite implements VendorDAO {
 
@@ -251,8 +253,8 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
-    public ArrayList<String> getVendorsFromRaw() {
-        ArrayList<String> vendors = new ArrayList<>();
+    public String[] getVendorsFromRaw() {
+        Set<String> vendors = new HashSet<>();
 
         String find = "SELECT vendor " +
                 "FROM vendor_namings;";
@@ -268,7 +270,7 @@ public class VendorDAOSqlite implements VendorDAO {
             e.printStackTrace();
         }
 
-        return vendors;
+        return vendors.toArray(new String[vendors.size()]);
     }
 
     private ArrayList<String> getVendorTags(String name) {
