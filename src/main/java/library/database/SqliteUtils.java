@@ -2,10 +2,7 @@ package library.database;
 
 import library.objects.Transaction;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class SqliteUtils {
     public static int getTransactionID(Transaction transaction, Connection conn) {
@@ -17,13 +14,16 @@ public class SqliteUtils {
 
             String find = "SELECT id " +
                     "FROM transactions " +
-                    "WHERE timestamp = " + transaction.getTimestamp().getTimestampLong() + " AND " +
-                    "vendor = " + vendorID + " AND " +
-                    "amount = " + transaction.getAmount() + ";";
+                    "WHERE timestamp = ? AND " +
+                    "vendor = ? AND " +
+                    "amount = ?;";
 
             try {
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(find);
+                PreparedStatement stmt = conn.prepareStatement(find);
+                stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
+                stmt.setInt(2, vendorID);
+                stmt.setInt(3, transaction.getAmount());
+                ResultSet rs = stmt.executeQuery();
 
                 if(rs.next()) {
                     return rs.getInt("id");
@@ -41,11 +41,12 @@ public class SqliteUtils {
         if(name != null) {
             String find = "SELECT id " +
                     "FROM vendors " +
-                    "WHERE name = '" + name + "';";
+                    "WHERE name = ?;";
 
             try {
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(find);
+                PreparedStatement stmt = conn.prepareStatement(find);
+                stmt.setString(1, name);
+                ResultSet rs = stmt.executeQuery();
 
                 if(rs.next()) {
                     return rs.getInt("id");
@@ -63,11 +64,12 @@ public class SqliteUtils {
     public static int getTagID(String tag, Connection conn) {
         String find = "SELECT id " +
                 "FROM vendor_tags " +
-                "WHERE  name = '" + tag + "';";
+                "WHERE  name = ?;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            stmt.setString(1, tag);
+            ResultSet rs = stmt.executeQuery();
 
             if(rs.next()) {
                 return rs.getInt("id");

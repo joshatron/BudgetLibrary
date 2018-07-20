@@ -129,9 +129,9 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
         String find = "SELECT timestamp, amount, vendors.name as vendor_name " +
                 "FROM transactions " +
+                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id " +
                 "WHERE timestamp > ? AND " +
-                "timestamp < ? " +
-                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
+                "timestamp < ?;";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(find);
@@ -162,8 +162,8 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
         String find = "SELECT timestamp, amount, vendors.name as vendor_name " +
                 "FROM transactions " +
-                "WHERE vendor = ? " +
-                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
+                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id " +
+                "WHERE vendor = ?;";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(find);

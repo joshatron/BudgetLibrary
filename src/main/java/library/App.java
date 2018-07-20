@@ -18,8 +18,13 @@ public class App {
         System.out.println("starting citi");
         ArrayList<Transaction> transactions = citi.getTransactions("citi_last_month.csv");
         System.out.println("ending citi");
-        System.out.println(transactions.size());
         for(Transaction transaction : transactions) {
+            transactionDAO.addTransaction(transaction);
+        }
+
+        ArrayList<Transaction> transactions1 = transactionDAO.getAllTransactions();
+
+        for(Transaction transaction : transactions1) {
             System.out.println(transaction);
         }
     }

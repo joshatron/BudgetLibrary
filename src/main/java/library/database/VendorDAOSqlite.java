@@ -196,8 +196,8 @@ public class VendorDAOSqlite implements VendorDAO {
 
         String find = "SELECT vendors.name as name " +
                 "FROM vendor_taggings " +
-                "WHERE tag_id = ? " +
-                "LEFT OUTER JOIN vendors on vendor_taggings.vendor_id = vendors.id;";
+                "LEFT OUTER JOIN vendors on vendor_taggings.vendor_id = vendors.id " +
+                "WHERE tag_id = ?;";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(find);
@@ -276,8 +276,8 @@ public class VendorDAOSqlite implements VendorDAO {
                 "FROM vendor_namings;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 vendors.add(rs.getString("vendor"));
@@ -300,12 +300,13 @@ public class VendorDAOSqlite implements VendorDAO {
 
         String findTags = "SELECT vendor_tags.name as name " +
                 "FROM vendor_taggings " +
-                "WHERE vendor_id = " + vendorID + " " +
-                "LEFT OUTER JOIN vendor_tags ON vendor_taggings.tag_id = vendor_tags.id;";
+                "LEFT OUTER JOIN vendor_tags ON vendor_taggings.tag_id = vendor_tags.id " +
+                "WHERE vendor_id = ?;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(findTags);
+            PreparedStatement stmt = conn.prepareStatement(findTags);
+            stmt.setInt(1, vendorID);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 tags.add(rs.getString("name"));
