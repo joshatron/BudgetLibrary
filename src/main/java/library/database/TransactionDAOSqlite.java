@@ -4,10 +4,7 @@ import library.objects.Timestamp;
 import library.objects.Transaction;
 import library.objects.Vendor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class TransactionDAOSqlite implements TransactionDAO {
@@ -35,14 +32,15 @@ public class TransactionDAOSqlite implements TransactionDAO {
             }
 
             String insert = "INSERT INTO transactions (timestamp, amount, vendor) " +
-                    "VALUES ( " + transaction.getTimestamp().getTimestampLong() + ", " +
-                    transaction.getAmount() + ", " +
-                    vendorID + " );";
+                    "VALUES (?,?,?);";
 
             try {
                 //add transaction
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(insert);
+                PreparedStatement stmt = conn.prepareStatement(insert);
+                stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
+                stmt.setInt(2, transaction.getAmount());
+                stmt.setInt(3, vendorID);
+                stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -61,12 +59,16 @@ public class TransactionDAOSqlite implements TransactionDAO {
             int vendorID = SqliteUtils.getVendorID(transaction.getVendor().getName(), conn);
 
             String update = "UPDATE transactions " +
-                    "SET timestamp = " + transaction.getTimestamp().getTimestampLong() + ", amount = " + transaction.getAmount() + ", vendor = " + vendorID + " " +
-                    "WHERE id = " + transactionID + ";";
+                    "SET timestamp = ?, amount = ?, vendor = ? " +
+                    "WHERE id = ?;";
 
             try {
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(update);
+                PreparedStatement stmt = conn.prepareStatement(update);
+                stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
+                stmt.setInt(2, transaction.getAmount());
+                stmt.setInt(3, vendorID);
+                stmt.setInt(4, transactionID);
+                stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -82,11 +84,12 @@ public class TransactionDAOSqlite implements TransactionDAO {
             }
 
             String delete = "DELETE FROM transactions " +
-                    "WHERE id = " + transactionID + ";";
+                    "WHERE id = ?;";
 
             try {
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(delete);
+                PreparedStatement stmt = conn.prepareStatement(delete);
+                stmt.setInt(1, transactionID);
+                stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -102,8 +105,8 @@ public class TransactionDAOSqlite implements TransactionDAO {
                 "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Transaction transaction = new Transaction();
@@ -126,13 +129,15 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
         String find = "SELECT timestamp, amount, vendors.name as vendor_name " +
                 "FROM transactions " +
-                "WHERE timestamp > " + start.getTimestampLong() + " AND " +
-                "timestamp < " + end.getTimestampLong() +
+                "WHERE timestamp > ? AND " +
+                "timestamp < ? " +
                 "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            stmt.setLong(1, start.getTimestampLong());
+            stmt.setLong(2, end.getTimestampLong());
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Transaction transaction = new Transaction();
@@ -157,12 +162,13 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
         String find = "SELECT timestamp, amount, vendors.name as vendor_name " +
                 "FROM transactions " +
-                "WHERE vendor = " + vendorID + " " +
+                "WHERE vendor = ? " +
                 "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            stmt.setInt(1, vendorID);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Transaction transaction = new Transaction();

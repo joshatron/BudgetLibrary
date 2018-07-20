@@ -2,10 +2,7 @@ package library.database;
 
 import library.objects.Vendor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,32 +24,16 @@ public class VendorDAOSqlite implements VendorDAO {
             }
 
             String insertVendor = "INSERT INTO vendors (name) " +
-                    "VALUES ( '" + vendor.getName() + "' );";
+                    "VALUES (?);";
 
             try {
                 //add vendor
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(insertVendor);
-
-                int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
+                PreparedStatement stmt = conn.prepareStatement(insertVendor);
+                stmt.setString(1, vendor.getName());
+                stmt.executeUpdate();
 
                 //add vendor tags
-                if (vendor.getTags() != null) {
-                    for (String tag : vendor.getTags()) {
-                        int tagID = SqliteUtils.getTagID(tag, conn);
-
-                        if (tagID == -1) {
-                            String insertTag = "INSERT INTO vendor_tags (name) " +
-                                    "VALUES ( '" + tag + "' );";
-                            stmt.executeUpdate(insertTag);
-                            tagID = SqliteUtils.getTagID(tag, conn);
-                        }
-
-                        String insertTagging = "INSERT INTO vendor_taggings (vendor_id, tag_id) " +
-                                "VALUES ( " + vendorID + ", " + tagID + " );";
-                        stmt.executeUpdate(insertTagging);
-                    }
-                }
+                addVendorTags(vendor);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -69,42 +50,62 @@ public class VendorDAOSqlite implements VendorDAO {
             }
 
             String update = "UPDATE vendors " +
-                    "SET name = '" + vendor.getName() + "' " +
-                    "WHERE name = '" + oldName + "';";
+                    "SET name = ? " +
+                    "WHERE name = ?;";
 
             try {
                 //add vendor
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(update);
+                PreparedStatement stmt = conn.prepareStatement(update);
+                stmt.setString(1, vendor.getName());
+                stmt.setString(2, oldName);
+                stmt.executeUpdate();
 
                 int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
 
                 //delete old taggings
                 String deleteTaggings = "DELETE FROM vendor_taggings " +
-                        "WHERE vendor_id = " + vendorID + ";";
+                        "WHERE vendor_id = ?;";
 
-                stmt.executeUpdate(deleteTaggings);
+                PreparedStatement deleteStmt = conn.prepareStatement(deleteTaggings);
+                deleteStmt.setInt(1, vendorID);
+                deleteStmt.executeUpdate();
                 //add vendor tags
-                if (vendor.getTags() != null) {
-                    for (String tag : vendor.getTags()) {
-                        int tagID = SqliteUtils.getTagID(tag, conn);
-
-                        if (tagID == -1) {
-                            String insertTag = "INSERT INTO vendor_tags (name) " +
-                                    "VALUES ( '" + tag + "' );";
-                            stmt.executeUpdate(insertTag);
-                            tagID = SqliteUtils.getTagID(tag, conn);
-                        }
-
-                        String insertTagging = "INSERT INTO vendor_taggings (vendor_id, tag_id) " +
-                                "VALUES ( " + vendorID + ", " + tagID + " );";
-                        stmt.executeUpdate(insertTagging);
-                    }
-                }
+                addVendorTags(vendor);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private void addVendorTags(Vendor vendor) {
+        if (vendor.getTags() != null) {
+            try {
+                int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
+
+                String insertTag = "INSERT INTO vendor_tags (name) " +
+                        "VALUES (?);";
+                PreparedStatement tagStmt = conn.prepareStatement(insertTag);
+
+                String insertTagging = "INSERT INTO vendor_taggings (vendor_id, tag_id) " +
+                        "VALUES (?,?);";
+                PreparedStatement taggingStmt = conn.prepareStatement(insertTagging);
+                for (String tag : vendor.getTags()) {
+                    int tagID = SqliteUtils.getTagID(tag, conn);
+
+                    if (tagID == -1) {
+                        tagStmt.setString(1, tag);
+                        tagStmt.executeUpdate();
+                        tagID = SqliteUtils.getTagID(tag, conn);
+                    }
+
+                    taggingStmt.setInt(1, vendorID);
+                    taggingStmt.setInt(2, tagID);
+                    taggingStmt.executeUpdate();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -115,17 +116,27 @@ public class VendorDAOSqlite implements VendorDAO {
             int vendorID = SqliteUtils.getVendorID(name, conn);
 
             String deleteRawNames = "DELETE FROM vendor_namings " +
-                    "WHERE vendor_id = " + vendorID + ";";
+                    "WHERE vendor_id = ?;";
             String deleteTaggings = "DELETE FROM vendor_taggings " +
-                    "WHERE vendor_id = " + vendorID + ";";
+                    "WHERE vendor_id = ?;";
             String delete = "DELETE FROM vendors " +
-                    "WHERE name = '" + name + "';";
+                    "WHERE name = ?;";
 
             try {
-                Statement stmt = conn.createStatement();
-                stmt.executeUpdate(deleteRawNames);
-                stmt.executeUpdate(deleteTaggings);
-                stmt.executeUpdate(delete);
+                //delete raw mappings
+                PreparedStatement rawNamesStmt = conn.prepareStatement(deleteRawNames);
+                rawNamesStmt.setInt(1, vendorID);
+                rawNamesStmt.executeUpdate();
+
+                //delete taggings
+                PreparedStatement taggingStmt = conn.prepareStatement(deleteTaggings);
+                taggingStmt.setInt(1, vendorID);
+                taggingStmt.executeUpdate();
+
+                //delete vendor
+                PreparedStatement deleteStmt = conn.prepareStatement(delete);
+                deleteStmt.setString(1, name);
+                deleteStmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -137,10 +148,12 @@ public class VendorDAOSqlite implements VendorDAO {
 
         try {
             String insertVendor = "INSERT INTO vendor_namings (vendor, raw) " +
-                    "VALUES ( '" + vendor + "', '" + raw + "' );";
+                    "VALUES (?,?);";
 
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(insertVendor);
+            PreparedStatement stmt = conn.prepareStatement(insertVendor);
+            stmt.setString(1, vendor);
+            stmt.setString(2, raw);
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -154,8 +167,8 @@ public class VendorDAOSqlite implements VendorDAO {
                 "FROM vendors;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Vendor vendor = new Vendor();
@@ -183,12 +196,13 @@ public class VendorDAOSqlite implements VendorDAO {
 
         String find = "SELECT vendors.name as name " +
                 "FROM vendor_taggings " +
-                "WHERE tag_id = " + tagID + " " +
+                "WHERE tag_id = ? " +
                 "LEFT OUTER JOIN vendors on vendor_taggings.vendor_id = vendors.id;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            stmt.setInt(1, tagID);
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Vendor vendor = new Vendor();
@@ -208,11 +222,12 @@ public class VendorDAOSqlite implements VendorDAO {
     public Vendor getVendorFromName(String name) {
         String find = "SELECT name " +
                 "FROM vendors " +
-                "WHERE name = '" + name + "';";
+                "WHERE name = ?;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 Vendor vendor = new Vendor();
@@ -232,11 +247,12 @@ public class VendorDAOSqlite implements VendorDAO {
     public Vendor getVendorFromRaw(String name) {
         String find = "SELECT vendor " +
                 "FROM vendor_namings " +
-                "WHERE raw = '" + name + "';";
+                "WHERE raw = ?;";
 
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(find);
+            PreparedStatement stmt = conn.prepareStatement(find);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 Vendor vendor = new Vendor();
