@@ -6,6 +6,7 @@ import library.objects.Vendor;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TransactionDAOSqlite implements TransactionDAO {
 
@@ -45,6 +46,13 @@ public class TransactionDAOSqlite implements TransactionDAO {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    @Override
+    public void addTransactions(List<Transaction> transactions) {
+        for(Transaction transaction : transactions) {
+            addTransaction(transaction);
         }
     }
 
