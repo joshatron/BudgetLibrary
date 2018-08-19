@@ -2,6 +2,7 @@ package library.simulator;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class PaySimulator {
 
@@ -9,10 +10,12 @@ public class PaySimulator {
         int startingAmount = 1550;
         int weekPay = 650;
         DayOfWeek payDay = DayOfWeek.TUESDAY;
-        int expense1Day = 22;
-        int expense1Amount = 1600;
-        int expense2Day = -1;
-        int expense2Amount = 1000;
+        int years = 2;
+        Expense rent = new Expense(-1, 1000, "rent");
+        Expense creditCard = new Expense(22, 1600, "credit card");
+        ArrayList<Expense> expenses = new ArrayList<>();
+        expenses.add(rent);
+        expenses.add(creditCard);
 
         int currentAmount = startingAmount;
         LocalDate date = LocalDate.now();
@@ -21,15 +24,15 @@ public class PaySimulator {
         int max = startingAmount;
         LocalDate maxDate = date;
 
-        for(int i = 0; i < 700; i++) {
+        for(int i = 0; i < years * 365; i++) {
             if(date.getDayOfWeek() == payDay) {
                 currentAmount += weekPay;
             }
-            if(date.getDayOfMonth() == expense1Day) {
-                currentAmount -= expense1Amount;
-            }
-            if(date.lengthOfMonth() - date.getDayOfMonth() == expense2Day * -1) {
-                currentAmount -= expense2Amount;
+
+            for(Expense expense : expenses) {
+                if (expense.executesToday(date)) {
+                    currentAmount -= expense.getAmount();
+                }
             }
 
             if(currentAmount < min) {
