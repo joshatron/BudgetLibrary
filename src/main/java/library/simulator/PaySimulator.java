@@ -8,19 +8,19 @@ public class PaySimulator {
 
     public static void main(String[] args) {
         int startingAmount = 51600;
-        int weekPay = 71000;
-        DayOfWeek payDay = DayOfWeek.TUESDAY;
         int years = 2;
-        Expense rent = new Expense(-1, 100000, "rent");
-        Expense creditCard = new Expense(22, 180000, "credit card");
-        ArrayList<Expense> expenses = new ArrayList<>();
-        expenses.add(rent);
-        expenses.add(creditCard);
+        MonthPayment rent = new MonthPayment(-100000, "rent", -1);
+        MonthPayment creditCard = new MonthPayment(-180000, "credit card", 22);
+        WeekPayment income = new WeekPayment(71000, "income", DayOfWeek.TUESDAY);
+        ArrayList<Payment> payments = new ArrayList<>();
+        payments.add(rent);
+        payments.add(creditCard);
+        payments.add(income);
 
-        runSimulation(startingAmount, weekPay, payDay, years, expenses);
+        runSimulation(startingAmount, years, payments);
     }
 
-    public static int runSimulation(int startingAmount, int weekPay, DayOfWeek payDay, int years, ArrayList<Expense> expenses) {
+    public static int runSimulation(int startingAmount, int years, ArrayList<Payment> payments) {
         int currentAmount = startingAmount;
         int debt = 0;
         LocalDate date = LocalDate.now();
@@ -30,13 +30,10 @@ public class PaySimulator {
         LocalDate maxDate = date;
 
         for(int i = 0; i < years * 365; i++) {
-            if(date.getDayOfWeek() == payDay) {
-                currentAmount += weekPay;
-            }
 
-            for(Expense expense : expenses) {
-                if (expense.executesToday(date)) {
-                    currentAmount -= expense.getAmount();
+            for(Payment payment : payments) {
+                if (payment.executesToday(date)) {
+                    currentAmount += payment.getAmount();
                 }
             }
 
@@ -53,7 +50,7 @@ public class PaySimulator {
                 System.out.println("Day: " + date.toString() + ", Money: $" + (currentAmount / 100.));
             }
             if(currentAmount < 0) {
-                System.out.println("You ran out of money on " + date.toString());
+                System.out.println("You ran out of money on " + date.toString() + ". Resolving debt and continuing.");
                 debt -= currentAmount;
                 currentAmount = 0;
             }

@@ -2,17 +2,14 @@ package library.simulator;
 
 import java.time.LocalDate;
 
-public class Expense {
+public class MonthPayment extends Payment {
 
     //0 or negative means from end
     private int dayOfMonth;
-    private int amount;
-    private String name;
 
-    public Expense(int dayOfMonth, int amount, String name) {
+    public MonthPayment(int amount, String name, int dayOfMonth) {
+        super(amount, name);
         this.dayOfMonth = dayOfMonth;
-        this.amount = amount;
-        this.name = name;
     }
 
     public boolean executesToday(LocalDate date) {
@@ -32,21 +29,5 @@ public class Expense {
 
     public void setDayOfMonth(int dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
