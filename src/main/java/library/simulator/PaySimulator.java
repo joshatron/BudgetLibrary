@@ -7,17 +7,22 @@ import java.util.ArrayList;
 public class PaySimulator {
 
     public static void main(String[] args) {
-        int startingAmount = 1550;
-        int weekPay = 650;
+        int startingAmount = 51600;
+        int weekPay = 71000;
         DayOfWeek payDay = DayOfWeek.TUESDAY;
         int years = 2;
-        Expense rent = new Expense(-1, 1000, "rent");
-        Expense creditCard = new Expense(22, 1600, "credit card");
+        Expense rent = new Expense(-1, 100000, "rent");
+        Expense creditCard = new Expense(22, 180000, "credit card");
         ArrayList<Expense> expenses = new ArrayList<>();
         expenses.add(rent);
         expenses.add(creditCard);
 
+        runSimulation(startingAmount, weekPay, payDay, years, expenses);
+    }
+
+    public static int runSimulation(int startingAmount, int weekPay, DayOfWeek payDay, int years, ArrayList<Expense> expenses) {
         int currentAmount = startingAmount;
+        int debt = 0;
         LocalDate date = LocalDate.now();
         int min = startingAmount;
         LocalDate minDate = date;
@@ -45,18 +50,23 @@ public class PaySimulator {
             }
 
             if(date.getDayOfMonth() == 1) {
-                System.out.println("Day: " + date.toString() + ", Money: $" + currentAmount);
+                System.out.println("Day: " + date.toString() + ", Money: $" + (currentAmount / 100.));
             }
             if(currentAmount < 0) {
                 System.out.println("You ran out of money on " + date.toString());
-                break;
+                debt -= currentAmount;
+                currentAmount = 0;
             }
 
             date = date.plusDays(1);
         }
 
         System.out.println();
-        System.out.println("Min: $" + min + " on " + minDate.toString());
-        System.out.println("Max: $" + max + " on " + maxDate.toString());
+        System.out.println("Min: $" + (min / 100.) + " on " + minDate.toString());
+        System.out.println("Max: $" + (max / 100.) + " on " + maxDate.toString());
+        System.out.println("End: $" + (currentAmount / 100.));
+        System.out.println("Debt: $" + (debt / 100.));
+
+        return currentAmount;
     }
 }
