@@ -1,7 +1,7 @@
 Database Structure
 ==================
 
-The main tables will be the transactions, vendors, and categories, with some other helper ones
+There are tables for the transactions and vendors, along with namings of the vendors for identification.
 
 ###Tables
 
@@ -11,7 +11,7 @@ The main tables will be the transactions, vendors, and categories, with some oth
 |-----------------|----------------|---------------------------|----------------------------------|
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each transaction           |
 | timestamp       | string         | NOT NULL                  | Time of the transaction          |
-| amount          | double         | NOT NULL                  | Amount for transaction           |
+| amount          | int            | NOT NULL                  | Amount for transaction           |
 | vendor          | int            | NOT NULL                  | The vendor for the transaction   |
 
 ####vendors
@@ -20,21 +20,7 @@ The main tables will be the transactions, vendors, and categories, with some oth
 |-----------------|----------------|---------------------------|----------------------------------|
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each vendor                |
 | name            | string         | NOT NULL                  | name of the vendor               |
-
-####vendor_tags
-
-| Name            | Data Type      | Parameters                | Description                      |
-|-----------------|----------------|---------------------------|----------------------------------|
-| id              | int            | PRIMARY KEY AUTOINCREMENT | id of each tag                   |
-| name            | string         | NOT NULL                  | name of the tag                  |
-
-####vendor_taggings
-
-| Name            | Data Type      | Parameters                | Description                      |
-|-----------------|----------------|---------------------------|----------------------------------|
-| id              | int            | PRIMARY KEY AUTOINCREMENT | id of each tagging               |
-| vendor_id       | int            | NOT NULL                  | id of the vendor                 |
-| tag_id          | int            | NOT NULL                  | id of the tag                    |
+| type            | string         | NOT NULL                  | the type of product sold         |
 
 ####vendor_namings
 

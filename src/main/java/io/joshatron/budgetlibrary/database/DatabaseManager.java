@@ -32,16 +32,8 @@ public class DatabaseManager {
 
         String vendorsTable = "CREATE TABLE IF NOT EXISTS vendors (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "name text NOT NULL);";
-
-        String vendorTagsTable = "CREATE TABLE IF NOT EXISTS vendor_tags (" +
-                "id integer PRIMARY KEY AUTOINCREMENT," +
-                "name text NOT NULL);";
-
-        String vendorTaggingsTable = "CREATE TABLE IF NOT EXISTS vendor_taggings (" +
-                "id integer PRIMARY KEY AUTOINCREMENT," +
-                "vendor_id integer NOT NULL," +
-                "tag_id integer NOT NULL);";
+                "name text NOT NULL," +
+                "type text NOT NULL);";
 
         String vendorNamingsTable = "CREATE TABLE IF NOT EXISTS vendor_namings (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
@@ -52,8 +44,6 @@ public class DatabaseManager {
             Statement stmts = conn.createStatement();
             stmts.executeUpdate(transactionsTable);
             stmts.executeUpdate(vendorsTable);
-            stmts.executeUpdate(vendorTagsTable);
-            stmts.executeUpdate(vendorTaggingsTable);
             stmts.executeUpdate(vendorNamingsTable);
             stmts.close();
 

@@ -7,39 +7,30 @@ import java.util.ArrayList;
  *
  * Fields include:
  * name: name of vendor
- * tags: tags relating to this vendor
+ * type: type of product the vendor sells
  */
 public class Vendor {
     private String name;
-    private ArrayList<String> tags;
+    private String type;
 
     public Vendor() {
         this.name = null;
-        this.tags = new ArrayList<String>();
+        this.type = null;
     }
 
-    public Vendor(String name, ArrayList<String> tags) {
+    public Vendor(String name, String type) {
         this.name = name;
-        this.tags = tags;
+        this.type = type
     }
 
     public boolean isValid() {
-        if(name == null || name.equals("")) {
+        if(name == null || name.equals("") || type == null || type.equals("")) {
             return false;
         }
         return true;
     }
 
-    public void addtag(String tag) {
-        this.tags.add(tag);
-    }
-
-    public void removetag(String tag) {
-        this.tags.remove(tag);
-    }
-
     public String getName() {
-
         return name;
     }
 
@@ -47,11 +38,11 @@ public class Vendor {
         this.name = name;
     }
 
-    public ArrayList<String> getTags() {
-        return tags;
+    private String getType() {
+        return type;
     }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
+    private void setType(String type) {
+        this.type = type;
     }
 }

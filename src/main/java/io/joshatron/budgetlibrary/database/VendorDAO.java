@@ -12,7 +12,7 @@ public interface VendorDAO {
     void addVendorRawMapping(String vendor, String raw);
 
     ArrayList<Vendor> getAllVendors();
-    ArrayList<Vendor> getVendorsWithTag(String tag);
+    ArrayList<Vendor> getVendorsWithType(String type);
     Vendor getVendorFromName(String name);
     Vendor getVendorFromRaw(String name);
     String[] getVendorsFromRaw();
