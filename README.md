@@ -1,7 +1,7 @@
 Budget
 ======
 
-Simple budget app with dynamic categories that learns vendor's categories as time goes on.
+A simple budget app. It features csv importing and a pay simulator.
 
 To Run
 ------
@@ -13,3 +13,8 @@ First, to compile the app, run:
 Then, to run the app, run:
 
     ./bl
+
+Database
+--------
+
+The database is specified [here](database.md).

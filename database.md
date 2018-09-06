@@ -3,9 +3,9 @@ Database Structure
 
 There are tables for the transactions and vendors, along with namings of the vendors for identification.
 
-###Tables
+### Tables
 
-####transactions
+#### Transactions
 
 | Name            | Data Type      | Parameters                | Description                      |
 |-----------------|----------------|---------------------------|----------------------------------|
@@ -14,7 +14,7 @@ There are tables for the transactions and vendors, along with namings of the ven
 | amount          | int            | NOT NULL                  | Amount for transaction           |
 | vendor          | int            | NOT NULL                  | The vendor for the transaction   |
 
-####vendors
+#### Vendors
 
 | Name            | Data Type      | Parameters                | Description                      |
 |-----------------|----------------|---------------------------|----------------------------------|
@@ -22,7 +22,7 @@ There are tables for the transactions and vendors, along with namings of the ven
 | name            | string         | NOT NULL                  | name of the vendor               |
 | type            | string         | NOT NULL                  | the type of product sold         |
 
-####vendor_namings
+#### Vendor_namings
 
 | Name            | Data Type      | Parameters                | Description                      |
 |-----------------|----------------|---------------------------|----------------------------------|
