@@ -125,7 +125,7 @@ public class VendorDAOSqlite implements VendorDAO {
             while (rs.next()) {
                 Vendor vendor = new Vendor();
                 vendor.setName(rs.getString("name"));
-                vendor.getName(rs.getString("type"));
+                vendor.setType(rs.getString("type"));
 
                 vendors.add(vendor);
             }
@@ -140,26 +140,19 @@ public class VendorDAOSqlite implements VendorDAO {
     public ArrayList<Vendor> getVendorsWithType(String type) {
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
 
-        int tagID = SqliteUtils.getTagID(tag, conn);
-
-        if(tagID == -1) {
-            return null;
-        }
-
-        String find = "SELECT vendors.name as name " +
-                "FROM vendor_taggings " +
-                "LEFT OUTER JOIN vendors on vendor_taggings.vendor_id = vendors.id " +
-                "WHERE tag_id = ?;";
+        String find = "SELECT name, type " +
+                "FROM vendors " +
+                "WHERE type = ?;";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(find);
-            stmt.setInt(1, tagID);
+            stmt.setString(1, type);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Vendor vendor = new Vendor();
                 vendor.setName(rs.getString("name"));
-                vendor.setTags(getVendorTags(vendor.getName()));
+                vendor.setType(rs.getString("type"));
 
                 vendors.add(vendor);
             }
@@ -172,7 +165,7 @@ public class VendorDAOSqlite implements VendorDAO {
 
     @Override
     public Vendor getVendorFromName(String name) {
-        String find = "SELECT name " +
+        String find = "SELECT name, type " +
                 "FROM vendors " +
                 "WHERE name = ?;";
 
@@ -184,7 +177,7 @@ public class VendorDAOSqlite implements VendorDAO {
             if (rs.next()) {
                 Vendor vendor = new Vendor();
                 vendor.setName(rs.getString("name"));
-                vendor.setTags(getVendorTags(vendor.getName()));
+                vendor.setType(rs.getString("type"));
 
                 return vendor;
             }
@@ -207,9 +200,7 @@ public class VendorDAOSqlite implements VendorDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Vendor vendor = new Vendor();
-                vendor.setName(rs.getString("vendor"));
-                vendor.setTags(getVendorTags(vendor.getName()));
+                Vendor vendor = getVendorFromName(rs.getString("vendor"));
 
                 return vendor;
             }
@@ -239,35 +230,6 @@ public class VendorDAOSqlite implements VendorDAO {
         }
 
         return vendors.toArray(new String[vendors.size()]);
-    }
-
-    private ArrayList<String> getVendorTags(String name) {
-        ArrayList<String> tags = new ArrayList<String>();
-
-        int vendorID = SqliteUtils.getVendorID(name, conn);
-
-        if(vendorID == -1) {
-            return null;
-        }
-
-        String findTags = "SELECT vendor_tags.name as name " +
-                "FROM vendor_taggings " +
-                "LEFT OUTER JOIN vendor_tags ON vendor_taggings.tag_id = vendor_tags.id " +
-                "WHERE vendor_id = ?;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(findTags);
-            stmt.setInt(1, vendorID);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                tags.add(rs.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return tags;
     }
 
     public Connection getConnection() {

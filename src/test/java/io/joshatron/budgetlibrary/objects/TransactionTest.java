@@ -8,9 +8,7 @@ import java.util.ArrayList;
 public class TransactionTest {
 
     private Transaction createTransaction() {
-        ArrayList<String> tags = new ArrayList<String>();
-        tags.add("groceries");
-        Vendor vendor = new Vendor("Safeway", tags);
+        Vendor vendor = new Vendor("Safeway", "grocery");
 
         Transaction transaction = new Transaction(new Timestamp("2017-09-01"), 10000, vendor);
 

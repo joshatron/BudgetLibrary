@@ -20,7 +20,7 @@ public class Vendor {
 
     public Vendor(String name, String type) {
         this.name = name;
-        this.type = type
+        this.type = type;
     }
 
     public boolean isValid() {
@@ -38,11 +38,11 @@ public class Vendor {
         this.name = name;
     }
 
-    private String getType() {
+    public String getType() {
         return type;
     }
 
-    private void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 }

@@ -8,9 +8,7 @@ import java.util.ArrayList;
 public class VendorTest {
 
     private Vendor createVendor() {
-        ArrayList<String> tags = new ArrayList<String>();
-        tags.add("groceries");
-        Vendor vendor = new Vendor("Safeway", tags);
+        Vendor vendor = new Vendor("Safeway", "grocery");
 
         return vendor;
     }
@@ -38,13 +36,11 @@ public class VendorTest {
     @Test
     public void testSettersGetters() throws Exception {
         String name = "Safeway";
-        ArrayList<String> tags = new ArrayList<String>();
-        tags.add("groceries");
+        String type = "grocery";
         Vendor vendor = new Vendor();
         vendor.setName(name);
-        vendor.setTags(tags);
+        vendor.setType(type);
         Assert.assertEquals(vendor.getName(), name);
-        Assert.assertEquals(vendor.getTags().size(), tags.size());
-        Assert.assertEquals(vendor.getTags().get(0), tags.get(0));
+        Assert.assertEquals(vendor.getType(), type);
     }
 }

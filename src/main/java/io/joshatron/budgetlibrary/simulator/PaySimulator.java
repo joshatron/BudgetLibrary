@@ -7,11 +7,11 @@ import java.util.ArrayList;
 public class PaySimulator {
 
     public static void main(String[] args) {
-        int startingAmount = 51600;
+        int startingAmount = 350000;
         int years = 2;
         MonthPayment rent = new MonthPayment(-100000, "rent", -1);
-        MonthPayment creditCard = new MonthPayment(-180000, "credit card", 22);
-        WeekPayment income = new WeekPayment(71000, "income", DayOfWeek.TUESDAY);
+        MonthPayment creditCard = new MonthPayment(-250000, "credit card", 22);
+        BiWeeklyPayment income = new BiWeeklyPayment(230000, "income", DayOfWeek.FRIDAY, false);
         ArrayList<Payment> payments = new ArrayList<>();
         payments.add(rent);
         payments.add(creditCard);
