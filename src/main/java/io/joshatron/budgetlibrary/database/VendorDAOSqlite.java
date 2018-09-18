@@ -201,7 +201,6 @@ public class VendorDAOSqlite implements VendorDAO {
 
             if (rs.next()) {
                 Vendor vendor = getVendorFromName(rs.getString("vendor"));
-
                 return vendor;
             }
         } catch (SQLException e) {
@@ -212,11 +211,11 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
-    public String[] getVendorsFromRaw() {
+    public String[] getVendorNames() {
         Set<String> vendors = new HashSet<>();
 
-        String find = "SELECT vendor " +
-                "FROM vendor_namings;";
+        String find = "SELECT name " +
+                "FROM vendors;";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(find);

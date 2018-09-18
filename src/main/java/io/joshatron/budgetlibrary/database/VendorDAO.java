@@ -15,5 +15,5 @@ public interface VendorDAO {
     ArrayList<Vendor> getVendorsWithType(String type);
     Vendor getVendorFromName(String name);
     Vendor getVendorFromRaw(String name);
-    String[] getVendorsFromRaw();
+    String[] getVendorNames();
 }

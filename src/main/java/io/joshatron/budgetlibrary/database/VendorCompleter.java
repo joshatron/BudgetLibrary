@@ -20,7 +20,7 @@ public class VendorCompleter implements Completer {
     @Override
     public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {
         if(parsedLine != null && list != null) {
-            String[] vendors = vendorDAO.getVendorsFromRaw();
+            String[] vendors = vendorDAO.getVendorNames();
             ArrayList<Candidate> candidates = new ArrayList<>();
 
             for(String vendor : vendors) {

@@ -45,7 +45,6 @@ public class App {
                     System.out.println("starting citi import");
                     ArrayList<Transaction> transactions = citi.getTransactions(file);
                     System.out.println("ending citi import");
-                    transactionDAO.addTransactions(transactions);
 
                     ArrayList<Transaction> transactions1 = transactionDAO.getAllTransactions();
 
