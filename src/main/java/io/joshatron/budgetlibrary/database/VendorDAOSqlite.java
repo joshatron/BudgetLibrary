@@ -222,7 +222,28 @@ public class VendorDAOSqlite implements VendorDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                vendors.add(rs.getString("vendor"));
+                vendors.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return vendors.toArray(new String[vendors.size()]);
+    }
+
+    @Override
+    public String[] getVendorTypes() {
+        Set<String> vendors = new HashSet<>();
+
+        String find = "SELECT type " +
+                "FROM vendors;";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(find);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                vendors.add(rs.getString("type"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package io.joshatron.budgetlibrary.imports;
 
 import io.joshatron.budgetlibrary.database.TransactionDAO;
+import io.joshatron.budgetlibrary.database.TypeCompleter;
 import io.joshatron.budgetlibrary.database.VendorCompleter;
 import io.joshatron.budgetlibrary.database.VendorDAO;
 import io.joshatron.budgetlibrary.objects.Timestamp;
@@ -52,6 +53,10 @@ public class ImportDAOCiti implements ImportDAO {
                     .terminal(terminal)
                     .completer(new VendorCompleter(vendorDAO))
                     .build();
+            LineReader typeReader = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .completer(new TypeCompleter(vendorDAO))
+                    .build();
 
             boolean first = true;
             String fullLine = "";
@@ -99,7 +104,9 @@ public class ImportDAOCiti implements ImportDAO {
                             vendor = vendorDAO.getVendorFromName(vendorName);
 
                             if (vendor == null) {
-                                vendor = new Vendor(vendorName, null);
+                                String vendorType = typeReader.readLine("What is the type for " + vendorName + "? ");
+                                vendorType = vendorType.trim();
+                                vendor = new Vendor(vendorName, vendorType);
                             }
                         }
 
