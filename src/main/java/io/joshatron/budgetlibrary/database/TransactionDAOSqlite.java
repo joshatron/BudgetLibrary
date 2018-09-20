@@ -1,5 +1,6 @@
 package io.joshatron.budgetlibrary.database;
 
+import io.joshatron.budgetlibrary.objects.Money;
 import io.joshatron.budgetlibrary.objects.Timestamp;
 import io.joshatron.budgetlibrary.objects.Transaction;
 import io.joshatron.budgetlibrary.objects.Vendor;
@@ -39,7 +40,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
                 //add transaction
                 PreparedStatement stmt = conn.prepareStatement(insert);
                 stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
-                stmt.setInt(2, transaction.getAmount());
+                stmt.setInt(2, transaction.getAmount().getAmountInCents());
                 stmt.setInt(3, vendorID);
                 stmt.executeUpdate();
             } catch (SQLException e) {
@@ -73,7 +74,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
             try {
                 PreparedStatement stmt = conn.prepareStatement(update);
                 stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
-                stmt.setInt(2, transaction.getAmount());
+                stmt.setInt(2, transaction.getAmount().getAmountInCents());
                 stmt.setInt(3, vendorID);
                 stmt.setInt(4, transactionID);
                 stmt.executeUpdate();
@@ -119,7 +120,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
             while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getInt("amount"));
+                transaction.setAmount(new Money(rs.getInt("amount")));
                 transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
 
                 transactions.add(transaction);
@@ -150,7 +151,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
             while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getInt("amount"));
+                transaction.setAmount(new Money(rs.getInt("amount")));
                 transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
 
                 transactions.add(transaction);
@@ -181,7 +182,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
             while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(rs.getInt("amount"));
+                transaction.setAmount(new Money(rs.getInt("amount")));
                 transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
 
                 transactions.add(transaction);

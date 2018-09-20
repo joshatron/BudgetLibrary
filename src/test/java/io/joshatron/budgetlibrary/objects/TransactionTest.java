@@ -10,7 +10,7 @@ public class TransactionTest {
     private Transaction createTransaction() {
         Vendor vendor = new Vendor("Safeway", "grocery");
 
-        Transaction transaction = new Transaction(new Timestamp("2017-09-01"), 10000, vendor);
+        Transaction transaction = new Transaction(new Timestamp("2017-09-01"), new Money(10000), vendor);
 
         return transaction;
     }
@@ -56,10 +56,10 @@ public class TransactionTest {
         Vendor vendor = new Vendor("Safeway", null);
         Transaction transaction = new Transaction();
         transaction.setTimestamp(timestamp);
-        transaction.setAmount(amount);
+        transaction.setAmount(new Money(amount));
         transaction.setVendor(vendor);
         Assert.assertEquals(transaction.getTimestamp().getTimestampString(), timestamp.getTimestampString());
-        Assert.assertEquals(transaction.getAmount(), amount);
+        Assert.assertEquals(transaction.getAmount().getAmountInCents(), amount);
         Assert.assertEquals(transaction.getVendor().getName(), vendor.getName());
     }
 }

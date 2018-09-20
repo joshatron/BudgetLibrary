@@ -4,6 +4,7 @@ import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.database.TypeCompleter;
 import io.joshatron.budgetlibrary.database.VendorCompleter;
 import io.joshatron.budgetlibrary.database.VendorDAO;
+import io.joshatron.budgetlibrary.objects.Money;
 import io.joshatron.budgetlibrary.objects.Timestamp;
 import io.joshatron.budgetlibrary.objects.Transaction;
 import io.joshatron.budgetlibrary.objects.Vendor;
@@ -83,11 +84,11 @@ public class ImportDAOCiti implements ImportDAO {
                         //need to convert double amount to int in cents
                         if(fields[7].length() != 0) {
                             String amount = fields[7].replace(",", "");
-                            transaction.setAmount(Math.round((float) Double.parseDouble(amount) * 100));
+                            transaction.setAmount(new Money(Double.parseDouble(amount)));
                         }
                         else {
                             String amount = fields[9].replace(",", "");
-                            transaction.setAmount(Math.round((float) Double.parseDouble(amount) * -100));
+                            transaction.setAmount(new Money(Double.parseDouble(amount) * -1));
                         }
 
                         if(fields[5].charAt(fields[5].length() - 1) == ' ') {

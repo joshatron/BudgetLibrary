@@ -5,21 +5,21 @@ package io.joshatron.budgetlibrary.objects;
  *
  * Fields include:
  * timestamp: time when transaction took place
- * amount: total amount of transaction, negative amount means money was received, value is in cents
+ * amount: total amount of transaction, negative amount means money was received
  * vendor: vendor for transaction
  */
 public class Transaction {
     private Timestamp timestamp;
-    private int amount;
+    private Money amount;
     private Vendor vendor;
 
     public Transaction() {
         this.timestamp = null;
-        this.amount = 0;
+        this.amount = new Money(0);
         this.vendor = null;
     }
 
-    public Transaction(Timestamp timestamp, int amount, Vendor vendor) {
+    public Transaction(Timestamp timestamp, Money amount, Vendor vendor) {
         this.timestamp = timestamp;
         this.amount = amount;
         this.vendor = vendor;
@@ -43,11 +43,11 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public int getAmount() {
+    public Money getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Money amount) {
         this.amount = amount;
     }
 
@@ -60,7 +60,7 @@ public class Transaction {
     }
 
     public String toString() {
-        return "Date: " + timestamp.getTimestampString() + " Amount: $" + (amount / 100.) + " Vendor: " + vendor.getName();
+        return "Date: " + timestamp.getTimestampString() + " Amount: " + amount.toString() + " Vendor: " + vendor.getName() + " Type: " + vendor.getType();
     }
 }
 

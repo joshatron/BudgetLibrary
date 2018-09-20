@@ -22,7 +22,7 @@ public class SqliteUtils {
                 PreparedStatement stmt = conn.prepareStatement(find);
                 stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
                 stmt.setInt(2, vendorID);
-                stmt.setInt(3, transaction.getAmount());
+                stmt.setInt(3, transaction.getAmount().getAmountInCents());
                 ResultSet rs = stmt.executeQuery();
 
                 if(rs.next()) {
