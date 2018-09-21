@@ -4,6 +4,7 @@ import io.joshatron.budgetlibrary.database.*;
 import io.joshatron.budgetlibrary.imports.ImportDAO;
 import io.joshatron.budgetlibrary.imports.ImportDAOCiti;
 import io.joshatron.budgetlibrary.objects.Transaction;
+import io.joshatron.budgetlibrary.operations.PrintHandler;
 import org.jline.builtins.Completers;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -25,7 +26,7 @@ public class App {
             ImportDAO citi = new ImportDAOCiti(transactionDAO, vendorDAO);
             LineReader commandReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
-                    .completer(new StringsCompleter("import", "exit"))
+                    .completer(new StringsCompleter("import", "print", "exit"))
                     .build();
             LineReader fileReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
@@ -43,14 +44,12 @@ public class App {
                 if(input.equals("import")) {
                     String file = fileReader.readLine("What is the file name? ").trim();
                     System.out.println("starting citi import");
-                    ArrayList<Transaction> transactions = citi.getTransactions(file);
+                    citi.getTransactions(file);
                     System.out.println("ending citi import");
 
-                    ArrayList<Transaction> transactions1 = transactionDAO.getAllTransactions();
-
-                    for (Transaction transaction : transactions1) {
-                        System.out.println(transaction);
-                    }
+                }
+                else if(input.equals("print")) {
+                    PrintHandler.printTransactions(transactionDAO.getAllTransactions());
                 }
                 else if(input.equals("exit")) {
                     break;

@@ -1,7 +1,5 @@
 package io.joshatron.budgetlibrary.objects;
 
-import java.text.DecimalFormat;
-
 public class Money {
     private int amount;
 
@@ -32,7 +30,6 @@ public class Money {
     }
 
     public String toString() {
-        DecimalFormat df = new DecimalFormat( "#,###,###,##0.00" );
         return String.format("$%.2f", amount / 100.);
     }
 }
