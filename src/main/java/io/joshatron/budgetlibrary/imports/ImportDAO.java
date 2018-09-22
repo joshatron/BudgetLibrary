@@ -9,6 +9,6 @@ public interface ImportDAO {
     /*
      * Takes a file and returns a list of transactions to import
      */
-    ArrayList<Transaction> getTransactions(String file);
+    void addTransactions(String file);
     String getName();
 }
