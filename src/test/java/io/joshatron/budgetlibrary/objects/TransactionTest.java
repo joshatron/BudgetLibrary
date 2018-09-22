@@ -3,14 +3,12 @@ package io.joshatron.budgetlibrary.objects;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-
 public class TransactionTest {
 
     private Transaction createTransaction() {
         Vendor vendor = new Vendor("Safeway", "grocery");
 
-        Transaction transaction = new Transaction(new Timestamp("2017-09-01"), new Money(10000), vendor);
+        Transaction transaction = new Transaction(new Timestamp("2017-09-01"), new Money(10000), vendor, "citi");
 
         return transaction;
     }

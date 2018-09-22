@@ -28,6 +28,7 @@ public class DatabaseManager {
                 "id integer PRIMARY KEY AUTOINCREMENT," +
                 "timestamp integer NOT NULL," +
                 "amount integer NOT NULL," +
+                "account text," +
                 "vendor integer NOT NULL);";
 
         String vendorsTable = "CREATE TABLE IF NOT EXISTS vendors (" +

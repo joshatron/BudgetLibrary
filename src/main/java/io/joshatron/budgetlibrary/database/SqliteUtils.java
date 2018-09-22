@@ -16,13 +16,15 @@ public class SqliteUtils {
                     "FROM transactions " +
                     "WHERE timestamp = ? AND " +
                     "vendor = ? AND " +
+                    "account = ? AND " +
                     "amount = ?;";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(find);
                 stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
                 stmt.setInt(2, vendorID);
-                stmt.setInt(3, transaction.getAmount().getAmountInCents());
+                stmt.setString(3, transaction.getAccount());
+                stmt.setInt(4, transaction.getAmount().getAmountInCents());
                 ResultSet rs = stmt.executeQuery();
 
                 if(rs.next()) {

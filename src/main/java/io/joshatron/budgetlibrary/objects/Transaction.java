@@ -12,21 +12,24 @@ public class Transaction {
     private Timestamp timestamp;
     private Money amount;
     private Vendor vendor;
+    private String account;
 
     public Transaction() {
         this.timestamp = null;
         this.amount = new Money(0);
         this.vendor = null;
+        this.account = null;
     }
 
-    public Transaction(Timestamp timestamp, Money amount, Vendor vendor) {
+    public Transaction(Timestamp timestamp, Money amount, Vendor vendor, String account) {
         this.timestamp = timestamp;
         this.amount = amount;
         this.vendor = vendor;
+        this.account = account;
     }
 
     public boolean isValid() {
-        if (timestamp == null || timestamp.getTimestampLong() == -1) {
+        if (timestamp == null || timestamp.getTimestampLong() == -1 || account == null) {
             return false;
         }
         if (vendor == null || !vendor.isValid()) {
@@ -57,6 +60,14 @@ public class Transaction {
 
     public void setVendor(Vendor vendor) {
         this.vendor = vendor;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String toString() {

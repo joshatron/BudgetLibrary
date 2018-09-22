@@ -84,6 +84,7 @@ public class ImportDAOCiti implements ImportDAO {
                     }
 
                     transaction.setVendor(vendor);
+                    transaction.setAccount(getName());
 
                     transactionDAO.addTransaction(transaction);
                 }

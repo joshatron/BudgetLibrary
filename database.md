@@ -10,8 +10,9 @@ There are tables for the transactions and vendors, along with namings of the ven
 | Name            | Data Type      | Parameters                | Description                      |
 |-----------------|----------------|---------------------------|----------------------------------|
 | id              | int            | PRIMARY KEY AUTOINCREMENT | id of each transaction           |
-| timestamp       | string         | NOT NULL                  | Time of the transaction          |
+| timestamp       | long           | NOT NULL                  | Time of the transaction          |
 | amount          | int            | NOT NULL                  | Amount for transaction           |
+| account         | string         | NOT NULL                  | Account transaction was made on  |
 | vendor          | int            | NOT NULL                  | The vendor for the transaction   |
 
 #### Vendors

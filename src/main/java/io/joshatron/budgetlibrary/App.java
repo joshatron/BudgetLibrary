@@ -44,7 +44,7 @@ public class App {
                 if(input.equals("import")) {
                     String file = fileReader.readLine("What is the file name? ").trim();
                     System.out.println("starting citi import");
-                    citi.getTransactions(file);
+                    citi.addTransactions(file);
                     System.out.println("ending citi import");
 
                 }

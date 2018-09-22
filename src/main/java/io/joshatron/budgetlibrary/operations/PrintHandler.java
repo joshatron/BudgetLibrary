@@ -11,11 +11,11 @@ import java.util.ArrayList;
 public class PrintHandler {
 
     public static void printTransactions(ArrayList<Transaction> transactions) {
-        System.out.println("Timestamp      Amount         Vendor                        Type");
-        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("Timestamp      Amount         Account        Vendor                        Type");
+        System.out.println("----------------------------------------------------------------------------------------------");
         for(Transaction transaction : transactions) {
-            System.out.println(String.format("%-15s%-15s%-30s%s", transaction.getTimestamp().getTimestampString(),
-                    transaction.getAmount().toString(), transaction.getVendor().getName(), transaction.getVendor().getType()));
+            System.out.println(String.format("%-15s%-15s%-15s%-30s%s", transaction.getTimestamp().getTimestampString(),
+                    transaction.getAmount().toString(), transaction.getAccount(), transaction.getVendor().getName(), transaction.getVendor().getType()));
         }
     }
 
