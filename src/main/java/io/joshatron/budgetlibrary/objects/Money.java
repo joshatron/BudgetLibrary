@@ -30,6 +30,11 @@ public class Money {
     }
 
     public String toString() {
-        return String.format("$%.2f", amount / 100.);
+        if(amount >= 0) {
+            return String.format("$%.2f", amount / 100.);
+        }
+        else {
+            return String.format("-$%.2f", amount / -100.);
+        }
     }
 }

@@ -7,13 +7,7 @@ import io.joshatron.budgetlibrary.objects.Timestamp;
 import io.joshatron.budgetlibrary.objects.Transaction;
 import io.joshatron.budgetlibrary.objects.Vendor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ImportDAOCiti implements ImportDAO {
 
@@ -77,13 +71,8 @@ public class ImportDAOCiti implements ImportDAO {
                     }
 
                     //get vendor from raw name
-                    Vendor vendor = vendorDAO.getVendorFromRaw(fields[5]);
-                    //if can't find vendor from raw name
-                    if (vendor == null) {
-                        vendor = ImportUtils.getVendorFromRaw(fields[5], vendorDAO);
-                    }
+                    transaction.setVendor(ImportUtils.getVendorFromRaw(fields[5], vendorDAO));
 
-                    transaction.setVendor(vendor);
                     transaction.setAccount(getName());
 
                     transactionDAO.addTransaction(transaction);
@@ -99,6 +88,6 @@ public class ImportDAOCiti implements ImportDAO {
 
     @Override
     public String getName() {
-        return "Citi";
+        return "citi";
     }
 }

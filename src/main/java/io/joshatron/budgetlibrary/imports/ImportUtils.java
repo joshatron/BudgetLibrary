@@ -21,34 +21,36 @@ import java.util.stream.Collectors;
 public class ImportUtils {
 
     public static Vendor getVendorFromRaw(String raw, VendorDAO vendorDAO) {
-        try {
-            Terminal terminal = TerminalBuilder.terminal();
-            LineReader lineReader = LineReaderBuilder.builder()
-                    .terminal(terminal)
-                    .completer(new VendorCompleter(vendorDAO))
-                    .build();
-            LineReader typeReader = LineReaderBuilder.builder()
-                    .terminal(terminal)
-                    .completer(new TypeCompleter(vendorDAO))
-                    .build();
+        Vendor vendor = vendorDAO.getVendorFromRaw(raw);
 
-            String vendorName = lineReader.readLine("What is the vendor for " + raw + "? ");
-            vendorName = vendorName.trim();
-            vendorDAO.addVendorRawMapping(vendorName, raw);
-            Vendor vendor = vendorDAO.getVendorFromName(vendorName);
+        if(vendor == null) {
+            try {
+                Terminal terminal = TerminalBuilder.terminal();
+                LineReader lineReader = LineReaderBuilder.builder()
+                        .terminal(terminal)
+                        .completer(new VendorCompleter(vendorDAO))
+                        .build();
+                LineReader typeReader = LineReaderBuilder.builder()
+                        .terminal(terminal)
+                        .completer(new TypeCompleter(vendorDAO))
+                        .build();
 
-            if (vendor == null) {
-                String vendorType = typeReader.readLine("What is the type for " + vendorName + "? ");
-                vendorType = vendorType.trim();
-                vendor = new Vendor(vendorName, vendorType);
+                String vendorName = lineReader.readLine("What is the vendor for " + raw + "? ");
+                vendorName = vendorName.trim();
+                vendorDAO.addVendorRawMapping(vendorName, raw);
+                vendor = vendorDAO.getVendorFromName(vendorName);
+
+                if (vendor == null) {
+                    String vendorType = typeReader.readLine("What is the type for " + vendorName + "? ");
+                    vendorType = vendorType.trim();
+                    vendor = new Vendor(vendorName, vendorType);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            return vendor;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        return null;
+        return vendor;
     }
 
     public static List<String> getLines(String file) {
