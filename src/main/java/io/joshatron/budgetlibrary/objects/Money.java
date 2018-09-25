@@ -13,6 +13,14 @@ public class Money {
         this.amount = Math.toIntExact(Math.round(amount * 100));
     }
 
+    //constructor for a string representation.
+    //it will remove all $ and , from the input automatically.
+    public Money(String amount) {
+        amount = amount.replace("$", "");
+        amount = amount.replace(",", "");
+        this.amount = Math.toIntExact(Math.round(Double.parseDouble(amount) * 100));
+    }
+
     public int getAmountInCents() {
         return amount;
     }
