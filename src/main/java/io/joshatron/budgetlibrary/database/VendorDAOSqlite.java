@@ -1,6 +1,6 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.objects.Vendor;
+import io.joshatron.budgetlibrary.dtos.Vendor;
 
 import java.sql.*;
 import java.util.ArrayList;

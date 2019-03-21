@@ -28,24 +28,36 @@ public class DatabaseManager {
                 "id integer PRIMARY KEY AUTOINCREMENT," +
                 "timestamp integer NOT NULL," +
                 "amount integer NOT NULL," +
-                "account text," +
+                "account integer NOT NULL," +
                 "vendor integer NOT NULL);";
+
+        String accountsTable = "CREATE TABLE IF NOT EXISTS accounts (" +
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "name text NOT NULL," +
+                "description text);";
 
         String vendorsTable = "CREATE TABLE IF NOT EXISTS vendors (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
                 "name text NOT NULL," +
-                "type text NOT NULL);";
+                "type integer NOT NULL);";
 
         String vendorNamingsTable = "CREATE TABLE IF NOT EXISTS vendor_namings (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
                 "vendor text NOT NULL," +
                 "raw text NOT NULL);";
 
+        String typesTable = "CREATE TABLE IF NOT EXISTS types (" +
+                "id integer PRIMARY KEY AUTOINCREMENT," +
+                "name text NOT NULL," +
+                "description text);";
+
         try {
             Statement stmts = conn.createStatement();
             stmts.executeUpdate(transactionsTable);
+            stmts.executeUpdate(accountsTable);
             stmts.executeUpdate(vendorsTable);
             stmts.executeUpdate(vendorNamingsTable);
+            stmts.executeUpdate(typesTable);
             stmts.close();
 
             System.out.println("Successfully initialized database");

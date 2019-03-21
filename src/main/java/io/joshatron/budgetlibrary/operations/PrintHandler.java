@@ -1,7 +1,7 @@
 package io.joshatron.budgetlibrary.operations;
 
-import io.joshatron.budgetlibrary.objects.Transaction;
-import io.joshatron.budgetlibrary.objects.Vendor;
+import io.joshatron.budgetlibrary.dtos.Transaction;
+import io.joshatron.budgetlibrary.dtos.Vendor;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,5 @@
 package io.joshatron.budgetlibrary.imports;
 
-import io.joshatron.budgetlibrary.objects.Transaction;
-
-import java.util.ArrayList;
-
 public interface ImportDAO {
 
     /*

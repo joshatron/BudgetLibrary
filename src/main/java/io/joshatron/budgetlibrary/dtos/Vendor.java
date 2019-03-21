@@ -1,9 +1,7 @@
-package io.joshatron.budgetlibrary.objects;
-
-import java.util.ArrayList;
+package io.joshatron.budgetlibrary.dtos;
 
 /*
- * Data held by vendor
+ * Data held by a vendor
  *
  * Fields include:
  * name: name of vendor
@@ -11,14 +9,14 @@ import java.util.ArrayList;
  */
 public class Vendor {
     private String name;
-    private String type;
+    private Type type;
 
     public Vendor() {
         this.name = null;
         this.type = null;
     }
 
-    public Vendor(String name, String type) {
+    public Vendor(String name, Type type) {
         this.name = name;
         this.type = type;
     }
@@ -38,11 +36,11 @@ public class Vendor {
         this.name = name;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 }

@@ -1,8 +1,8 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.objects.Timestamp;
-import io.joshatron.budgetlibrary.objects.Transaction;
-import io.joshatron.budgetlibrary.objects.Vendor;
+import io.joshatron.budgetlibrary.dtos.Timestamp;
+import io.joshatron.budgetlibrary.dtos.Transaction;
+import io.joshatron.budgetlibrary.dtos.Vendor;
 
 import java.util.List;
 

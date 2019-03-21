@@ -1,4 +1,4 @@
-package io.joshatron.budgetlibrary.objects;
+package io.joshatron.budgetlibrary.dtos;
 
 import java.text.DateFormat;
 import java.text.ParseException;

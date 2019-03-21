@@ -1,6 +1,6 @@
 package io.joshatron.budgetlibrary.operations;
 
-import io.joshatron.budgetlibrary.objects.Transaction;
+import io.joshatron.budgetlibrary.dtos.Transaction;
 
 /*
  * Wrapper for all the budget classes

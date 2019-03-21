@@ -1,9 +1,9 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.objects.Money;
-import io.joshatron.budgetlibrary.objects.Timestamp;
-import io.joshatron.budgetlibrary.objects.Transaction;
-import io.joshatron.budgetlibrary.objects.Vendor;
+import io.joshatron.budgetlibrary.dtos.Money;
+import io.joshatron.budgetlibrary.dtos.Timestamp;
+import io.joshatron.budgetlibrary.dtos.Transaction;
+import io.joshatron.budgetlibrary.dtos.Vendor;
 
 import java.sql.*;
 import java.util.ArrayList;

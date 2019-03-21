@@ -2,10 +2,9 @@ package io.joshatron.budgetlibrary.imports;
 
 import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.database.VendorDAO;
-import io.joshatron.budgetlibrary.objects.Money;
-import io.joshatron.budgetlibrary.objects.Timestamp;
-import io.joshatron.budgetlibrary.objects.Transaction;
-import io.joshatron.budgetlibrary.objects.Vendor;
+import io.joshatron.budgetlibrary.dtos.Money;
+import io.joshatron.budgetlibrary.dtos.Timestamp;
+import io.joshatron.budgetlibrary.dtos.Transaction;
 
 import java.util.List;
 

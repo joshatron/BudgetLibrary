@@ -1,4 +1,4 @@
-package io.joshatron.budgetlibrary.objects;
+package io.joshatron.budgetlibrary.dtos;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

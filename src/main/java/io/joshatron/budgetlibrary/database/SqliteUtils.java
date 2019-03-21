@@ -1,6 +1,6 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.objects.Transaction;
+import io.joshatron.budgetlibrary.dtos.Transaction;
 
 import java.sql.*;
 

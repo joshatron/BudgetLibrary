@@ -1,4 +1,4 @@
-package io.joshatron.budgetlibrary.objects;
+package io.joshatron.budgetlibrary.dtos;
 
 public class Money {
     private int amount;

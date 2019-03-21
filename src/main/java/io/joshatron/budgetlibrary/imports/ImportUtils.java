@@ -3,8 +3,7 @@ package io.joshatron.budgetlibrary.imports;
 import io.joshatron.budgetlibrary.database.TypeCompleter;
 import io.joshatron.budgetlibrary.database.VendorCompleter;
 import io.joshatron.budgetlibrary.database.VendorDAO;
-import io.joshatron.budgetlibrary.objects.Transaction;
-import io.joshatron.budgetlibrary.objects.Vendor;
+import io.joshatron.budgetlibrary.dtos.Vendor;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.terminal.Terminal;
@@ -14,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
