@@ -108,7 +108,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public ArrayList<Transaction> getAllTransactions() {
+    public List<Transaction> getAllTransactions() {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
         String find = "SELECT timestamp, amount, account, vendors.name as vendor_name " +
@@ -136,7 +136,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public ArrayList<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end) {
+    public List<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
         String find = "SELECT timestamp, amount, account, vendors.name as vendor_name " +
@@ -168,7 +168,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public ArrayList<Transaction> getTransactionsForVendor(Vendor vendor) {
+    public List<Transaction> getTransactionsForVendor(Vendor vendor) {
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
         int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);

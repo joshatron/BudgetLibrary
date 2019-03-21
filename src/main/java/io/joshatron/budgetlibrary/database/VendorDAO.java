@@ -2,7 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.objects.Vendor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface VendorDAO {
 
@@ -11,8 +11,8 @@ public interface VendorDAO {
     void deleteVendor(String name);
     void addVendorRawMapping(String vendor, String raw);
 
-    ArrayList<Vendor> getAllVendors();
-    ArrayList<Vendor> getVendorsWithType(String type);
+    List<Vendor> getAllVendors();
+    List<Vendor> getVendorsWithType(String type);
     Vendor getVendorFromName(String name);
     Vendor getVendorFromRaw(String name);
     String[] getVendorNames();

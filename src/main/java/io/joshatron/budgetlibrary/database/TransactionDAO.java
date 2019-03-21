@@ -4,7 +4,6 @@ import io.joshatron.budgetlibrary.objects.Timestamp;
 import io.joshatron.budgetlibrary.objects.Transaction;
 import io.joshatron.budgetlibrary.objects.Vendor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TransactionDAO {
@@ -14,7 +13,7 @@ public interface TransactionDAO {
     void updateTransaction(Transaction transaction, Transaction oldTransaction);
     void deleteTransaction(Transaction transaction);
 
-    ArrayList<Transaction> getAllTransactions();
-    ArrayList<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end);
-    ArrayList<Transaction> getTransactionsForVendor(Vendor vendor);
+    List<Transaction> getAllTransactions();
+    List<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end);
+    List<Transaction> getTransactionsForVendor(Vendor vendor);
 }

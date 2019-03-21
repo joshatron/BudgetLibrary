@@ -5,6 +5,7 @@ import io.joshatron.budgetlibrary.objects.Vendor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class VendorDAOSqlite implements VendorDAO {
@@ -112,7 +113,7 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
-    public ArrayList<Vendor> getAllVendors() {
+    public List<Vendor> getAllVendors() {
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
 
         String find = "SELECT name, type " +
@@ -137,7 +138,7 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
-    public ArrayList<Vendor> getVendorsWithType(String type) {
+    public List<Vendor> getVendorsWithType(String type) {
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
 
         String find = "SELECT name, type " +
