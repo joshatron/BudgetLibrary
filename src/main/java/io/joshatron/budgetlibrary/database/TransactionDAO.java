@@ -10,9 +10,10 @@ public interface TransactionDAO {
 
     void addTransaction(Transaction transaction);
     void addTransactions(List<Transaction> transactions);
-    void updateTransaction(Transaction transaction, Transaction oldTransaction);
-    void deleteTransaction(Transaction transaction);
+    void updateTransaction(int transactionId, Transaction oldTransaction);
+    void deleteTransaction(int transactionId);
 
+    //TODO: create search transactions
     List<Transaction> getAllTransactions();
     List<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end);
     List<Transaction> getTransactionsForVendor(Vendor vendor);
