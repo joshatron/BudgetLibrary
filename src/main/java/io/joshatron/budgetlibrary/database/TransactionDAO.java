@@ -1,8 +1,6 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.dtos.Timestamp;
-import io.joshatron.budgetlibrary.dtos.Transaction;
-import io.joshatron.budgetlibrary.dtos.Vendor;
+import io.joshatron.budgetlibrary.dtos.*;
 
 import java.util.List;
 
@@ -13,8 +11,6 @@ public interface TransactionDAO {
     void updateTransaction(int transactionId, Transaction oldTransaction);
     void deleteTransaction(int transactionId);
 
-    //TODO: create search transactions
-    List<Transaction> getAllTransactions();
-    List<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end);
-    List<Transaction> getTransactionsForVendor(Vendor vendor);
+    List<Transaction> searchTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type);
+    Transaction getTransactionFromId(int transactionId);
 }

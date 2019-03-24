@@ -1,5 +1,6 @@
 package io.joshatron.budgetlibrary.database;
 
+import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 
 import java.util.List;
@@ -11,9 +12,8 @@ public interface VendorDAO {
     void deleteVendor(int vendorId);
     void addVendorRawMapping(String vendor, String raw);
 
-    //TODO: Add search vendors
-    List<Vendor> getAllVendors();
-    List<Vendor> getVendorsWithType(String type);
+    List<Vendor> searchVendors(String name, Type type);
+    Vendor getVendorFromId(int vendorId);
     Vendor getVendorFromName(String name);
     Vendor getVendorFromRaw(String raw);
     String[] getVendorNames();
