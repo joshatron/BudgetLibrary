@@ -1,9 +1,7 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.dtos.Money;
+import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.dtos.Timestamp;
-import io.joshatron.budgetlibrary.dtos.Transaction;
-import io.joshatron.budgetlibrary.dtos.Vendor;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,24 +11,27 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
     private Connection conn;
     private VendorDAO vendorDAO;
+    private AccountDAO accountDAO;
 
-    public TransactionDAOSqlite(Connection conn, VendorDAO vendorDAO) {
+    public TransactionDAOSqlite(Connection conn, VendorDAO vendorDAO, AccountDAO accountDAO) {
         this.conn = conn;
         this.vendorDAO = vendorDAO;
+        this.accountDAO = accountDAO;
     }
 
     @Override
     public void addTransaction(Transaction transaction) {
-        if (transaction.isValid()) {
+        if(transaction.isValid()) {
             //transaction already in database
-            if (SqliteUtils.getTransactionID(transaction, conn) != -1) {
+            if(SqliteUtils.getTransactionID(transaction, conn) != -1) {
                 return;
             }
-            int vendorID = SqliteUtils.getVendorID(transaction.getVendor().getName(), conn);
-            //if vendor doesn't exist, add it
-            if (vendorID == -1) {
-                vendorDAO.addVendor(transaction.getVendor());
-                vendorID = SqliteUtils.getVendorID(transaction.getVendor().getName(), conn);
+            //Add vendor and account if new
+            if(transaction.getVendor().getId() == -1) {
+                transaction.getVendor().setId(vendorDAO.addVendor(transaction.getVendor()));
+            }
+            if(transaction.getAccount().getId() == -1) {
+                transaction.getAccount().setId(accountDAO.addAccount(transaction.getAccount()));
             }
 
             String insert = "INSERT INTO transactions (timestamp, amount, account, vendor) " +
@@ -41,8 +42,8 @@ public class TransactionDAOSqlite implements TransactionDAO {
                 PreparedStatement stmt = conn.prepareStatement(insert);
                 stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
                 stmt.setInt(2, transaction.getAmount().getAmountInCents());
-                stmt.setString(3, transaction.getAccount());
-                stmt.setInt(4, vendorID);
+                stmt.setInt(3, transaction.getAccount().getId());
+                stmt.setInt(4, transaction.getVendor().getId());
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -56,6 +57,26 @@ public class TransactionDAOSqlite implements TransactionDAO {
         for(Transaction transaction : transactions) {
             addTransaction(transaction);
         }
+    }
+
+    @Override
+    public void updateTransaction(int transactionId, Transaction oldTransaction) {
+
+    }
+
+    @Override
+    public void deleteTransaction(int transactionId) {
+
+    }
+
+    @Override
+    public List<Transaction> searchTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) {
+        return null;
+    }
+
+    @Override
+    public Transaction getTransactionFromId(int transactionId) {
+        return null;
     }
 
     @Override

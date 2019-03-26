@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface VendorDAO {
 
-    void addVendor(Vendor vendor);
+    int addVendor(Vendor vendor);
     void updateVendor(int vendorId, String oldName);
     void deleteVendor(int vendorId);
     void addVendorRawMapping(String vendor, String raw);
