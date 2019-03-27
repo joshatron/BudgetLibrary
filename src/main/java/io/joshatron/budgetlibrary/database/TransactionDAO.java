@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface TransactionDAO {
 
-    void addTransaction(Transaction transaction);
+    int addTransaction(Transaction transaction);
     void addTransactions(List<Transaction> transactions);
-    void updateTransaction(int transactionId, Transaction oldTransaction);
+    void updateTransaction(int transactionId, Transaction newTransaction);
     void deleteTransaction(int transactionId);
 
     List<Transaction> searchTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type);

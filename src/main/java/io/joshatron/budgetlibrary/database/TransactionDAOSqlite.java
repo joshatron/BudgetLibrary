@@ -4,7 +4,6 @@ import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.dtos.Timestamp;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDAOSqlite implements TransactionDAO {
@@ -20,7 +19,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public void addTransaction(Transaction transaction) {
+    public int addTransaction(Transaction transaction) {
         if(transaction.isValid()) {
             //transaction already in database
             if(SqliteUtils.getTransactionID(transaction, conn) != -1) {
@@ -60,27 +59,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public void updateTransaction(int transactionId, Transaction oldTransaction) {
-
-    }
-
-    @Override
-    public void deleteTransaction(int transactionId) {
-
-    }
-
-    @Override
-    public List<Transaction> searchTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) {
-        return null;
-    }
-
-    @Override
-    public Transaction getTransactionFromId(int transactionId) {
-        return null;
-    }
-
-    @Override
-    public void updateTransaction(Transaction transaction, Transaction oldTransaction) {
+    public void updateTransaction(int transactionId, Transaction newTransaction) {
         if(transaction.isValid() && oldTransaction.isValid()) {
             int transactionID = SqliteUtils.getTransactionID(oldTransaction, conn);
             if(transactionID == -1) {
@@ -108,7 +87,7 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public void deleteTransaction(Transaction transaction) {
+    public void deleteTransaction(int transactionId) {
         if(transaction.isValid()) {
             int transactionID = SqliteUtils.getTransactionID(transaction, conn);
             if(transactionID == -1) {
@@ -129,95 +108,17 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     @Override
-    public List<Transaction> getAllTransactions() {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-
-        String find = "SELECT timestamp, amount, account, vendors.name as vendor_name " +
-                "FROM transactions " +
-                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Transaction transaction = new Transaction();
-                transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(new Money(rs.getInt("amount")));
-                transaction.setAccount(rs.getString("account"));
-                transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
-
-                transactions.add(transaction);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
+    public List<Transaction> searchTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) {
+        return null;
     }
 
     @Override
-    public List<Transaction> getTransactionsinTimeRange(Timestamp start, Timestamp end) {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-
-        String find = "SELECT timestamp, amount, account, vendors.name as vendor_name " +
-                "FROM transactions " +
-                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id " +
-                "WHERE timestamp > ? AND " +
-                "timestamp < ?;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            stmt.setLong(1, start.getTimestampLong());
-            stmt.setLong(2, end.getTimestampLong());
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Transaction transaction = new Transaction();
-                transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(new Money(rs.getInt("amount")));
-                transaction.setAccount(rs.getString("account"));
-                transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
-
-                transactions.add(transaction);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
+    public Transaction getTransactionFromId(int transactionId) {
+        return null;
     }
 
-    @Override
-    public List<Transaction> getTransactionsForVendor(Vendor vendor) {
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-
-        int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
-
-        String find = "SELECT timestamp, amount, account, vendors.name as vendor_name " +
-                "FROM transactions " +
-                "LEFT OUTER JOIN vendors on transactions.vendor = vendors.id " +
-                "WHERE vendor = ?;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            stmt.setInt(1, vendorID);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Transaction transaction = new Transaction();
-                transaction.setTimestamp(new Timestamp(rs.getLong("timestamp")));
-                transaction.setAmount(new Money(rs.getInt("amount")));
-                transaction.setAccount(rs.getString("account"));
-                transaction.setVendor(vendorDAO.getVendorFromName(rs.getString("vendor_name")));
-
-                transactions.add(transaction);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
+    private int getTransactionId(Transaction transaction) {
+        return -1;
     }
 
     public Connection getConn() {
