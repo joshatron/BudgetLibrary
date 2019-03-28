@@ -22,8 +22,9 @@ public class TransactionDAOSqlite implements TransactionDAO {
     public int addTransaction(Transaction transaction) {
         if(transaction.isValid()) {
             //transaction already in database
-            if(SqliteUtils.getTransactionID(transaction, conn) != -1) {
-                return;
+            int transactionId = getTransactionId(transaction);
+            if(transactionId != -1) {
+                return transactionId;
             }
             //Add vendor and account if new
             if(transaction.getVendor().getId() == -1) {
@@ -48,7 +49,10 @@ public class TransactionDAOSqlite implements TransactionDAO {
                 e.printStackTrace();
             }
 
+            return getTransactionId(transaction);
         }
+
+        return -1;
     }
 
     @Override
