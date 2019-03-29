@@ -64,13 +64,13 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
     @Override
     public void updateTransaction(int transactionId, Transaction newTransaction) {
-        if(transaction.isValid() && oldTransaction.isValid()) {
-            int transactionID = SqliteUtils.getTransactionID(oldTransaction, conn);
-            if(transactionID == -1) {
-                return;
+        if(newTransaction.isValid() && getTransactionFromId(transactionId) != null) {
+            if(newTransaction.getVendor().getId() == -1) {
+                newTransaction.getVendor().setId(vendorDAO.addVendor(newTransaction.getVendor()));
             }
-
-            int vendorID = SqliteUtils.getVendorID(transaction.getVendor().getName(), conn);
+            if(newTransaction.getAccount().getId() == -1) {
+                newTransaction.getAccount().setId(accountDAO.addAccount(newTransaction.getAccount()));
+            }
 
             String update = "UPDATE transactions " +
                     "SET timestamp = ?, amount = ?, account = ?, vendor = ? " +
@@ -78,11 +78,11 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(update);
-                stmt.setLong(1, transaction.getTimestamp().getTimestampLong());
-                stmt.setInt(2, transaction.getAmount().getAmountInCents());
-                stmt.setString(3, transaction.getAccount());
-                stmt.setInt(4, vendorID);
-                stmt.setInt(5, transactionID);
+                stmt.setLong(1, newTransaction.getTimestamp().getTimestampLong());
+                stmt.setInt(2, newTransaction.getAmount().getAmountInCents());
+                stmt.setInt(3, newTransaction.getAccount().getId());
+                stmt.setInt(4, newTransaction.getVendor().getId());
+                stmt.setInt(5, transactionId);
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
