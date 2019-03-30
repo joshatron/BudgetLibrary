@@ -92,18 +92,13 @@ public class TransactionDAOSqlite implements TransactionDAO {
 
     @Override
     public void deleteTransaction(int transactionId) {
-        if(transaction.isValid()) {
-            int transactionID = SqliteUtils.getTransactionID(transaction, conn);
-            if(transactionID == -1) {
-                return;
-            }
-
+        if(getTransactionFromId(transactionId) != null) {
             String delete = "DELETE FROM transactions " +
                     "WHERE id = ?;";
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(delete);
-                stmt.setInt(1, transactionID);
+                stmt.setInt(1, transactionId);
                 stmt.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
