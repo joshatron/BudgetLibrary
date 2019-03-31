@@ -6,6 +6,7 @@ import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.exception.ErrorCode;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDAOSqlite implements TransactionDAO {
@@ -86,12 +87,42 @@ public class TransactionDAOSqlite implements TransactionDAO {
     }
 
     private boolean transactionExists(int transactionId) {
+        String search = "SELECT * FROM transactions " +
+                "WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(search);
+            stmt.setInt(1, transactionId);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
     @Override
     public List<Transaction> getTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) throws  BudgetLibraryException {
-        return null;
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        String search = "SELECT * FROM transactions " +
+                "WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(search);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transactions;
     }
 
     public Connection getConn() {
