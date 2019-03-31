@@ -42,13 +42,8 @@ public class Transaction {
     }
 
     public boolean isValid() {
-        if (timestamp == null || timestamp.getTimestampLong() == -1 || account == null) {
-            return false;
-        }
-        if (vendor == null || !vendor.isValid()) {
-            return false;
-        }
-        return true;
+        return id != -1 && timestamp != null && amount != null && vendor != null && vendor.isValid() &&
+               account != null && account.isValid();
     }
 
     public Timestamp getTimestamp() {

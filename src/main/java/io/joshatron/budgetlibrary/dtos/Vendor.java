@@ -16,7 +16,7 @@ public class Vendor {
 
     public Vendor() {
         this.id = -1;
-        this.name = null;
+        this.name = "";
         this.type = null;
     }
 
@@ -33,10 +33,7 @@ public class Vendor {
     }
 
     public boolean isValid() {
-        if(name == null || name.equals("") || type == null || type.equals("")) {
-            return false;
-        }
-        return true;
+        return id != -1 && !name.isEmpty() && type != null;
     }
 
     public String getName() {

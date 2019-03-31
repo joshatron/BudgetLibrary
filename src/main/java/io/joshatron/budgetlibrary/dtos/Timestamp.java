@@ -12,10 +12,6 @@ import java.util.Date;
 public class Timestamp {
     private long timestamp;
 
-    public Timestamp() {
-        timestamp = -1;
-    }
-
     public Timestamp(long timestamp) {
         this.timestamp = timestamp;
     }

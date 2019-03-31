@@ -1,16 +1,15 @@
 package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.*;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 
 import java.util.List;
 
 public interface TransactionDAO {
 
-    int addTransaction(Transaction transaction);
-    void addTransactions(List<Transaction> transactions);
-    void updateTransaction(int transactionId, Transaction newTransaction);
-    void deleteTransaction(int transactionId);
+    Transaction createTransaction(Timestamp timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException;
+    void updateTransaction(int transactionId, Transaction newTransaction) throws BudgetLibraryException;
+    void deleteTransaction(int transactionId) throws BudgetLibraryException;
 
-    List<Transaction> searchTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type);
-    Transaction getTransactionFromId(int transactionId);
+    List<Transaction> getTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) throws BudgetLibraryException;
 }

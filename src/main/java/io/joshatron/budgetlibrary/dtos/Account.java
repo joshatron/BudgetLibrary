@@ -32,6 +32,10 @@ public class Account {
         this.description = description;
     }
 
+    public boolean isValid() {
+        return id != -1 && !name.isEmpty() && !description.isEmpty();
+    }
+
     public int getId() {
         return id;
     }
