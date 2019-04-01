@@ -2,20 +2,16 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 
 import java.util.List;
 
 public interface VendorDAO {
 
-    int addVendor(Vendor vendor);
-    void updateVendor(int vendorId, String oldName);
-    void deleteVendor(int vendorId);
-    void addVendorRawMapping(String vendor, String raw);
+    Vendor createVendor(String name, Type type) throws BudgetLibraryException;
+    void createVendorRawMapping(Vendor vendor, String raw) throws BudgetLibraryException;
+    void updateVendor(int vendorId, Vendor newVendor) throws BudgetLibraryException;
+    void deleteVendor(int vendorId) throws BudgetLibraryException;
 
-    List<Vendor> searchVendors(String name, Type type);
-    Vendor getVendorFromId(int vendorId);
-    Vendor getVendorFromName(String name);
-    Vendor getVendorFromRaw(String raw);
-    String[] getVendorNames();
-    String[] getVendorTypes();
+    List<Vendor> getVendors(String name, Type type, String raw) throws BudgetLibraryException;
 }

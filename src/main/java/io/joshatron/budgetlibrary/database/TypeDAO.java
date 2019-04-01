@@ -1,16 +1,15 @@
 package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.Type;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 
 import java.util.List;
 
 public interface TypeDAO {
 
-    public void addType(Type type);
-    public void updateType(int typeId, Type newType);
-    public void deleteType(int typeId);
+    Type createType(String name, String description) throws BudgetLibraryException;
+    void updateType(int typeId, Type newType) throws BudgetLibraryException;
+    void deleteType(int typeId) throws BudgetLibraryException;
 
-    public List<Type> searchTypes(String name, String description);
-    public Type getTypeById(int typeId);
-    public Type getTypeByName(String name);
+    List<Type> getTypes(String name, String description) throws BudgetLibraryException;
 }
