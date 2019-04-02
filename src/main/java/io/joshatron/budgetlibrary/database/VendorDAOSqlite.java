@@ -3,6 +3,7 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,28 +21,27 @@ public class VendorDAOSqlite implements VendorDAO {
 
     @Override
     public Vendor createVendor(String name, Type type) throws BudgetLibraryException {
-        if (vendor.isValid()) {
-            //vendor already in database
-            if (getVendorFromName(vendor.getName()) != null) {
-                return;
-            }
-
-            String insertVendor = "INSERT INTO vendors (name,type) " +
-                    "VALUES (?,?);";
-
-            try {
-                //add vendor
-                PreparedStatement stmt = conn.prepareStatement(insertVendor);
-                stmt.setString(1, vendor.getName());
-                stmt.setString(2, vendor.getType());
-                stmt.executeUpdate();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+        if(name == null || name.isEmpty() || type == null || !type.isValid()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR);
         }
-        return null;
+        if (!getVendors(name, type, null).isEmpty()) {
+            throw new BudgetLibraryException(ErrorCode.VENDOR_EXISTS);
+        }
+
+        String insertVendor = "INSERT INTO vendors (name,type) " +
+                "VALUES (?,?);";
+
+        try {
+            //add vendor
+            PreparedStatement stmt = conn.prepareStatement(insertVendor);
+            stmt.setString(1, name);
+            stmt.setInt(2, type.getId());
+            stmt.executeUpdate();
+
+            return getVendors(name, type, null).get(0);
+        } catch (SQLException e) {
+            throw new BudgetLibraryException(ErrorCode.DATABASE_ERROR);
+        }
     }
 
     @Override

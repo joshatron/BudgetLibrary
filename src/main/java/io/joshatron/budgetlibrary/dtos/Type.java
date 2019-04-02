@@ -32,6 +32,10 @@ public class Type {
         this.description = description;
     }
 
+    public boolean isValid() {
+        return id != -1 && name != null && !name.isEmpty() && description != null && !description.isEmpty();
+    }
+
     public int getId() {
         return id;
     }

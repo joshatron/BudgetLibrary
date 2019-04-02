@@ -22,7 +22,6 @@ public class TransactionDAOSqlite implements TransactionDAO {
         if(timestamp == null || amount == null || vendor == null || !vendor.isValid() || account == null || !account.isValid()) {
             throw new BudgetLibraryException(ErrorCode.INVALID_TRANSACTION);
         }
-        //transaction already in database
         if(!getTransactions(timestamp, timestamp, amount, amount, vendor, account, null).isEmpty()) {
             throw new BudgetLibraryException(ErrorCode.TRANSACTION_EXISTS);
         }
@@ -38,11 +37,11 @@ public class TransactionDAOSqlite implements TransactionDAO {
             stmt.setInt(3, account.getId());
             stmt.setInt(4, vendor.getId());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        return getTransactions(timestamp, timestamp, amount, amount, vendor, account, null).get(0);
+            return getTransactions(timestamp, timestamp, amount, amount, vendor, account, null).get(0);
+        } catch (SQLException e) {
+            throw new BudgetLibraryException(ErrorCode.DATABASE_ERROR);
+        }
     }
 
     @Override
