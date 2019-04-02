@@ -1,6 +1,8 @@
 package io.joshatron.budgetlibrary.database;
 
+import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
-    public void addVendor(Vendor vendor) {
+    public Vendor createVendor(String name, Type type) throws BudgetLibraryException {
         if (vendor.isValid()) {
             //vendor already in database
             if (getVendorFromName(vendor.getName()) != null) {
@@ -39,10 +41,26 @@ public class VendorDAOSqlite implements VendorDAO {
             }
 
         }
+        return null;
     }
 
     @Override
-    public void updateVendor(Vendor vendor, String oldName) {
+    public void createVendorRawMapping(Vendor vendor, String raw) throws BudgetLibraryException {
+         try {
+            String insertVendor = "INSERT INTO vendor_namings (vendor, raw) " +
+                    "VALUES (?,?);";
+
+            PreparedStatement stmt = conn.prepareStatement(insertVendor);
+            stmt.setString(1, vendor);
+            stmt.setString(2, raw);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateVendor(int vendorId, Vendor newVendor) throws BudgetLibraryException {
         if (vendor.isValid()) {
             //vendor is not in database
             if (getVendorFromName(vendor.getName()) == null) {
@@ -71,7 +89,7 @@ public class VendorDAOSqlite implements VendorDAO {
 
     //TODO: needs to be written to not leave abandoned transactions
     @Override
-    public void deleteVendor(String name) {
+    public void deleteVendor(int vendorId) throws BudgetLibraryException {
         if(name != null) {
             int vendorID = SqliteUtils.getVendorID(name, conn);
 
@@ -97,23 +115,7 @@ public class VendorDAOSqlite implements VendorDAO {
     }
 
     @Override
-    public void addVendorRawMapping(String vendor, String raw) {
-
-        try {
-            String insertVendor = "INSERT INTO vendor_namings (vendor, raw) " +
-                    "VALUES (?,?);";
-
-            PreparedStatement stmt = conn.prepareStatement(insertVendor);
-            stmt.setString(1, vendor);
-            stmt.setString(2, raw);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public List<Vendor> getAllVendors() {
+    public List<Vendor> getVendors(String name, Type type, String raw) throws BudgetLibraryException {
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
 
         String find = "SELECT name, type " +
@@ -135,122 +137,7 @@ public class VendorDAOSqlite implements VendorDAO {
         }
 
         return vendors;
-    }
-
-    @Override
-    public List<Vendor> getVendorsWithType(String type) {
-        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
-
-        String find = "SELECT name, type " +
-                "FROM vendors " +
-                "WHERE type = ?;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            stmt.setString(1, type);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Vendor vendor = new Vendor();
-                vendor.setName(rs.getString("name"));
-                vendor.setType(rs.getString("type"));
-
-                vendors.add(vendor);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return vendors;
-    }
-
-    @Override
-    public Vendor getVendorFromName(String name) {
-        String find = "SELECT name, type " +
-                "FROM vendors " +
-                "WHERE name = ?;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            stmt.setString(1, name);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Vendor vendor = new Vendor();
-                vendor.setName(rs.getString("name"));
-                vendor.setType(rs.getString("type"));
-
-                return vendor;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         return null;
-    }
-
-    @Override
-    public Vendor getVendorFromRaw(String name) {
-        String find = "SELECT vendor " +
-                "FROM vendor_namings " +
-                "WHERE raw = ?;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            stmt.setString(1, name);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Vendor vendor = getVendorFromName(rs.getString("vendor"));
-                return vendor;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    @Override
-    public String[] getVendorNames() {
-        Set<String> vendors = new HashSet<>();
-
-        String find = "SELECT name " +
-                "FROM vendors;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                vendors.add(rs.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return vendors.toArray(new String[vendors.size()]);
-    }
-
-    @Override
-    public String[] getVendorTypes() {
-        Set<String> vendors = new HashSet<>();
-
-        String find = "SELECT type " +
-                "FROM vendors;";
-
-        try {
-            PreparedStatement stmt = conn.prepareStatement(find);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                vendors.add(rs.getString("type"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return vendors.toArray(new String[vendors.size()]);
     }
 
     public Connection getConnection() {
