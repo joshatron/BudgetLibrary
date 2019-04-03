@@ -43,7 +43,7 @@ public class DatabaseManager {
 
         String vendorNamingsTable = "CREATE TABLE IF NOT EXISTS vendor_namings (" +
                 "id integer PRIMARY KEY AUTOINCREMENT," +
-                "vendor text NOT NULL," +
+                "vendor integer NOT NULL," +
                 "raw text NOT NULL);";
 
         String typesTable = "CREATE TABLE IF NOT EXISTS types (" +

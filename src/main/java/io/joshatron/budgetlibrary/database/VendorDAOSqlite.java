@@ -7,9 +7,7 @@ import io.joshatron.budgetlibrary.exception.ErrorCode;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class VendorDAOSqlite implements VendorDAO {
 
@@ -46,72 +44,107 @@ public class VendorDAOSqlite implements VendorDAO {
 
     @Override
     public void createVendorRawMapping(Vendor vendor, String raw) throws BudgetLibraryException {
-         try {
-            String insertVendor = "INSERT INTO vendor_namings (vendor, raw) " +
-                    "VALUES (?,?);";
+         if(vendor == null || !vendor.isValid() || raw == null || raw.isEmpty()) {
+             throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR_MAPPING);
+         }
 
+        String insertVendor = "INSERT INTO vendor_namings (vendor, raw) " +
+                "VALUES (?,?);";
+
+         try {
             PreparedStatement stmt = conn.prepareStatement(insertVendor);
-            stmt.setString(1, vendor);
+            stmt.setInt(1, vendor.getId());
             stmt.setString(2, raw);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+             throw new BudgetLibraryException(ErrorCode.DATABASE_ERROR);
         }
     }
 
     @Override
     public void updateVendor(int vendorId, Vendor newVendor) throws BudgetLibraryException {
-        if (vendor.isValid()) {
-            //vendor is not in database
-            if (getVendorFromName(vendor.getName()) == null) {
-                return;
-            }
+        if (!newVendor.isValid() || !vendorExists(vendorId)) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR);
+        }
 
-            String update = "UPDATE vendors " +
-                    "SET name = ?, type = ? " +
-                    "WHERE name = ?;";
+        String update = "UPDATE vendors " +
+                "SET name = ?, type = ? " +
+                "WHERE id = ?;";
 
-            try {
-                //add vendor
-                PreparedStatement stmt = conn.prepareStatement(update);
-                stmt.setString(1, vendor.getName());
-                stmt.setString(2, vendor.getType());
-                stmt.setString(3, oldName);
-                stmt.executeUpdate();
+        try {
+            //add vendor
+            PreparedStatement stmt = conn.prepareStatement(update);
+            stmt.setString(1, newVendor.getName());
+            stmt.setInt(2, newVendor.getType().getId());
+            stmt.setInt(3, vendorId);
+            stmt.executeUpdate();
 
-                int vendorID = SqliteUtils.getVendorID(vendor.getName(), conn);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
+        } catch (SQLException e) {
+            throw new BudgetLibraryException(ErrorCode.DATABASE_ERROR);
         }
     }
 
-    //TODO: needs to be written to not leave abandoned transactions
     @Override
     public void deleteVendor(int vendorId) throws BudgetLibraryException {
-        if(name != null) {
-            int vendorID = SqliteUtils.getVendorID(name, conn);
-
-            String deleteRawNames = "DELETE FROM vendor_namings " +
-                    "WHERE vendor_id = ?;";
-            String delete = "DELETE FROM vendors " +
-                    "WHERE name = ?;";
-
-            try {
-                //delete raw mappings
-                PreparedStatement rawNamesStmt = conn.prepareStatement(deleteRawNames);
-                rawNamesStmt.setInt(1, vendorID);
-                rawNamesStmt.executeUpdate();
-
-                //delete vendor
-                PreparedStatement deleteStmt = conn.prepareStatement(delete);
-                deleteStmt.setString(1, name);
-                deleteStmt.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        if(!vendorExists(vendorId)) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR);
         }
+        if(vendorHasTransactions(vendorId)) {
+            throw new BudgetLibraryException(ErrorCode.VENDOR_HAS_DEPENDANT_TRANSACTIONS);
+        }
+
+        String deleteRawNames = "DELETE FROM vendor_namings " +
+                "WHERE vendor = ?;";
+        String delete = "DELETE FROM vendors " +
+                "WHERE id = ?;";
+
+        try {
+            //delete raw mappings
+            PreparedStatement rawNamesStmt = conn.prepareStatement(deleteRawNames);
+            rawNamesStmt.setInt(1, vendorId);
+            rawNamesStmt.executeUpdate();
+
+            //delete vendor
+            PreparedStatement deleteStmt = conn.prepareStatement(delete);
+            deleteStmt.setInt(1, vendorId);
+            deleteStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new BudgetLibraryException(ErrorCode.DATABASE_ERROR);
+        }
+    }
+
+    private boolean vendorExists(int vendorId) {
+        String search = "SELECT * FROM vendors " +
+                "WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(search);
+            stmt.setInt(1, vendorId);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private boolean vendorHasTransactions(int vendorId) {
+        String search = "SELECT * FROM transactions " +
+                "WHERE vendor = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(search);
+            stmt.setInt(1, vendorId);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     @Override
