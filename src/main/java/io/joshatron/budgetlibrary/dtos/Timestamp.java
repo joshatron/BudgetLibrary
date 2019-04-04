@@ -5,10 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/*
- * Class to store information about timestamp
- * Will be able to import and export in several formats
- */
 public class Timestamp {
     private long timestamp;
 
