@@ -13,13 +13,13 @@ import javax.persistence.*;
 public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
     @Column
     private String name;
     @ManyToOne
     private Type type;
 
     public boolean isValid() {
-        return id != -1 && !name.isEmpty() && type != null;
+        return name != null && !name.isEmpty() && type != null && type.isValid();
     }
 }

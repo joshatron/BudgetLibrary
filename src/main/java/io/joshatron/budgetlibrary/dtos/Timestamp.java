@@ -1,11 +1,15 @@
 package io.joshatron.budgetlibrary.dtos;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Entity
 public class Timestamp {
+    @Column
     private long timestamp;
 
     public Timestamp(long timestamp) {

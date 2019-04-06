@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
     @Column
     private Timestamp timestamp;
     @Column
@@ -24,8 +24,7 @@ public class Transaction {
     private Account account;
 
     public boolean isValid() {
-        return id != -1 && timestamp != null && amount != null && vendor != null && vendor.isValid() &&
-               account != null && account.isValid();
+        return timestamp != null && amount != null && vendor != null && vendor.isValid() && account != null && account.isValid();
     }
 
     public String toString() {

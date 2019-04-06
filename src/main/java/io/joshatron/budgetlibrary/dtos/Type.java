@@ -13,13 +13,13 @@ import javax.persistence.*;
 public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
     @Column
     private String name;
     @Column
     private String description;
 
     public boolean isValid() {
-        return id != -1 && name != null && !name.isEmpty() && description != null && !description.isEmpty();
+        return name != null && !name.isEmpty() && description != null && !description.isEmpty();
     }
 }

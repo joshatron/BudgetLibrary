@@ -14,13 +14,13 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
     @Column
     private String name;
     @Column
     private String description;
 
     public boolean isValid() {
-        return id != -1 && !name.isEmpty() && !description.isEmpty();
+        return name != null && !name.isEmpty() && description != null && !description.isEmpty();
     }
 }
