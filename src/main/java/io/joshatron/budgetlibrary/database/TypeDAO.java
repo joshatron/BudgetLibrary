@@ -2,14 +2,49 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import org.hibernate.Session;
 
 import java.util.List;
 
-public interface TypeDAO {
+public class TypeDAO {
 
-    Type createType(String name, String description) throws BudgetLibraryException;
-    void updateType(int typeId, Type newType) throws BudgetLibraryException;
-    void deleteType(int typeId) throws BudgetLibraryException;
+    public static Type createType(Session session, String name, String description) throws BudgetLibraryException {
+        org.hibernate.Transaction tx = session.beginTransaction();
 
-    List<Type> getTypes(String name, String description) throws BudgetLibraryException;
+        Type type = new Type();
+        type.setName(name);
+        type.setDescription(description);
+        session.save(type);
+
+        tx.commit();
+
+        return type;
+    }
+
+    public static void updateType(Session session, int typeId, String name, String description) throws BudgetLibraryException {
+        org.hibernate.Transaction tx = session.beginTransaction();
+
+        Type type = session.get(Type.class, typeId);
+        if(name != null) {
+            type.setName(name);
+        }
+        if(description != null) {
+            type.setDescription(description);
+        }
+
+        tx.commit();
+    }
+
+    public static void deleteType(Session session, int typeId) throws BudgetLibraryException {
+        org.hibernate.Transaction tx = session.beginTransaction();
+
+        Type type = session.get(Type.class, typeId);
+        session.delete(type);
+
+        tx.commit();
+    }
+
+    public static List<Type> getTypes(Session session, String name, String description) throws BudgetLibraryException {
+        return null;
+    }
 }
