@@ -23,14 +23,22 @@ public class TransactionDAO {
         return transaction;
     }
 
-    public static void updateTransaction(Session session, int transactionId, Transaction newTransaction) throws BudgetLibraryException {
+    public static void updateTransaction(Session session, int transactionId, Timestamp timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Transaction transaction = session.get(Transaction.class, transactionId);
-        transaction.setTimestamp(newTransaction.getTimestamp());
-        transaction.setAmount(newTransaction.getAmount());
-        transaction.setVendor(newTransaction.getVendor());
-        transaction.setAccount(newTransaction.getAccount());
+        if(timestamp != null) {
+            transaction.setTimestamp(timestamp);
+        }
+        if(amount != null) {
+            transaction.setAmount(amount);
+        }
+        if(vendor != null) {
+            transaction.setVendor(vendor);
+        }
+        if(account != null) {
+            transaction.setAccount(account);
+        }
 
         tx.commit();
     }
