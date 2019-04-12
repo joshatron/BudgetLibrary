@@ -14,9 +14,9 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column
+    @OneToOne
     private Timestamp timestamp;
-    @Column
+    @OneToOne
     private Money amount;
     @ManyToOne
     private Vendor vendor;
