@@ -1,5 +1,6 @@
-package io.joshatron.budgetlibrary.database;
+package io.joshatron.budgetlibrary.cli;
 
+import io.joshatron.budgetlibrary.database.TypeDAO;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import org.hibernate.Session;

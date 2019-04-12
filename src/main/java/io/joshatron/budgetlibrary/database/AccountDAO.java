@@ -45,7 +45,7 @@ public class AccountDAO {
 
     }
 
-    public static List<Account> getAccounts(Session session, String name, String description) {
+    public static List<Account> getAccounts(Session session, String name, String description) throws BudgetLibraryException {
         return null;
     }
 }

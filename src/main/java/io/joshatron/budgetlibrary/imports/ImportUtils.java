@@ -1,7 +1,7 @@
 package io.joshatron.budgetlibrary.imports;
 
-import io.joshatron.budgetlibrary.database.TypeCompleter;
-import io.joshatron.budgetlibrary.database.VendorCompleter;
+import io.joshatron.budgetlibrary.cli.TypeCompleter;
+import io.joshatron.budgetlibrary.cli.VendorCompleter;
 import io.joshatron.budgetlibrary.database.VendorDAO;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import org.jline.reader.LineReader;
