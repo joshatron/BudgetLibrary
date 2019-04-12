@@ -1,5 +1,8 @@
 package io.joshatron.budgetlibrary.database;
 
+import io.joshatron.budgetlibrary.dtos.Type;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import org.hibernate.Session;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
@@ -11,20 +14,26 @@ import java.util.List;
 
 public class TypeCompleter implements Completer {
 
-    private VendorDAO vendorDAO;
+    private Session session;
 
-    public TypeCompleter(VendorDAO vendorDAO) {
-        this.vendorDAO = vendorDAO;
+    public TypeCompleter(Session session) {
+        this.session = session;
     }
 
     @Override
     public void complete(LineReader lineReader, ParsedLine parsedLine, List<Candidate> list) {
         if(parsedLine != null && list != null) {
-            String[] vendors = vendorDAO.getVendorTypes();
+            List<Type> types = null;
+            try {
+                types = TypeDAO.getTypes(session, null, null);
+            }
+            catch(BudgetLibraryException e) {
+                e.printStackTrace();
+            }
             ArrayList<Candidate> candidates = new ArrayList<>();
 
-            for(String vendor : vendors) {
-                candidates.add(new Candidate(AttributedString.stripAnsi(vendor), vendor, null, null, null, null, true));
+            for(Type type : types) {
+                candidates.add(new Candidate(AttributedString.stripAnsi(type.getName()), type.getName(), null, null, null, null, true));
             }
 
             list.addAll(candidates);
