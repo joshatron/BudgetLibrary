@@ -40,10 +40,10 @@ public abstract class ImportDAO {
 
         while(!line.isEmpty()) {
             if(line.charAt(0) == '"') {
-                int index = line.indexOf("\",", 1);
+                int index = line.indexOf("\"", 1);
                 elements.add(line.substring(1, index));
                 line = line.substring(index + 1);
-                if(line.charAt(0) == ',') {
+                if(!line.isEmpty() && line.charAt(0) == ',') {
                     line = line.substring(1);
                 }
             }
