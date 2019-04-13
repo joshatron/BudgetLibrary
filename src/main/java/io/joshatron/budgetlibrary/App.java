@@ -18,7 +18,11 @@ import java.util.ArrayList;
 
 public class App {
     public static void main(String[] args) {
-        try {
+        ImportDAOAlliant importDAOAlliant = new ImportDAOAlliant();
+
+        importDAOAlliant.addTransactions("alliant.csv");
+
+        /*try {
             Connection conn = DatabaseManager.getConnection();
             VendorDAO vendorDAO = new VendorDAOSqlite(conn);
             TransactionDAO transactionDAO = new TransactionDAOSqlite(conn, vendorDAO);
@@ -78,6 +82,6 @@ public class App {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

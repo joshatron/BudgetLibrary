@@ -2,7 +2,6 @@ package io.joshatron.budgetlibrary.cli;
 
 import io.joshatron.budgetlibrary.database.AccountDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
-import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import org.hibernate.Session;
 import org.jline.reader.Candidate;
