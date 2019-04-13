@@ -1,7 +1,5 @@
 package io.joshatron.budgetlibrary.imports;
 
-import io.joshatron.budgetlibrary.dtos.Transaction;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,9 +10,7 @@ import java.util.stream.Collectors;
 
 public abstract class ImportDAO {
 
-    public List<Transaction> addTransactions(String file) {
-        ArrayList<Transaction> transactions = new ArrayList<>();
-
+    public void addTransactions(String file) {
         try {
             BufferedReader br = Files.newBufferedReader(Paths.get(file));
             List<String> lines = br.lines().collect(Collectors.toList());
@@ -26,13 +22,11 @@ public abstract class ImportDAO {
                     continue;
                 }
 
-                transactions.add(createTransaction(getElements(line)));
+                createTransaction(getElements(line));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return transactions;
     }
 
     private String[] getElements(String line) {
@@ -65,7 +59,7 @@ public abstract class ImportDAO {
         return 0;
     }
 
-    abstract Transaction createTransaction(String[] elements);
+    abstract void createTransaction(String[] elements);
 
     abstract String getName();
 }

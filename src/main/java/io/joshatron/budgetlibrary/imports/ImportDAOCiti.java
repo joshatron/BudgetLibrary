@@ -1,12 +1,9 @@
 package io.joshatron.budgetlibrary.imports;
 
-import io.joshatron.budgetlibrary.dtos.Transaction;
-
 public class ImportDAOCiti extends ImportDAO {
 
     @Override
-    Transaction createTransaction(String[] elements) {
-        return null;
+    void createTransaction(String[] elements) {
     }
 
     @Override
