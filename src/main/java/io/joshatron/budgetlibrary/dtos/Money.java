@@ -42,6 +42,10 @@ public class Money {
         this.amount = Math.toIntExact(Math.round(amount * 100));
     }
 
+    public void reverseSign() {
+        amount = amount * -1;
+    }
+
     public String toString() {
         if(amount >= 0) {
             return String.format("$%.2f", amount / 100.);

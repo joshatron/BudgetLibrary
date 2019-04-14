@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 
 public abstract class ImportDAO {
 
-    public void addTransactions(String file) {
+    public List<TransactionImport> addTransactions(String file) {
+        ArrayList<TransactionImport> transactions = new ArrayList<>();
+
         try {
             BufferedReader br = Files.newBufferedReader(Paths.get(file));
             List<String> lines = br.lines().collect(Collectors.toList());
@@ -22,11 +24,16 @@ public abstract class ImportDAO {
                     continue;
                 }
 
-                createTransaction(getElements(line));
+                TransactionImport transaction = createTransaction(getElements(line));
+                if(transaction != null) {
+                    transactions.add(transaction);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return transactions;
     }
 
     private String[] getElements(String line) {
@@ -59,7 +66,7 @@ public abstract class ImportDAO {
         return 0;
     }
 
-    abstract void createTransaction(String[] elements);
+    abstract TransactionImport createTransaction(String[] elements);
 
     abstract String getName();
 }
