@@ -25,7 +25,7 @@ public class ImportDAOCiti extends ImportDAO {
     }
 
     @Override
-    public int getInitialLinesSkipped() {
+    protected int getInitialLinesSkipped() {
         return 1;
     }
 

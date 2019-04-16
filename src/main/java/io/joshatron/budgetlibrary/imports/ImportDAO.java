@@ -62,11 +62,11 @@ public abstract class ImportDAO {
         return elements.toArray(new String[0]);
     }
 
-    public int getInitialLinesSkipped() {
+    protected int getInitialLinesSkipped() {
         return 0;
     }
 
-    abstract TransactionImport createTransaction(String[] elements);
+    protected abstract TransactionImport createTransaction(String[] elements);
 
-    abstract String getName();
+    public abstract String getName();
 }
