@@ -2,6 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -9,6 +10,10 @@ import java.util.List;
 public class AccountDAO {
 
     public static Account createAccount(Session session, String name, String description) throws BudgetLibraryException {
+        if(session == null || name == null || name.isEmpty() || (description != null && description.isEmpty())) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_ACCOUNT);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = new Account();

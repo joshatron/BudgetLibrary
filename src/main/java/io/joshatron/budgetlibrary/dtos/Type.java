@@ -20,6 +20,6 @@ public class Type {
     private String description;
 
     public boolean isValid() {
-        return name != null && !name.isEmpty() && description != null && !description.isEmpty();
+        return name != null && !name.isEmpty() && (description == null || (description != null && !description.isEmpty()));
     }
 }

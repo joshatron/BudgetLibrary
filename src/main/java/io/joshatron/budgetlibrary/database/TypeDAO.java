@@ -2,6 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -9,6 +10,10 @@ import java.util.List;
 public class TypeDAO {
 
     public static Type createType(Session session, String name, String description) throws BudgetLibraryException {
+        if(session == null || name == null || name.isEmpty() || (description != null && description.isEmpty())) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TYPE);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = new Type();

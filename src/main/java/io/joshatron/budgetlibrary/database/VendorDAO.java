@@ -3,6 +3,7 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -10,6 +11,10 @@ import java.util.List;
 public class VendorDAO {
 
     public static Vendor createVendor(Session session, String name, Type type) throws BudgetLibraryException {
+        if(session == null || name == null || name.isEmpty() || type == null || !type.isValid()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TYPE);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Vendor vendor = new Vendor();

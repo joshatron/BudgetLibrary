@@ -2,6 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -9,6 +10,10 @@ import java.util.List;
 public class TransactionDAO {
 
     public static Transaction createTransaction(Session session, Timestamp timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException {
+        if(session == null || timestamp == null || amount == null || vendor == null || !vendor.isValid() || account == null || !account.isValid()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TRANSACTION);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Transaction transaction = new Transaction();

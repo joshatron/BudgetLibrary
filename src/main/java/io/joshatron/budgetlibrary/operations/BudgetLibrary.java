@@ -1,6 +1,11 @@
 package io.joshatron.budgetlibrary.operations;
 
+import io.joshatron.budgetlibrary.database.AccountDAO;
+import io.joshatron.budgetlibrary.database.TransactionDAO;
+import io.joshatron.budgetlibrary.database.TypeDAO;
+import io.joshatron.budgetlibrary.database.VendorDAO;
 import io.joshatron.budgetlibrary.dtos.*;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.imports.ImportDAO;
 import io.joshatron.budgetlibrary.imports.ImportDAOAlliant;
 import io.joshatron.budgetlibrary.imports.ImportDAOCiti;
@@ -41,20 +46,24 @@ public class BudgetLibrary {
         importers.add(new ImportDAOAlliant());
     }
 
-    public void createTransaction(Timestamp timestamp, Money amount, Vendor vendor, Account account) {
+    public void createTransaction(Timestamp timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException {
+        TransactionDAO.createTransaction(session, timestamp, amount, vendor, account);
     }
 
-    public void createVendor(String name, Type type) {
+    public void createVendor(String name, Type type) throws BudgetLibraryException {
+        VendorDAO.createVendor(session, name, type);
     }
 
     public Vendor getVendorFromRaw(String raw) {
         return null;
     }
 
-    public void createType(String name, String description) {
+    public void createType(String name, String description) throws BudgetLibraryException {
+        TypeDAO.createType(session, name, description);
     }
 
-    public void createAccount(String name, String description) {
+    public void createAccount(String name, String description) throws BudgetLibraryException {
+        AccountDAO.createAccount(session, name, description);
     }
 
     public void importTransactions(String fileName, String importerName) {
