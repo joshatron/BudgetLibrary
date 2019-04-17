@@ -4,6 +4,7 @@ import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.imports.ImportDAO;
 import io.joshatron.budgetlibrary.imports.ImportDAOAlliant;
 import io.joshatron.budgetlibrary.imports.ImportDAOCiti;
+import io.joshatron.budgetlibrary.imports.TransactionImport;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -59,7 +60,8 @@ public class BudgetLibrary {
     public void importTransactions(String fileName, String importerName) {
         for(ImportDAO importer : importers) {
             if(importer.getName().equalsIgnoreCase(importerName)) {
-                importer.addTransactions(fileName);
+                List<TransactionImport> transactionImports = importer.addTransactions(fileName);
+                //Add transactions
                 break;
             }
         }

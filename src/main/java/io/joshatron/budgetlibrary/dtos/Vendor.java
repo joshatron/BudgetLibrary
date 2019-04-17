@@ -15,7 +15,7 @@ public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column
+    @Column(unique = true, nullable = false)
     private String name;
     @ManyToOne
     private Type type;

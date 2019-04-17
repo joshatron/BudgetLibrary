@@ -1,11 +1,11 @@
 package io.joshatron.budgetlibrary.dtos;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 
-@Entity
+@Embeddable
 public class Money {
-    @Column
+    @Column(nullable = false)
     private int amount;
 
     //constructor in cents
