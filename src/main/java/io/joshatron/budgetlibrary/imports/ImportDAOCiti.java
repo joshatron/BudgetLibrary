@@ -6,7 +6,7 @@ import io.joshatron.budgetlibrary.dtos.Timestamp;
 public class ImportDAOCiti extends ImportDAO {
 
     @Override
-    public TransactionImport createTransaction(String[] elements) {
+    protected TransactionImport createTransaction(String[] elements) {
         if(elements.length >= 4 && elements[0].equalsIgnoreCase("Cleared")) {
             Timestamp timestamp = new Timestamp(elements[1]);
             Money amount;
@@ -18,7 +18,7 @@ public class ImportDAOCiti extends ImportDAO {
                 amount = new Money(elements[4]);
                 amount.reverseSign();
             }
-            return new TransactionImport(timestamp, amount, elements[2], getName());
+            return new TransactionImport(timestamp, amount, elements[2]);
         }
 
         return null;

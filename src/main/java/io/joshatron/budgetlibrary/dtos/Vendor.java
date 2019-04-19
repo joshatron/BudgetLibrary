@@ -19,7 +19,7 @@ public class Vendor {
     private String name;
     @ManyToOne
     private Type type;
-    @OneToMany
+    @ElementCollection
     private ArrayList<String> rawMappings;
 
     public boolean isValid() {

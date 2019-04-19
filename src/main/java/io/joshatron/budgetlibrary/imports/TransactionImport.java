@@ -11,5 +11,4 @@ public class TransactionImport {
     private Timestamp timestamp;
     private Money amount;
     private String rawVendor;
-    private String account;
 }

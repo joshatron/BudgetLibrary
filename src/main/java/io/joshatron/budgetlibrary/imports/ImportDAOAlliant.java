@@ -6,9 +6,9 @@ import io.joshatron.budgetlibrary.dtos.Timestamp;
 public class ImportDAOAlliant extends ImportDAO {
 
     @Override
-    TransactionImport createTransaction(String[] elements) {
+    protected TransactionImport createTransaction(String[] elements) {
         if(elements.length == 4) {
-            return new TransactionImport(new Timestamp(elements[0]), new Money(elements[2]), elements[1], getName());
+            return new TransactionImport(new Timestamp(elements[0]), new Money(elements[2]), elements[1]);
         }
 
         return null;
