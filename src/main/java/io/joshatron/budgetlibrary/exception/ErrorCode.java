@@ -4,5 +4,6 @@ public enum ErrorCode {
     INVALID_TRANSACTION,
     INVALID_VENDOR,
     INVALID_TYPE,
-    INVALID_ACCOUNT
+    INVALID_ACCOUNT,
+    IO_ERROR
 }

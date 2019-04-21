@@ -63,7 +63,7 @@ public abstract class BudgetLibrary {
         return VendorDAO.getVendors(session, name, type, null);
     }
 
-    protected abstract Vendor getVendorFromRaw(String raw);
+    protected abstract Vendor getVendorFromRaw(String raw) throws BudgetLibraryException;
 
     public void createType(String name, String description) throws BudgetLibraryException {
         TypeDAO.createType(session, name, description);
@@ -73,22 +73,17 @@ public abstract class BudgetLibrary {
         return TypeDAO.getTypes(session, name, description);
     }
 
-    public void createAccount(String name, String description) throws BudgetLibraryException {
-        AccountDAO.createAccount(session, name, description);
+    public void createAccount(String name, String bank, String description) throws BudgetLibraryException {
+        AccountDAO.createAccount(session, name, bank, description);
     }
 
-    public List<Account> getAccounts(String name, String description) throws BudgetLibraryException {
-        return AccountDAO.getAccounts(session, name, description);
+    public List<Account> getAccounts(String name, String bank, String description) throws BudgetLibraryException {
+        return AccountDAO.getAccounts(session, name, bank, description);
     }
 
-    public void importTransactions(String fileName, String importerName, String accountName) throws BudgetLibraryException {
-        if(!getAccounts(accountName, null).isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_ACCOUNT);
-        }
-        Account account = getAccounts(accountName, null).get(0);
-
+    public void importTransactions(String fileName, Account account) throws BudgetLibraryException {
         for(ImportDAO importer : importers) {
-            if(importer.getName().equalsIgnoreCase(importerName)) {
+            if(importer.getName().equalsIgnoreCase(account.getBank())) {
                 List<TransactionImport> transactionImports = importer.addTransactions(fileName);
 
                 for(TransactionImport transactionImport : transactionImports) {
@@ -98,5 +93,9 @@ public abstract class BudgetLibrary {
                 break;
             }
         }
+    }
+
+    public Session getSession() {
+        return session;
     }
 }

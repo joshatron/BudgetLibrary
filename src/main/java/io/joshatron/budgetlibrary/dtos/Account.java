@@ -17,10 +17,12 @@ public class Account {
     private long id;
     @Column(unique = true, nullable = false)
     private String name;
+    @Column(nullable = false)
+    private String bank;
     @Column
     private String description;
 
     public boolean isValid() {
-        return name != null && !name.isEmpty() && ((description == null) || (description != null && !description.isEmpty()));
+        return name != null && !name.isEmpty() && bank != null && !bank.isEmpty() && (description == null || !description.isEmpty());
     }
 }

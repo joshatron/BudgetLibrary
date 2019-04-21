@@ -1,7 +1,7 @@
 package io.joshatron.budgetlibrary;
 
+import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.operations.BudgetLibrary;
 import io.joshatron.budgetlibrary.operations.BudgetLibraryCLI;
 import io.joshatron.budgetlibrary.operations.PrintHandler;
 import org.jline.builtins.Completers;
@@ -16,11 +16,11 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) {
         try {
-            BudgetLibrary budgetLibrary = new BudgetLibraryCLI();
+            BudgetLibraryCLI budgetLibrary = new BudgetLibraryCLI();
 
             LineReader importReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
-                    .completer(new StringsCompleter("alliant", "citi"))
+                    .completer(budgetLibrary.getAccountCompleter())
                     .build();
             LineReader commandReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
@@ -40,9 +40,10 @@ public class App {
                 String input = commandReader.readLine("> ").trim().toLowerCase();
 
                 if(input.equals("import")) {
-                    String account = importReader.readLine("Which bank account is being imported? ").trim();
+                    String accountName = importReader.readLine("Which bank account is being imported? ").trim();
+                    Account account = budgetLibrary.getAccounts(accountName, null, null).get(0);
                     String file = fileReader.readLine("What is the file name? ").trim();
-                    budgetLibrary.importTransactions(file, account, account);
+                    budgetLibrary.importTransactions(file, account);
                 }
                 else if(input.equals("print")) {
                     PrintHandler.printTransactions(budgetLibrary.getTransactions(null, null, null, null, null, null, null));

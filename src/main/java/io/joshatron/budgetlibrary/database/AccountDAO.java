@@ -9,8 +9,8 @@ import java.util.List;
 
 public class AccountDAO {
 
-    public static Account createAccount(Session session, String name, String description) throws BudgetLibraryException {
-        if(session == null || name == null || name.isEmpty() || (description != null && description.isEmpty())) {
+    public static Account createAccount(Session session, String name, String bank, String description) throws BudgetLibraryException {
+        if(session == null || name == null || name.isEmpty() || bank == null || bank.isEmpty() || (description != null && description.isEmpty())) {
             throw new BudgetLibraryException(ErrorCode.INVALID_ACCOUNT);
         }
 
@@ -18,6 +18,7 @@ public class AccountDAO {
 
         Account account = new Account();
         account.setName(name);
+        account.setBank(bank);
         account.setDescription(description);
         session.save(account);
 
@@ -26,12 +27,15 @@ public class AccountDAO {
         return account;
     }
 
-    public static void updateAccount(Session session, int accountId, String name, String description) throws BudgetLibraryException {
+    public static void updateAccount(Session session, int accountId, String name, String bank, String description) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = session.get(Account.class, accountId);
         if(name != null) {
             account.setName(name);
+        }
+        if(bank != null) {
+            account.setBank(bank);
         }
         if(description != null) {
             account.setDescription(description);
@@ -50,7 +54,7 @@ public class AccountDAO {
 
     }
 
-    public static List<Account> getAccounts(Session session, String name, String description) throws BudgetLibraryException {
+    public static List<Account> getAccounts(Session session, String name, String bank, String description) throws BudgetLibraryException {
         return null;
     }
 }
