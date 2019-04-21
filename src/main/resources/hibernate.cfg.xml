@@ -13,9 +13,11 @@
         <property name="show_sql">true</property>
         <!--  Drop and re-create the database schema on startup  -->
         <property name="hbm2ddl.auto">create-drop</property>
-        <mapping class="io.joshatron.budgetlibrary.dtos.Transaction"/>
         <mapping class="io.joshatron.budgetlibrary.dtos.Account"/>
-        <mapping class="io.joshatron.budgetlibrary.dtos.Vendor"/>
+        <mapping class="io.joshatron.budgetlibrary.dtos.Money"/>
+        <mapping class="io.joshatron.budgetlibrary.dtos.Timestamp"/>
+        <mapping class="io.joshatron.budgetlibrary.dtos.Transaction"/>
         <mapping class="io.joshatron.budgetlibrary.dtos.Type"/>
+        <mapping class="io.joshatron.budgetlibrary.dtos.Vendor"/>
     </session-factory>
 </hibernate-configuration>

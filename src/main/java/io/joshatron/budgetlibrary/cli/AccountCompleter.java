@@ -26,7 +26,7 @@ public class AccountCompleter implements Completer {
         if(parsedLine != null && list != null) {
             List<Account> accounts = null;
             try {
-                accounts = AccountDAO.getAccounts(session, null, null);
+                accounts = AccountDAO.getAccounts(session, null, null, null);
             }
             catch(BudgetLibraryException e) {
                 e.printStackTrace();

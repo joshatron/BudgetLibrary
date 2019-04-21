@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,7 +20,7 @@ public class Vendor {
     @ManyToOne
     private Type type;
     @ElementCollection
-    private ArrayList<String> rawMappings;
+    private List<String> rawMappings;
 
     public boolean isValid() {
         return name != null && !name.isEmpty() && type != null && type.isValid();
