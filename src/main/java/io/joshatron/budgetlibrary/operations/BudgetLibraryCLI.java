@@ -28,8 +28,13 @@ public class BudgetLibraryCLI extends BudgetLibrary {
 
                 String vendorName = reader.readLine("What is the vendor for this transaction? ").trim();
 
-                //TODO: handle new vendor
-                return VendorDAO.getVendors(getSession(), vendorName, null, null).get(0);
+                List<Vendor> foundVendors = VendorDAO.getVendors(getSession(), vendorName, null, null);
+                if(foundVendors != null && !foundVendors.isEmpty()) {
+                    return foundVendors.get(0);
+                }
+                else {
+                    //TODO: handle new vendor
+                }
             }
             catch(IOException e) {
                 throw new BudgetLibraryException(ErrorCode.IO_ERROR);
