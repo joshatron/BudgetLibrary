@@ -10,10 +10,6 @@ import java.util.List;
 public class TypeDAO {
 
     public static Type createType(Session session, String name, String description) throws BudgetLibraryException {
-        if(session == null || name == null || name.isEmpty() || (description != null && description.isEmpty())) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_TYPE);
-        }
-
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = new Type();

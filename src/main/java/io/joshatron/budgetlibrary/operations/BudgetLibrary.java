@@ -48,6 +48,10 @@ public abstract class BudgetLibrary {
     }
 
     public void createTransaction(Timestamp timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException {
+        if(timestamp == null || amount == null || vendor == null || !vendor.isValid() || account == null || !account.isValid()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TRANSACTION);
+        }
+
         TransactionDAO.createTransaction(session, timestamp, amount, vendor, account);
     }
 
@@ -56,6 +60,10 @@ public abstract class BudgetLibrary {
     }
 
     public void createVendor(String name, Type type) throws BudgetLibraryException {
+        if(session == null || name == null || name.isEmpty() || type == null || !type.isValid()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR);
+        }
+
         VendorDAO.createVendor(session, name, type);
     }
 
@@ -66,6 +74,10 @@ public abstract class BudgetLibrary {
     protected abstract Vendor getVendorFromRaw(String raw) throws BudgetLibraryException;
 
     public void createType(String name, String description) throws BudgetLibraryException {
+        if(name == null || name.isEmpty() || (description != null && description.isEmpty())) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TYPE);
+        }
+
         TypeDAO.createType(session, name, description);
     }
 
@@ -74,6 +86,10 @@ public abstract class BudgetLibrary {
     }
 
     public void createAccount(String name, String bank, String description) throws BudgetLibraryException {
+        if(name == null || name.isEmpty() || bank == null || bank.isEmpty() || (description != null && description.isEmpty())) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_ACCOUNT);
+        }
+
         AccountDAO.createAccount(session, name, bank, description);
     }
 

@@ -11,10 +11,6 @@ import java.util.List;
 public class VendorDAO {
 
     public static Vendor createVendor(Session session, String name, Type type) throws BudgetLibraryException {
-        if(session == null || name == null || name.isEmpty() || type == null || !type.isValid()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR);
-        }
-
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Vendor vendor = new Vendor();
