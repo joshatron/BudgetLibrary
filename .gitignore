@@ -2,5 +2,6 @@
 *.iml
 *.csv
 *.CSV
-budget.db
+*.db
+dependency-reduced-pom.xml
 target/
