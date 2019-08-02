@@ -3,7 +3,9 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO {
@@ -50,6 +52,46 @@ public class AccountDAO {
     }
 
     public static List<Account> getAccounts(Session session, String name, String bank, String description) throws BudgetLibraryException {
-        return null;
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("from Account a");
+        if(isValid(name)) {
+            queryString.append(" where");
+
+            boolean first = true;
+            if(isValid(name)) {
+                first = false;
+                queryString.append(" a.name=:name");
+            }
+            if(isValid(bank)) {
+                if(!first) {
+                    queryString.append(" and");
+                }
+                first = false;
+                queryString.append(" a.bank=:bank");
+            }
+            if(isValid(description)) {
+                if(!first) {
+                    queryString.append(" and");
+                }
+                queryString.append(" a.description=:description");
+            }
+        }
+
+        Query query = session.createQuery(queryString.toString());
+        if(isValid(name)) {
+            query.setParameter("name", name);
+        }
+        if(isValid(bank)) {
+            query.setParameter("bank", bank);
+        }
+        if(isValid(description)) {
+            query.setParameter("description", description);
+        }
+
+        return query.list();
+    }
+
+    private static boolean isValid(String string) {
+        return string != null && !string.isEmpty();
     }
 }
