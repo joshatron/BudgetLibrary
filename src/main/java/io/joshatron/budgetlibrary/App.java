@@ -1,6 +1,8 @@
 package io.joshatron.budgetlibrary;
 
 import io.joshatron.budgetlibrary.dtos.Account;
+import io.joshatron.budgetlibrary.dtos.Type;
+import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.operations.BudgetLibraryCLI;
 import io.joshatron.budgetlibrary.operations.PrintHandler;
@@ -35,6 +37,12 @@ public class App {
             System.out.println("| Budget Manager |");
             System.out.println("------------------");
             System.out.println();
+
+            budgetLibrary.createType("grocery", "grocery stores");
+            Type type = budgetLibrary.getTypes(null, null).get(0);
+            budgetLibrary.createVendor("vons", type);
+            Vendor vendor = budgetLibrary.getVendors(null, null).get(0);
+            System.out.println(vendor);
 
             while (true) {
                 String input = commandReader.readLine("> ").trim().toLowerCase();

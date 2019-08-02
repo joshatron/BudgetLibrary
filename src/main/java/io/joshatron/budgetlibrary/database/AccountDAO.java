@@ -5,7 +5,6 @@ import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO {
@@ -24,7 +23,7 @@ public class AccountDAO {
         return account;
     }
 
-    public static void updateAccount(Session session, int accountId, String name, String bank, String description) throws BudgetLibraryException {
+    public static void updateAccount(Session session, long accountId, String name, String bank, String description) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = session.get(Account.class, accountId);
@@ -41,7 +40,7 @@ public class AccountDAO {
         tx.commit();
     }
 
-    public static void deleteAccount(Session session, int accountId) throws BudgetLibraryException {
+    public static void deleteAccount(Session session, long accountId) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = session.get(Account.class, accountId);
@@ -54,7 +53,7 @@ public class AccountDAO {
     public static List<Account> getAccounts(Session session, String name, String bank, String description) throws BudgetLibraryException {
         StringBuilder queryString = new StringBuilder();
         queryString.append("from Account a");
-        if(isValid(name)) {
+        if(isValid(name) || isValid(bank) || isValid(description)) {
             queryString.append(" where");
 
             boolean first = true;
@@ -77,7 +76,7 @@ public class AccountDAO {
             }
         }
 
-        Query query = session.createQuery(queryString.toString());
+        Query<Account> query = session.createQuery(queryString.toString(), Account.class);
         if(isValid(name)) {
             query.setParameter("name", name);
         }
