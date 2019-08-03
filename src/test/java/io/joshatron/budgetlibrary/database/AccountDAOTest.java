@@ -11,7 +11,7 @@ import java.util.List;
 public class AccountDAOTest {
     Session session;
 
-    @BeforeMethod
+    @BeforeTest
     public void initialize() {
         session = DAOUtils.createSession();
     }
@@ -19,6 +19,11 @@ public class AccountDAOTest {
     @AfterMethod
     public void deleteAfter() {
         DAOUtils.cleanUp(session);
+    }
+
+    @AfterTest
+    public void closeSession() {
+        session.close();
     }
 
     @Test
@@ -33,6 +38,7 @@ public class AccountDAOTest {
             Assert.assertEquals(accounts.size(), 1);
             Assert.assertEquals(accounts.get(0), account);
         } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
         }
     }
 

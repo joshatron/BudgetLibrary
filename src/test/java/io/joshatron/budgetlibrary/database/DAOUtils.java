@@ -22,6 +22,5 @@ public class DAOUtils {
         session.createQuery("delete from Type").executeUpdate();
         session.createQuery("delete from Account").executeUpdate();
         tx.commit();
-        session.close();
     }
 }

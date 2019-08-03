@@ -23,7 +23,7 @@ public class TypeDAO {
         return type;
     }
 
-    public static void updateType(Session session, int typeId, String name, String description) throws BudgetLibraryException {
+    public static void updateType(Session session, long typeId, String name, String description) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = session.get(Type.class, typeId);
@@ -37,7 +37,7 @@ public class TypeDAO {
         tx.commit();
     }
 
-    public static void deleteType(Session session, int typeId) throws BudgetLibraryException {
+    public static void deleteType(Session session, long typeId) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = session.get(Type.class, typeId);
