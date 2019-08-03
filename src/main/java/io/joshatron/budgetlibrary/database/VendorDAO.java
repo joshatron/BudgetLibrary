@@ -32,7 +32,7 @@ public class VendorDAO {
         tx.commit();
     }
 
-    public static void updateVendor(Session session, int vendorId, String newName, Type newType) throws BudgetLibraryException {
+    public static void updateVendor(Session session, long vendorId, String newName, Type newType) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Vendor vendor = session.get(Vendor.class, vendorId);
@@ -46,7 +46,7 @@ public class VendorDAO {
         tx.commit();
     }
 
-    public static void deleteVendor(Session session, int vendorId) throws BudgetLibraryException {
+    public static void deleteVendor(Session session, long vendorId) throws BudgetLibraryException {
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Vendor vendor = session.get(Vendor.class, vendorId);
@@ -66,28 +66,29 @@ public class VendorDAO {
 
     public static List<Vendor> getVendors(Session session, String name, Type type, String raw) throws BudgetLibraryException {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("from Vendor v inner join v.type as t");
-        if(isValid(name) || isValid(raw)) {
+        queryString.append("from Vendor v");
+        if(isValid(name)  || (type != null && type.isValid()) || isValid(raw)) {
             queryString.append(" where");
 
             if(isValid(name)) {
                 queryString.append(" v.name=:name");
             }
-            if(type.isValid()) {
+            if(type != null && type.isValid()) {
                 if(isValid(name)) {
                     queryString.append(" and");
                 }
-                queryString.append(" t.id=:id");
+                queryString.append(" v.type=:type");
             }
         }
 
 
+        System.out.println(queryString.toString());
         Query<Vendor> query = session.createQuery(queryString.toString(), Vendor.class);
         if(isValid(name)) {
             query.setParameter("name", name);
         }
-        if(type.isValid()) {
-            query.setParameter("id", type.getId());
+        if(type != null && type.isValid()) {
+            query.setParameter("type", type);
         }
 
         return query.list();
