@@ -94,7 +94,7 @@ public abstract class BudgetLibrary {
     }
 
     public List<Account> getAccounts(String name, String bank, String description) throws BudgetLibraryException {
-        return AccountDAO.getAccounts(session, name, bank, description);
+        return AccountDAO.getAllAccounts(session);
     }
 
     public void importTransactions(String fileName, Account account) throws BudgetLibraryException {
