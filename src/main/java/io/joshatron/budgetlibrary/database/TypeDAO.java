@@ -11,6 +11,13 @@ import java.util.List;
 public class TypeDAO {
 
     public static Type createType(Session session, String name, String description) throws BudgetLibraryException {
+        if(session == null || !session.isOpen()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
+        }
+        if(name == null || name.isEmpty() || description == null || description.isEmpty()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = new Type();
@@ -24,6 +31,10 @@ public class TypeDAO {
     }
 
     public static void updateType(Session session, long typeId, String name, String description) throws BudgetLibraryException {
+        if(session == null || !session.isOpen()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = session.get(Type.class, typeId);
@@ -38,6 +49,10 @@ public class TypeDAO {
     }
 
     public static void deleteType(Session session, long typeId) throws BudgetLibraryException {
+        if(session == null || !session.isOpen()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
+        }
+
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = session.get(Type.class, typeId);
@@ -46,36 +61,49 @@ public class TypeDAO {
         tx.commit();
     }
 
-    public static List<Type> getTypes(Session session, String name, String description) throws BudgetLibraryException {
-        StringBuilder queryString = new StringBuilder();
-        queryString.append("from Type t");
-        if(isValid(name) || isValid(description)) {
-            queryString.append(" where");
-
-            if(isValid(name)) {
-                queryString.append(" t.name=:name");
-            }
-            if(isValid(description)) {
-                if(isValid(name)) {
-                    queryString.append(" and");
-                }
-                queryString.append(" t.description=:description");
-            }
+    public static List<Type> getAllTypes(Session session) throws BudgetLibraryException {
+        if(session == null || !session.isOpen()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
         }
 
-
-        Query<Type> query = session.createQuery(queryString.toString(), Type.class);
-        if(isValid(name)) {
-            query.setParameter("name", name);
-        }
-        if(isValid(description)) {
-            query.setParameter("description", description);
-        }
-
+        Query<Type> query = session.createQuery("from Type t", Type.class);
         return query.list();
     }
 
-    private static boolean isValid(String string) {
-        return string != null && !string.isEmpty();
+    public static Type getTypeByName(Session session, String name) throws BudgetLibraryException {
+        if(session == null || !session.isOpen()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
+        }
+        if(name == null || name.isEmpty()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
+        }
+
+        Query<Type> query = session.createQuery("from Type a where a.name=:name", Type.class);
+        query.setParameter("name", name);
+        List<Type> types = query.list();
+
+        if(types.size() == 1) {
+            return types.get(0);
+        }
+        else if(types.isEmpty()) {
+            throw new BudgetLibraryException(ErrorCode.NO_RESULT_FOUND);
+        }
+        else {
+            throw new BudgetLibraryException(ErrorCode.TOO_MANY_RESULTS_FOUND);
+        }
+    }
+
+    public static List<Type> searchTypesByName(Session session, String name) throws BudgetLibraryException {
+        if(session == null || !session.isOpen()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
+        }
+        if(name == null || name.isEmpty()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
+        }
+
+        Query<Type> query = session.createQuery("from Type a where a.name like :name", Type.class);
+        query.setParameter("name", "%" + name + "%");
+
+        return query.list();
     }
 }

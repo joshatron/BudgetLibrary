@@ -36,7 +36,7 @@ public class TypeDAOTest {
             Assert.assertEquals(type.getName(), "groceries");
             Assert.assertEquals(type.getDescription(), "food");
 
-            List<Type> types = TypeDAO.getTypes(session, null, null);
+            List<Type> types = TypeDAO.getAllTypes(session);
             Assert.assertEquals(types.size(), 1);
             Assert.assertEquals(types.get(0), type);
         } catch(BudgetLibraryException e) {
@@ -50,7 +50,7 @@ public class TypeDAOTest {
             Type type = TypeDAO.createType(session, "groceries", "food");
             TypeDAO.updateType(session, type.getId(), "market", "stuff");
 
-            List<Type> types = TypeDAO.getTypes(session, null, null);
+            List<Type> types = TypeDAO.getAllTypes(session);
             Assert.assertEquals(types.size(), 1);
             Assert.assertEquals(types.get(0).getName(), "market");
             Assert.assertEquals(types.get(0).getDescription(), "stuff");
@@ -65,7 +65,7 @@ public class TypeDAOTest {
             Type type = TypeDAO.createType(session, "groceries", "food");
             TypeDAO.deleteType(session, type.getId());
 
-            List<Type> types = TypeDAO.getTypes(session, null, null);
+            List<Type> types = TypeDAO.getAllTypes(session);
             Assert.assertEquals(types.size(), 0);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
@@ -73,36 +73,44 @@ public class TypeDAOTest {
     }
 
     @Test
-    public void getTypesByName() {
+    public void getAllTypesBasic() {
         try {
             TypeDAO.createType(session, "groceries", "food");
             TypeDAO.createType(session, "market", "food");
             TypeDAO.createType(session, "gas", "oil");
 
-            List<Type> types = TypeDAO.getTypes(session, "groceries", null);
-            Assert.assertEquals(types.size(), 1);
-            types = TypeDAO.getTypes(session, "market", null);
-            Assert.assertEquals(types.size(), 1);
-            types = TypeDAO.getTypes(session, "gas", null);
-            Assert.assertEquals(types.size(), 1);
+            List<Type> types = TypeDAO.getAllTypes(session);
+            Assert.assertEquals(types.size(), 3);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
         }
     }
 
     @Test
-    public void getTypesByDescription() {
+    public void getTypeByNameBasic() {
         try {
             TypeDAO.createType(session, "groceries", "food");
             TypeDAO.createType(session, "market", "food");
             TypeDAO.createType(session, "gas", "oil");
-            TypeDAO.createType(session, "amazon", "stuff");
 
-            List<Type> types = TypeDAO.getTypes(session, null, "food");
+            Type type = TypeDAO.getTypeByName(session, "market");
+            Assert.assertEquals(type.getName(), "market");
+            Assert.assertEquals(type.getDescription(), "food");
+        } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
+        }
+    }
+
+    @Test
+    public void searchTypeByNameBasic() {
+        try {
+            TypeDAO.createType(session, "groceries", "food");
+            TypeDAO.createType(session, "market", "food");
+            TypeDAO.createType(session, "gas", "oil");
+
+            List<Type> types = TypeDAO.searchTypesByName(session, "g");
             Assert.assertEquals(types.size(), 2);
-            types = TypeDAO.getTypes(session, null, "oil");
-            Assert.assertEquals(types.size(), 1);
-            types = TypeDAO.getTypes(session, null, "stuff");
+            types = TypeDAO.searchTypesByName(session, "ark");
             Assert.assertEquals(types.size(), 1);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());

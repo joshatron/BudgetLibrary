@@ -26,7 +26,7 @@ public class TypeCompleter implements Completer {
         if(parsedLine != null && list != null) {
             List<Type> types = null;
             try {
-                types = TypeDAO.getTypes(session, null, null);
+                types = TypeDAO.getAllTypes(session);
             }
             catch(BudgetLibraryException e) {
                 e.printStackTrace();

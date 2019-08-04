@@ -82,7 +82,7 @@ public abstract class BudgetLibrary {
     }
 
     public List<Type> getTypes(String name, String description) throws BudgetLibraryException {
-        return TypeDAO.getTypes(session, name, description);
+        return TypeDAO.getAllTypes(session);
     }
 
     public void createAccount(String name, String bank, String description) throws BudgetLibraryException {
