@@ -15,12 +15,10 @@ public class AccountDAO {
     }
 
     public static Account createAccount(Session session, String name, String bank, String description) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
-        if(name == null || name.isEmpty() || bank == null || bank.isEmpty() || description == null || description.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
-        }
+        DAOValidator.validateSession(session);
+        DAOValidator.validateString(name);
+        DAOValidator.validateString(bank);
+        DAOValidator.validateString(description);
 
         org.hibernate.Transaction tx = session.beginTransaction();
 
@@ -36,24 +34,20 @@ public class AccountDAO {
     }
 
     public static void updateAccount(Session session, long accountId, String name, String bank, String description) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
+        DAOValidator.validateSession(session);
 
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = session.get(Account.class, accountId);
-        if(account == null) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_ACCOUNT);
-        }
+        DAOValidator.validateAccount(account);
 
-        if(name != null) {
+        if(name != null && !name.isEmpty()) {
             account.setName(name);
         }
-        if(bank != null) {
+        if(bank != null && !bank.isEmpty()) {
             account.setBank(bank);
         }
-        if(description != null) {
+        if(description != null && !description.isEmpty()) {
             account.setDescription(description);
         }
 
@@ -61,16 +55,12 @@ public class AccountDAO {
     }
 
     public static void deleteAccount(Session session, long accountId) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
+        DAOValidator.validateSession(session);
 
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = session.get(Account.class, accountId);
-        if(account == null) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_ACCOUNT);
-        }
+        DAOValidator.validateAccount(account);
 
         session.delete(account);
 
@@ -79,44 +69,27 @@ public class AccountDAO {
     }
 
     public static List<Account> getAllAccounts(Session session) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
+        DAOValidator.validateSession(session);
 
         Query<Account> query = session.createQuery("from Account", Account.class);
         return query.list();
     }
 
     public static Account getAccountByName(Session session, String name) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
-        if(name == null || name.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
-        }
+        DAOValidator.validateSession(session);
+        DAOValidator.validateString(name);
 
         Query<Account> query = session.createQuery("from Account a where a.name=:name", Account.class);
         query.setParameter("name", name);
         List<Account> accounts = query.list();
 
-        if(accounts.size() == 1) {
-            return accounts.get(0);
-        }
-        else if(accounts.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.NO_RESULT_FOUND);
-        }
-        else {
-            throw new BudgetLibraryException(ErrorCode.TOO_MANY_RESULTS_FOUND);
-        }
+        DAOValidator.validateOnlyOneResult(accounts);
+        return accounts.get(0);
     }
 
     public static List<Account> getAccountsByBank(Session session, String bank) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
-        if(bank == null || bank.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
-        }
+        DAOValidator.validateSession(session);
+        DAOValidator.validateString(bank);
 
         Query<Account> query = session.createQuery("from Account a where a.bank=:bank", Account.class);
         query.setParameter("bank", bank);
@@ -125,12 +98,8 @@ public class AccountDAO {
     }
 
     public static List<Account> searchAccountsByName(Session session, String name) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
-        if(name == null || name.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
-        }
+        DAOValidator.validateSession(session);
+        DAOValidator.validateString(name);
 
         Query<Account> query = session.createQuery("from Account a where a.name like :name", Account.class);
         query.setParameter("name", "%" + name + "%");
@@ -139,12 +108,8 @@ public class AccountDAO {
     }
 
     public static List<Account> searchAccountsByBank(Session session, String bank) throws BudgetLibraryException {
-        if(session == null || !session.isOpen()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_SESSION);
-        }
-        if(bank == null || bank.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.INVALID_STRING);
-        }
+        DAOValidator.validateSession(session);
+        DAOValidator.validateString(bank);
 
         Query<Account> query = session.createQuery("from Account a where a.bank like :bank", Account.class);
         query.setParameter("bank", "%" + bank + "%");
