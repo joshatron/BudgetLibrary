@@ -47,6 +47,21 @@ public class VendorDAOTest {
     }
 
     @Test
+    public void createVendorRawMappingBasic() {
+        try {
+            Type type = TypeDAO.createType(session, "groceries", "food");
+            Vendor vendor = VendorDAO.createVendor(session, "vons", type);
+            VendorDAO.createVendorRawMapping(session, vendor.getId(), "VONS #81");
+
+            List<Vendor> vendors = VendorDAO.getAllVendors(session);
+            Assert.assertEquals(vendors.get(0).getRawMappings().size(), 1);
+            Assert.assertEquals(vendors.get(0).getRawMappings().get(0), "VONS #81");
+        } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
+        }
+    }
+
+    @Test
     public void updateVendorBasic() {
         try {
             Type type = TypeDAO.createType(session, "groceries", "food");
@@ -72,6 +87,23 @@ public class VendorDAOTest {
 
             List<Vendor> vendors = VendorDAO.getAllVendors(session);
             Assert.assertEquals(vendors.size(), 0);
+        } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
+        }
+    }
+
+    @Test
+    public void deleteVendorRawMappingBasic() {
+        try {
+            Type type = TypeDAO.createType(session, "groceries", "food");
+            Vendor vendor = VendorDAO.createVendor(session, "vons", type);
+            VendorDAO.createVendorRawMapping(session, vendor.getId(), "VONS #81");
+            VendorDAO.createVendorRawMapping(session, vendor.getId(), "VONS #64");
+            VendorDAO.deleteVendorRawMapping(session, vendor.getId(), "VONS #81");
+
+            List<Vendor> vendors = VendorDAO.getAllVendors(session);
+            Assert.assertEquals(vendors.get(0).getRawMappings().size(), 1);
+            Assert.assertEquals(vendors.get(0).getRawMappings().get(0), "VONS #64");
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
         }
@@ -125,6 +157,27 @@ public class VendorDAOTest {
             Assert.assertEquals(vendors.size(), 1);
             vendors = VendorDAO.getVendorsByType(session, type3);
             Assert.assertEquals(vendors.size(), 1);
+        } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
+        }
+    }
+
+    @Test
+    public void getVendorByRawMappingBasic() {
+        try {
+            Type type = TypeDAO.createType(session, "groceries", "food");
+            Vendor vons = VendorDAO.createVendor(session, "vons", type);
+            VendorDAO.createVendorRawMapping(session, vons.getId(), "VONS #81");
+            VendorDAO.createVendorRawMapping(session, vons.getId(), "VONS #64");
+            Vendor joes = VendorDAO.createVendor(session, "trader joes", type);
+            VendorDAO.createVendorRawMapping(session, joes.getId(), "JOE's, TRADER");
+            Vendor safeway = VendorDAO.createVendor(session, "safeway", type);
+            VendorDAO.createVendorRawMapping(session, safeway.getId(), "#86");
+
+            Vendor vendor = VendorDAO.getVendorByRawMapping(session, "VONS #64");
+            Assert.assertEquals(vendor, vons);
+            vendor = VendorDAO.getVendorByRawMapping(session, "#86");
+            Assert.assertEquals(vendor, safeway);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
         }

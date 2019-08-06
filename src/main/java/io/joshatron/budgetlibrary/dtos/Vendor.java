@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,6 +21,10 @@ public class Vendor {
     private Type type;
     @ElementCollection
     private List<String> rawMappings;
+
+    public Vendor() {
+        rawMappings = new ArrayList<>();
+    }
 
     public boolean isValid() {
         return name != null && !name.isEmpty() && type != null && type.isValid();

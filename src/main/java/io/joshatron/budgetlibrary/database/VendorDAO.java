@@ -3,7 +3,6 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -28,7 +27,7 @@ public class VendorDAO {
         return vendor;
     }
 
-    public static void createVendorRawMapping(Session session, int vendorId, String raw) throws BudgetLibraryException {
+    public static void createVendorRawMapping(Session session, long vendorId, String raw) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(raw);
 
@@ -72,7 +71,7 @@ public class VendorDAO {
         tx.commit();
     }
 
-    public static void deleteVendorRawMapping(Session session, int vendorId, String raw) throws BudgetLibraryException {
+    public static void deleteVendorRawMapping(Session session, long vendorId, String raw) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
 
         org.hibernate.Transaction tx = session.beginTransaction();
@@ -118,8 +117,7 @@ public class VendorDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(raw);
 
-        Query<Vendor> query = session.createQuery("from Vendor v where v.id in " +
-                "(select Vendor_id from Vendor_rawMappings r where r.rawMappings=:raw)", Vendor.class);
+        Query<Vendor> query = session.createQuery("from Vendor v where :raw in elements(v.rawMappings)", Vendor.class);
         query.setParameter("raw", raw);
         List<Vendor> vendors = query.list();
 

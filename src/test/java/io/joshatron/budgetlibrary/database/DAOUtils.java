@@ -18,6 +18,7 @@ public class DAOUtils {
     public static void cleanUp(Session session) {
         Transaction tx = session.beginTransaction();
         session.createQuery("delete from Transaction").executeUpdate();
+        session.createSQLQuery("delete from Vendor_rawMappings").executeUpdate();
         session.createQuery("delete from Vendor").executeUpdate();
         session.createQuery("delete from Type").executeUpdate();
         session.createQuery("delete from Account").executeUpdate();
