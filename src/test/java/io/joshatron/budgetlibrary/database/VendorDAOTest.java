@@ -38,7 +38,7 @@ public class VendorDAOTest {
             Assert.assertEquals(vendor.getName(), "vons");
             Assert.assertEquals(vendor.getType(), type);
 
-            List<Vendor> vendors = VendorDAO.getVendors(session, null, null, null);
+            List<Vendor> vendors = VendorDAO.getAllVendors(session);
             Assert.assertEquals(vendors.size(), 1);
             Assert.assertEquals(vendors.get(0), vendor);
         } catch(BudgetLibraryException e) {
@@ -54,7 +54,7 @@ public class VendorDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             VendorDAO.updateVendor(session, vendor.getId(), "shell", type2);
 
-            List<Vendor> vendors = VendorDAO.getVendors(session, null, null, null);
+            List<Vendor> vendors = VendorDAO.getAllVendors(session);
             Assert.assertEquals(vendors.size(), 1);
             Assert.assertEquals(vendors.get(0).getName(), "shell");
             Assert.assertEquals(vendors.get(0).getType(), type2);
@@ -70,7 +70,7 @@ public class VendorDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             VendorDAO.deleteVendor(session, vendor.getId());
 
-            List<Vendor> vendors = VendorDAO.getVendors(session, null, null, null);
+            List<Vendor> vendors = VendorDAO.getAllVendors(session);
             Assert.assertEquals(vendors.size(), 0);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
@@ -78,26 +78,38 @@ public class VendorDAOTest {
     }
 
     @Test
-    public void getVendorsByName() {
+    public void getAllVendorBasic() {
         try {
             Type type = TypeDAO.createType(session, "groceries", "food");
             VendorDAO.createVendor(session, "vons", type);
             VendorDAO.createVendor(session, "trader joes", type);
             VendorDAO.createVendor(session, "safeway", type);
 
-            List<Vendor> vendors = VendorDAO.getVendors(session, "vons", null, null);
-            Assert.assertEquals(vendors.size(), 1);
-            vendors = VendorDAO.getVendors(session, "trader joes", null, null);
-            Assert.assertEquals(vendors.size(), 1);
-            vendors = VendorDAO.getVendors(session, "safeway", null, null);
-            Assert.assertEquals(vendors.size(), 1);
+            List<Vendor> vendors = VendorDAO.getAllVendors(session);
+            Assert.assertEquals(vendors.size(), 3);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
         }
     }
 
     @Test
-    public void getVendorsByType() {
+    public void getVendorByNameBasic() {
+        try {
+            Type type = TypeDAO.createType(session, "groceries", "food");
+            VendorDAO.createVendor(session, "vons", type);
+            VendorDAO.createVendor(session, "trader joes", type);
+            VendorDAO.createVendor(session, "safeway", type);
+
+            Vendor vendor = VendorDAO.getVendorByName(session, "vons");
+            Assert.assertEquals(vendor.getName(), "vons");
+            Assert.assertEquals(vendor.getType(), type);
+        } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
+        }
+    }
+
+    @Test
+    public void getVendorsByTypeBasic() {
         try {
             Type type = TypeDAO.createType(session, "groceries", "food");
             Type type2 = TypeDAO.createType(session, "gas", "oil");
@@ -107,11 +119,28 @@ public class VendorDAOTest {
             VendorDAO.createVendor(session, "shell", type2);
             VendorDAO.createVendor(session, "drive ins", type3);
 
-            List<Vendor> vendors = VendorDAO.getVendors(session, null, type, null);
+            List<Vendor> vendors = VendorDAO.getVendorsByType(session, type);
             Assert.assertEquals(vendors.size(), 2);
-            vendors = VendorDAO.getVendors(session, null, type2, null);
+            vendors = VendorDAO.getVendorsByType(session, type2);
             Assert.assertEquals(vendors.size(), 1);
-            vendors = VendorDAO.getVendors(session, null, type3, null);
+            vendors = VendorDAO.getVendorsByType(session, type3);
+            Assert.assertEquals(vendors.size(), 1);
+        } catch(BudgetLibraryException e) {
+            Assert.fail("Got exception: " + e.getCode());
+        }
+    }
+
+    @Test
+    public void searchVendorsByNameBasic() {
+        try {
+            Type type = TypeDAO.createType(session, "groceries", "food");
+            VendorDAO.createVendor(session, "vons", type);
+            VendorDAO.createVendor(session, "trader joes", type);
+            VendorDAO.createVendor(session, "safeway", type);
+
+            List<Vendor> vendors = VendorDAO.searchVendorsByName(session, "a");
+            Assert.assertEquals(vendors.size(), 2);
+            vendors = VendorDAO.searchVendorsByName(session, "on");
             Assert.assertEquals(vendors.size(), 1);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());

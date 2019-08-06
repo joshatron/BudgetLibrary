@@ -26,7 +26,7 @@ public class VendorCompleter implements Completer {
         if(parsedLine != null && list != null) {
             List<Vendor> vendors = null;
             try {
-                vendors = VendorDAO.getVendors(session, null, null, null);
+                vendors = VendorDAO.getAllVendors(session);
             }
             catch(BudgetLibraryException e) {
                 e.printStackTrace();

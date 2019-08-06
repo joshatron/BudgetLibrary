@@ -68,7 +68,7 @@ public abstract class BudgetLibrary {
     }
 
     public List<Vendor> getVendors(String name, Type type) throws BudgetLibraryException {
-        return VendorDAO.getVendors(session, name, type, null);
+        return VendorDAO.getAllVendors(session);
     }
 
     protected abstract Vendor getVendorFromRaw(String raw) throws BudgetLibraryException;

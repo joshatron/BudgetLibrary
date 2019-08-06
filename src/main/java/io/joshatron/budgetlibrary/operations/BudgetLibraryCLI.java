@@ -17,9 +17,9 @@ import java.util.List;
 public class BudgetLibraryCLI extends BudgetLibrary {
     @Override
     protected Vendor getVendorFromRaw(String raw) throws BudgetLibraryException {
-        List<Vendor> vendors = VendorDAO.getVendors(getSession(), null, null, raw);
+        Vendor vendor = VendorDAO.getVendorByRawMapping(getSession(), raw);
 
-        if(vendors == null || vendors.isEmpty()) {
+        if(vendor == null) {
             try {
                 LineReader reader = LineReaderBuilder.builder()
                         .terminal(TerminalBuilder.terminal())
@@ -28,9 +28,9 @@ public class BudgetLibraryCLI extends BudgetLibrary {
 
                 String vendorName = reader.readLine("What is the vendor for this transaction? ").trim();
 
-                List<Vendor> foundVendors = VendorDAO.getVendors(getSession(), vendorName, null, null);
-                if(foundVendors != null && !foundVendors.isEmpty()) {
-                    return foundVendors.get(0);
+                Vendor foundVendor = VendorDAO.getVendorByName(getSession(), vendorName);
+                if(foundVendor != null) {
+                    return foundVendor;
                 }
                 else {
                     //TODO: handle new vendor
@@ -41,7 +41,7 @@ public class BudgetLibraryCLI extends BudgetLibrary {
             }
         }
 
-        return vendors.get(0);
+        return vendor;
     }
 
     public AccountCompleter getAccountCompleter() {
