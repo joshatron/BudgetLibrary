@@ -3,6 +3,9 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import java.util.List;
 
 public class TransactionDAO {
 
@@ -68,23 +71,101 @@ public class TransactionDAO {
         tx.commit();
     }
 
-    public static void getAllTransactions(Session session) throws BudgetLibraryException {
+    public static List<Transaction> getAllTransactions(Session session) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+
+        Query<Transaction> query = session.createQuery("from Transaction", Transaction.class);
+        return query.list();
     }
 
-    public static void getTransactionsByVendor(Session session, Vendor vendor) throws BudgetLibraryException {
+    public static List<Transaction> getTransactionsByVendor(Session session, Vendor vendor) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+        DAOValidator.validateVendor(vendor);
+
+        Query<Transaction> query = session.createQuery("from Transaction t where t.vendor=:vendor", Transaction.class);
+        query.setParameter("vendor", vendor);
+
+        return query.list();
     }
 
-    public static void getTransactionsByAccount(Session session, Account account) throws BudgetLibraryException {
+    public static List<Transaction> getTransactionsByAccount(Session session, Account account) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+        DAOValidator.validateAccount(account);
+
+        Query<Transaction> query = session.createQuery("from Transaction t where t.account=:account", Transaction.class);
+        query.setParameter("account", account);
+
+        return query.list();
     }
 
-    public static void searchTransactionsByTimeRange(Session session, Timestamp start, Timestamp end) throws BudgetLibraryException {
+    public static List<Transaction> searchTransactions(Session session, Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+
+        StringBuilder q = new StringBuilder();
+        q.append("from Transaction t");
+
+        Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
+
+        return query.list();
     }
 
-    public static void searchTransactionsByMoneyRange(Session session, Money min, Money max) throws BudgetLibraryException {
+    public static List<Transaction> searchTransactionsByTimeRange(Session session, Timestamp start, Timestamp end) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+
+        StringBuilder q = new StringBuilder();
+        q.append("from Transaction t");
+
+        if(start != null || end != null) {
+            q.append(" where");
+            if(start != null) {
+                q.append(" t.timestamp>=:start");
+            }
+            if(end != null) {
+                if(start != null) {
+                    q.append(" and ");
+                }
+                q.append(" t.timestamp<=:end");
+            }
+        }
+
+        Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
+        if(start != null) {
+            query.setParameter("start", start);
+        }
+        if(end != null) {
+            query.setParameter("end", end);
+        }
+
+        return query.list();
+    }
+
+    public static List<Transaction> searchTransactionsByMoneyRange(Session session, Money min, Money max) throws BudgetLibraryException {
+        DAOValidator.validateSession(session);
+
+        StringBuilder q = new StringBuilder();
+        q.append("from Transaction t");
+
+        if(min != null || max != null) {
+            q.append(" where");
+            if(min != null) {
+                q.append(" t.amount>=:min");
+            }
+            if(max != null) {
+                if(min != null) {
+                    q.append(" and ");
+                }
+                q.append(" t.amount<=:max");
+            }
+        }
+
+        Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
+        if(min != null) {
+            query.setParameter("min", min);
+        }
+        if(max != null) {
+            query.setParameter("max", max);
+        }
+
+        return query.list();
     }
 }
