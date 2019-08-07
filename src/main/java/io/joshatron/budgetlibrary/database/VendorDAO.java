@@ -3,6 +3,8 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -133,5 +135,32 @@ public class VendorDAO {
         query.setParameter("name", "%" + name + "%");
 
         return query.list();
+    }
+
+    public static Vendor searchVendorByRawMapping(Session session, String raw) throws BudgetLibraryException {
+        DAOValidator.validateSession(session);
+        DAOValidator.validateString(raw);
+
+        Query query = session.createSQLQuery("select rawMappings from Vendor_rawMappings");
+        List rawMappings = query.list();
+
+        if(rawMappings.isEmpty()) {
+            throw new BudgetLibraryException(ErrorCode.NO_RESULT_FOUND);
+        }
+
+        int bestDistance = Integer.MAX_VALUE;
+        String bestRaw = (String) rawMappings.get(0);
+
+        for(Object current : rawMappings) {
+            String currentRaw = (String) current;
+            int distance = new LevenshteinDistance().apply(raw, currentRaw);
+
+            if(distance < bestDistance) {
+                bestDistance = distance;
+                bestRaw = currentRaw;
+            }
+        }
+
+        return getVendorByRawMapping(session, bestRaw);
     }
 }
