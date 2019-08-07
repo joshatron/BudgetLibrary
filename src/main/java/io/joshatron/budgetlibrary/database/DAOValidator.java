@@ -1,8 +1,6 @@
 package io.joshatron.budgetlibrary.database;
 
-import io.joshatron.budgetlibrary.dtos.Account;
-import io.joshatron.budgetlibrary.dtos.Type;
-import io.joshatron.budgetlibrary.dtos.Vendor;
+import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
@@ -41,6 +39,24 @@ public class DAOValidator {
     public static void validateVendor(Vendor vendor) throws BudgetLibraryException {
         if(vendor == null || !vendor.isValid()) {
             throw new BudgetLibraryException(ErrorCode.INVALID_VENDOR);
+        }
+    }
+
+    public static void validateTimestamp(Timestamp timestamp) throws BudgetLibraryException {
+        if(timestamp == null) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TIMESTAMP);
+        }
+    }
+
+    public static void validateMoney(Money money) throws BudgetLibraryException {
+        if(money == null) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_MONEY);
+        }
+    }
+
+    public static void validateTransaction(Transaction transaction) throws BudgetLibraryException {
+        if(transaction == null || !transaction.isValid()) {
+            throw new BudgetLibraryException(ErrorCode.INVALID_TRANSACTION);
         }
     }
 

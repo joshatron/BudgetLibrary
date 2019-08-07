@@ -33,22 +33,31 @@ public class AccountDAO {
         return account;
     }
 
-    public static void updateAccount(Session session, long accountId, String name, String bank, String description) throws BudgetLibraryException {
+    public static void updateAccount(Session session, long accountId, String newName, String newBank, String newDescription) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+        if(newName != null) {
+            DAOValidator.validateString(newName);
+        }
+        if(newBank != null) {
+            DAOValidator.validateString(newBank);
+        }
+        if(newDescription != null) {
+            DAOValidator.validateString(newDescription);
+        }
 
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Account account = session.get(Account.class, accountId);
         DAOValidator.validateAccount(account);
 
-        if(name != null && !name.isEmpty()) {
-            account.setName(name);
+        if(newName != null) {
+            account.setName(newName);
         }
-        if(bank != null && !bank.isEmpty()) {
-            account.setBank(bank);
+        if(newBank != null) {
+            account.setBank(newBank);
         }
-        if(description != null && !description.isEmpty()) {
-            account.setDescription(description);
+        if(newDescription != null) {
+            account.setDescription(newDescription);
         }
 
         tx.commit();

@@ -45,16 +45,22 @@ public class VendorDAO {
 
     public static void updateVendor(Session session, long vendorId, String newName, Type newType) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+        if(newName != null) {
+            DAOValidator.validateString(newName);
+        }
+        if(newType != null) {
+            DAOValidator.validateType(newType);
+        }
 
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Vendor vendor = session.get(Vendor.class, vendorId);
         DAOValidator.validateVendor(vendor);
 
-        if(newName != null && !newName.isEmpty()) {
+        if(newName != null) {
             vendor.setName(newName);
         }
-        if(newType != null && newType.isValid()) {
+        if(newType != null) {
             vendor.setType(newType);
         }
 

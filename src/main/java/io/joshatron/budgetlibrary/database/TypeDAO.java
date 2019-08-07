@@ -26,19 +26,25 @@ public class TypeDAO {
         return type;
     }
 
-    public static void updateType(Session session, long typeId, String name, String description) throws BudgetLibraryException {
+    public static void updateType(Session session, long typeId, String newName, String newDescription) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+        if(newName != null) {
+            DAOValidator.validateString(newName);
+        }
+        if(newDescription != null) {
+            DAOValidator.validateString(newDescription);
+        }
 
         org.hibernate.Transaction tx = session.beginTransaction();
 
         Type type = session.get(Type.class, typeId);
         DAOValidator.validateType(type);
 
-        if(name != null && !name.isEmpty()) {
-            type.setName(name);
+        if(newName != null) {
+            type.setName(newName);
         }
-        if(description != null && !description.isEmpty()) {
-            type.setDescription(description);
+        if(newDescription != null) {
+            type.setDescription(newDescription);
         }
 
         tx.commit();
