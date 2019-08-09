@@ -93,7 +93,7 @@ public class TransactionDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateType(type);
 
-        Query<Transaction> query = session.createQuery("select t from Transaction t inner join Vendor as v where v.type=:type", Transaction.class);
+        Query<Transaction> query = session.createQuery("select t from Transaction t inner join t.vendor as v where v.type=:type", Transaction.class);
         query.setParameter("type", type);
 
         return query.list();
@@ -124,7 +124,7 @@ public class TransactionDAO {
         boolean first = true;
         StringBuilder q = new StringBuilder();
         if(type != null) {
-            q.append("select t from Transaction t inner join Vendor as v");
+            q.append("select t from Transaction t inner join t.vendor as v");
         }
         else {
             q.append("from Transaction t");
@@ -133,38 +133,36 @@ public class TransactionDAO {
             q.append(" where");
         }
 
-        if(start != null && end != null) {
-            first = false;
-            q.append(" (t.timestamp>=:start and t.timestamp<=:end)");
-        }
-        else if(start != null) {
+        if(start != null) {
             first = false;
             q.append(" t.timestamp>=:start");
         }
-        else if(end != null) {
+        if(end != null) {
+            if(!first) {
+                q.append(" and");
+            }
             first = false;
             q.append(" t.timestamp<=:end");
         }
 
-        if(!first && (min != null || max != null)) {
-            q.append(" or");
-        }
-        if(min != null && max != null) {
-            first = false;
-            q.append(" (t.amount>=:min and t.amount <=:max)");
-        }
-        else if(min != null) {
+        if(min != null) {
+            if(!first) {
+                q.append(" and");
+            }
             first = false;
             q.append(" t.amount>=:min");
         }
-        else if(max != null) {
+        if(max != null) {
+            if(!first) {
+                q.append(" and");
+            }
             first = false;
             q.append(" t.amount<=:max");
         }
 
         if(vendor != null) {
             if(!first) {
-                q.append(" or");
+                q.append(" and");
             }
             first = false;
             q.append(" t.vendor=:vendor");
@@ -172,7 +170,7 @@ public class TransactionDAO {
 
         if(account != null) {
             if(!first) {
-                q.append(" or");
+                q.append(" and");
             }
             first = false;
             q.append(" t.account=:account");
@@ -180,7 +178,7 @@ public class TransactionDAO {
 
         if(type != null) {
             if(!first) {
-                q.append(" or");
+                q.append(" and");
             }
             q.append(" v.type=:type");
         }
@@ -254,7 +252,7 @@ public class TransactionDAO {
             }
             if(max != null) {
                 if(min != null) {
-                    q.append(" and ");
+                    q.append(" and");
                 }
                 q.append(" t.amount<=:max");
             }

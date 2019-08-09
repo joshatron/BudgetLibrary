@@ -56,7 +56,7 @@ public abstract class BudgetLibrary {
     }
 
     public List<Transaction> getTransactions(Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) throws BudgetLibraryException {
-        return TransactionDAO.searchTransactions(session, start, end, min, max, vendor, account);
+        return TransactionDAO.searchTransactions(session, start, end, min, max, vendor, account, type);
     }
 
     public void createVendor(String name, Type type) throws BudgetLibraryException {
