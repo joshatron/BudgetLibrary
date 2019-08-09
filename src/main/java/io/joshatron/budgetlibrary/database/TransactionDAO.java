@@ -2,6 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
+import io.joshatron.budgetlibrary.exception.ErrorCode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -88,6 +89,16 @@ public class TransactionDAO {
         return query.list();
     }
 
+    public static List<Transaction> getTransactionsByType(Session session, Type type) throws BudgetLibraryException {
+        DAOValidator.validateSession(session);
+        DAOValidator.validateType(type);
+
+        Query<Transaction> query = session.createQuery("select t from Transaction t inner join Vendor as v where v.type=:type", Transaction.class);
+        query.setParameter("type", type);
+
+        return query.list();
+    }
+
     public static List<Transaction> getTransactionsByAccount(Session session, Account account) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
         DAOValidator.validateAccount(account);
@@ -98,13 +109,104 @@ public class TransactionDAO {
         return query.list();
     }
 
-    public static List<Transaction> searchTransactions(Session session, Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account) throws BudgetLibraryException {
+    public static List<Transaction> searchTransactions(Session session, Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
+        if(vendor != null) {
+            DAOValidator.validateVendor(vendor);
+        }
+        if(account != null) {
+            DAOValidator.validateAccount(account);
+        }
+        if(vendor != null && type != null) {
+            throw new BudgetLibraryException(ErrorCode.CONFLICTING_TYPES);
+        }
 
+        boolean first = true;
         StringBuilder q = new StringBuilder();
-        q.append("from Transaction t");
+        if(type != null) {
+            q.append("select t from Transaction t inner join Vendor as v");
+        }
+        else {
+            q.append("from Transaction t");
+        }
+        if(start != null || end != null || min != null || max != null || vendor != null || account != null || type != null) {
+            q.append(" where");
+        }
+
+        if(start != null && end != null) {
+            first = false;
+            q.append(" (t.timestamp>=:start and t.timestamp<=:end)");
+        }
+        else if(start != null) {
+            first = false;
+            q.append(" t.timestamp>=:start");
+        }
+        else if(end != null) {
+            first = false;
+            q.append(" t.timestamp<=:end");
+        }
+
+        if(!first && (min != null || max != null)) {
+            q.append(" or");
+        }
+        if(min != null && max != null) {
+            first = false;
+            q.append(" (t.amount>=:min and t.amount <=:max)");
+        }
+        else if(min != null) {
+            first = false;
+            q.append(" t.amount>=:min");
+        }
+        else if(max != null) {
+            first = false;
+            q.append(" t.amount<=:max");
+        }
+
+        if(vendor != null) {
+            if(!first) {
+                q.append(" or");
+            }
+            first = false;
+            q.append(" t.vendor=:vendor");
+        }
+
+        if(account != null) {
+            if(!first) {
+                q.append(" or");
+            }
+            first = false;
+            q.append(" t.account=:account");
+        }
+
+        if(type != null) {
+            if(!first) {
+                q.append(" or");
+            }
+            q.append(" v.type=:type");
+        }
 
         Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
+        if(start != null) {
+            query.setParameter("start", start);
+        }
+        if(end != null) {
+            query.setParameter("end", end);
+        }
+        if(min != null) {
+            query.setParameter("min", min);
+        }
+        if(max != null) {
+            query.setParameter("max", max);
+        }
+        if(vendor != null) {
+            query.setParameter("vendor", vendor);
+        }
+        if(account != null) {
+            query.setParameter("account", account);
+        }
+        if(type != null) {
+            query.setParameter("type", type);
+        }
 
         return query.list();
     }

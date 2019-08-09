@@ -1,12 +1,19 @@
 package io.joshatron.budgetlibrary.dtos;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+@EqualsAndHashCode
 @Embeddable
 public class Money {
     @Column(nullable = false)
     private int amount;
+
+    public Money() {
+        amount = 0;
+    }
 
     //constructor in cents
     public Money(int amount) {
