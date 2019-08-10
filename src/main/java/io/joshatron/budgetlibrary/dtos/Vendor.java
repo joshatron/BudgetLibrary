@@ -37,4 +37,14 @@ public class Vendor {
     public void removeRawMapping(String mapping) {
         rawMappings.remove(mapping);
     }
+
+    public boolean hasRawMapping(String mapping) {
+        for(String raw : rawMappings) {
+            if(mapping.equals(raw)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

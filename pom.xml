@@ -83,6 +83,11 @@
             <artifactId>commons-text</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.joestelmach</groupId>
+            <artifactId>natty</artifactId>
+            <version>0.11</version>
+        </dependency>
     </dependencies>
 
 

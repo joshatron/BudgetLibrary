@@ -1,10 +1,7 @@
 package io.joshatron.budgetlibrary.imports;
 
-import io.joshatron.budgetlibrary.cli.TypeCompleter;
-import io.joshatron.budgetlibrary.cli.VendorCompleter;
-import io.joshatron.budgetlibrary.database.TypeDAO;
+import io.joshatron.budgetlibrary.cli.CliGetter;
 import io.joshatron.budgetlibrary.database.VendorDAO;
-import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.exception.ErrorCode;
@@ -24,7 +21,15 @@ public class ImportManagerCLI extends ImportManager {
 
     @Override
     protected Vendor getVendorFromRaw(String raw) throws BudgetLibraryException {
-        Vendor vendor = VendorDAO.searchVendorByRawMapping(getSession(), raw);
+        Vendor vendor = null;
+        try {
+            vendor = VendorDAO.searchVendorByRawMapping(getSession(), raw);
+        }
+        catch(BudgetLibraryException e) {
+            if(e.getCode() != ErrorCode.NO_RESULT_FOUND) {
+                throw e;
+            }
+        }
 
         try {
             LineReader yesNoReader = LineReaderBuilder.builder()
@@ -40,60 +45,7 @@ public class ImportManagerCLI extends ImportManager {
                 }
             }
 
-            LineReader vendorReader = LineReaderBuilder.builder()
-                    .terminal(TerminalBuilder.terminal())
-                    .completer(new VendorCompleter(getSession()))
-                    .build();
-
-            while(true) {
-                String vendorName = vendorReader.readLine("What is the vendor for this transaction? ").trim();
-
-                Vendor foundVendor = VendorDAO.getVendorByName(getSession(), vendorName);
-                if(foundVendor != null) {
-                    return foundVendor;
-                }
-
-                String answer = yesNoReader.readLine("A vendor by that name could not be found. Would you like to create one named '" + vendorName + "'?");
-                if(answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
-                    return VendorDAO.createVendor(getSession(), vendorName, getType());
-                }
-            }
-        }
-        catch(IOException e) {
-            throw new BudgetLibraryException(ErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
-        }
-    }
-
-    private Type getType() throws BudgetLibraryException {
-        try {
-            LineReader plainReader = LineReaderBuilder.builder()
-                    .terminal(TerminalBuilder.terminal())
-                    .build();
-
-            LineReader yesNoReader = LineReaderBuilder.builder()
-                    .terminal(TerminalBuilder.terminal())
-                    .completer(new StringsCompleter("yes", "no"))
-                    .build();
-
-            LineReader typeReader = LineReaderBuilder.builder()
-                    .terminal(TerminalBuilder.terminal())
-                    .completer(new TypeCompleter(getSession()))
-                    .build();
-
-            while(true) {
-                String typeName = typeReader.readLine("What is the type for this vendor? ").trim();
-
-                Type foundType = TypeDAO.getTypeByName(getSession(), typeName);
-                if(foundType != null) {
-                    return foundType;
-                }
-
-                String answer = yesNoReader.readLine("A type by that name could not be found. Would you like to create one named '" + typeName + "'?");
-                if(answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
-                    String description = plainReader.readLine("What is the description of this type? ").trim();
-                    return TypeDAO.createType(getSession(), typeName, description);
-                }
-            }
+            return CliGetter.getVendor(getSession());
         }
         catch(IOException e) {
             throw new BudgetLibraryException(ErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);

@@ -30,7 +30,23 @@ public class ImportManager {
                 List<TransactionImport> transactionImports = importer.addTransactions(fileName);
 
                 for(TransactionImport transactionImport : transactionImports) {
-                    TransactionDAO.createTransaction(session, transactionImport.getTimestamp(), transactionImport.getAmount(), getVendorFromRaw(transactionImport.getRawVendor()), account);
+                    System.out.println("Processing transaction: " + transactionImport.getTimestamp().getTimestampString() +
+                            ", " + transactionImport.getAmount().toString() + ", " + transactionImport.getRawVendor());
+
+                    Vendor vendor = getVendorFromRaw(transactionImport.getRawVendor());
+                    if(!vendor.hasRawMapping(transactionImport.getRawVendor())) {
+                        VendorDAO.createVendorRawMapping(session, vendor.getId(), transactionImport.getRawVendor());
+                    }
+
+                    List<Transaction> transactions = TransactionDAO.searchTransactions(session, transactionImport.getTimestamp(),
+                            transactionImport.getTimestamp(), transactionImport.getAmount(), transactionImport.getAmount(),
+                            vendor, account, null);
+                    if(!transactions.isEmpty()) {
+                        System.out.println("Duplicate transaction found, skipping");
+                    }
+                    else {
+                        TransactionDAO.createTransaction(session, transactionImport.getTimestamp(), transactionImport.getAmount(), vendor, account);
+                    }
                 }
 
                 break;

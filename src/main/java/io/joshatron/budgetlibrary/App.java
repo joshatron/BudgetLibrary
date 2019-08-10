@@ -1,7 +1,6 @@
 package io.joshatron.budgetlibrary;
 
-import io.joshatron.budgetlibrary.cli.AccountCompleter;
-import io.joshatron.budgetlibrary.database.AccountDAO;
+import io.joshatron.budgetlibrary.cli.CliGetter;
 import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
@@ -24,7 +23,6 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) {
         try {
-
             StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
             SessionFactory factory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
 
@@ -32,10 +30,6 @@ public class App {
 
             ImportManagerCLI importManager = new ImportManagerCLI(session);
 
-            LineReader importReader = LineReaderBuilder.builder()
-                    .terminal(TerminalBuilder.terminal())
-                    .completer(new AccountCompleter(session))
-                    .build();
             LineReader commandReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
                     .completer(new StringsCompleter("import", "print", "exit"))
@@ -54,8 +48,7 @@ public class App {
                 String input = commandReader.readLine("> ").trim().toLowerCase();
 
                 if(input.equals("import")) {
-                    String accountName = importReader.readLine("Which bank account is being imported? ").trim();
-                    Account account = AccountDAO.getAccountByName(session, accountName);
+                    Account account = CliGetter.getAccount(session);
                     String file = fileReader.readLine("What is the file name? ").trim();
                     importManager.importTransactions(file, account);
                 }

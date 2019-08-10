@@ -1,5 +1,7 @@
 package io.joshatron.budgetlibrary.dtos;
 
+import com.joestelmach.natty.DateGroup;
+import com.joestelmach.natty.Parser;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
@@ -8,6 +10,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode
 @Embeddable
@@ -45,14 +48,9 @@ public class Timestamp {
 
     //Expects format YYYY-MM-DD HH:MM:SS
     private static long stringToLong(String timestamp) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = dateFormat.parse(timestamp);
-            return date.getTime() / 1000;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        Parser parser = new Parser();
+        List<DateGroup> list = parser.parse(timestamp);
+        return list.get(0).getDates().get(0).getTime() / 1000;
     }
 
     //Outputs format YYYY-MM-DD HH:MM:SS
@@ -60,5 +58,10 @@ public class Timestamp {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(timestamp * 1000L);
         return sdf.format(date);
+    }
+
+    @Override
+    public String toString() {
+        return longToString(timestamp);
     }
 }
