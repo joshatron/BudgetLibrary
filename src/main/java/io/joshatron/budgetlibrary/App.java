@@ -1,11 +1,17 @@
 package io.joshatron.budgetlibrary;
 
+import io.joshatron.budgetlibrary.cli.AccountCompleter;
+import io.joshatron.budgetlibrary.database.AccountDAO;
+import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
-import io.joshatron.budgetlibrary.dtos.Type;
-import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.operations.BudgetLibraryCLI;
+import io.joshatron.budgetlibrary.imports.ImportManagerCLI;
 import io.joshatron.budgetlibrary.operations.PrintHandler;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.jline.builtins.Completers;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -18,11 +24,17 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) {
         try {
-            BudgetLibraryCLI budgetLibrary = new BudgetLibraryCLI();
+
+            StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+            SessionFactory factory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+
+            Session session = factory.openSession();
+
+            ImportManagerCLI importManager = new ImportManagerCLI(session);
 
             LineReader importReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
-                    .completer(budgetLibrary.getAccountCompleter())
+                    .completer(new AccountCompleter(session))
                     .build();
             LineReader commandReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
@@ -38,32 +50,23 @@ public class App {
             System.out.println("------------------");
             System.out.println();
 
-            budgetLibrary.createType("grocery", "grocery stores");
-            Type type = budgetLibrary.getTypes(null, null).get(0);
-            budgetLibrary.createVendor("vons", type);
-            Vendor vendor = budgetLibrary.getVendors(null, null).get(0);
-            System.out.println(vendor);
-
             while (true) {
                 String input = commandReader.readLine("> ").trim().toLowerCase();
 
                 if(input.equals("import")) {
                     String accountName = importReader.readLine("Which bank account is being imported? ").trim();
-                    Account account = budgetLibrary.getAccounts(accountName, null, null).get(0);
+                    Account account = AccountDAO.getAccountByName(session, accountName);
                     String file = fileReader.readLine("What is the file name? ").trim();
-                    budgetLibrary.importTransactions(file, account);
+                    importManager.importTransactions(file, account);
                 }
                 else if(input.equals("print")) {
-                    PrintHandler.printTransactions(budgetLibrary.getTransactions(null, null, null, null, null, null, null));
+                    PrintHandler.printTransactions(TransactionDAO.getAllTransactions(session));
                 }
                 else if(input.equals("exit")) {
                     break;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch(BudgetLibraryException e) {
+        } catch (IOException | BudgetLibraryException e) {
             e.printStackTrace();
         }
     }
