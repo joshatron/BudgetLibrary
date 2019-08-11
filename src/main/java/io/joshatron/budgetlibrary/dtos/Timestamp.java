@@ -1,16 +1,16 @@
 package io.joshatron.budgetlibrary.dtos;
 
-import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
-import java.util.List;
 
 @EqualsAndHashCode
 @Embeddable
@@ -49,8 +49,10 @@ public class Timestamp {
     //Expects format YYYY-MM-DD HH:MM:SS
     private static long stringToLong(String timestamp) {
         Parser parser = new Parser();
-        List<DateGroup> list = parser.parse(timestamp);
-        return list.get(0).getDates().get(0).getTime() / 1000;
+        Date date = parser.parse(timestamp).get(0).getDates().get(0);
+        LocalDate day = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDateTime time = day.atStartOfDay();
+        return time.toEpochSecond(ZoneOffset.MIN);
     }
 
     //Outputs format YYYY-MM-DD HH:MM:SS

@@ -38,10 +38,16 @@ public class ImportManagerCLI extends ImportManager {
                     .build();
 
             if(vendor != null) {
-                String answer = yesNoReader.readLine("Is this the correct vendor \'" + vendor.getName() + "\'? ").trim();
-
-                if(answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
+                int distance = vendor.getDistanceFromRaw(raw);
+                if(distance < 4) {
                     return vendor;
+                }
+                else if(distance < 15) {
+                    String answer = yesNoReader.readLine("Is this the correct vendor \'" + vendor.getName() + "\'? ").trim();
+
+                    if(answer.equalsIgnoreCase("yes") || answer.equalsIgnoreCase("y")) {
+                        return vendor;
+                    }
                 }
             }
 

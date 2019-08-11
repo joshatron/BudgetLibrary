@@ -3,6 +3,7 @@ package io.joshatron.budgetlibrary.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -46,5 +47,14 @@ public class Vendor {
         }
 
         return false;
+    }
+
+    public int getDistanceFromRaw(String raw) {
+        int best = Integer.MAX_VALUE;
+        for(String mapping : rawMappings) {
+            best = Math.min(new LevenshteinDistance().apply(raw, mapping), best);
+        }
+
+        return best;
     }
 }
