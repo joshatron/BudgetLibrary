@@ -3,5 +3,6 @@
 *.csv
 *.CSV
 *.db
+*.bak
 dependency-reduced-pom.xml
 target/

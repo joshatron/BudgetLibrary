@@ -95,7 +95,7 @@ public class VendorDAO {
     public static List<Vendor> getAllVendors(Session session) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
 
-        Query<Vendor> query = session.createQuery("from Vendor v", Vendor.class);
+        Query<Vendor> query = session.createQuery("from Vendor v order by v.type.name asc, v.name asc", Vendor.class);
         return query.list();
     }
 
@@ -115,7 +115,7 @@ public class VendorDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateType(type);
 
-        Query<Vendor> query = session.createQuery("from Vendor v where v.type=:type", Vendor.class);
+        Query<Vendor> query = session.createQuery("from Vendor v where v.type=:type order by v.name asc", Vendor.class);
         query.setParameter("type", type);
 
         return query.list();
@@ -137,7 +137,7 @@ public class VendorDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(name);
 
-        Query<Vendor> query = session.createQuery("from Vendor v where v.name like :name", Vendor.class);
+        Query<Vendor> query = session.createQuery("from Vendor v where v.name like :name order by v.name asc", Vendor.class);
         query.setParameter("name", "%" + name + "%");
 
         return query.list();

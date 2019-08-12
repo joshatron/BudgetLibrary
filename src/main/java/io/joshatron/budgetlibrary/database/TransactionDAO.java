@@ -75,7 +75,7 @@ public class TransactionDAO {
     public static List<Transaction> getAllTransactions(Session session) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
 
-        Query<Transaction> query = session.createQuery("from Transaction", Transaction.class);
+        Query<Transaction> query = session.createQuery("from Transaction t order by t.timestamp asc", Transaction.class);
         return query.list();
     }
 
@@ -83,7 +83,7 @@ public class TransactionDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateVendor(vendor);
 
-        Query<Transaction> query = session.createQuery("from Transaction t where t.vendor=:vendor", Transaction.class);
+        Query<Transaction> query = session.createQuery("from Transaction t where t.vendor=:vendor order by t.timestamp asc", Transaction.class);
         query.setParameter("vendor", vendor);
 
         return query.list();
@@ -93,7 +93,7 @@ public class TransactionDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateType(type);
 
-        Query<Transaction> query = session.createQuery("select t from Transaction t inner join t.vendor as v where v.type=:type", Transaction.class);
+        Query<Transaction> query = session.createQuery("select t from Transaction t inner join t.vendor as v where v.type=:type order by t.timestamp asc", Transaction.class);
         query.setParameter("type", type);
 
         return query.list();
@@ -103,7 +103,7 @@ public class TransactionDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateAccount(account);
 
-        Query<Transaction> query = session.createQuery("from Transaction t where t.account=:account", Transaction.class);
+        Query<Transaction> query = session.createQuery("from Transaction t where t.account=:account order by t.timestamp asc", Transaction.class);
         query.setParameter("account", account);
 
         return query.list();
@@ -182,6 +182,7 @@ public class TransactionDAO {
             }
             q.append(" v.type=:type");
         }
+        q.append(" order by t.timestamp asc");
 
         Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
         if(start != null) {
@@ -227,6 +228,7 @@ public class TransactionDAO {
                 q.append(" t.timestamp<=:end");
             }
         }
+        q.append(" order by t.timestamp asc");
 
         Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
         if(start != null) {
@@ -257,6 +259,7 @@ public class TransactionDAO {
                 q.append(" t.amount<=:max");
             }
         }
+        q.append(" order by t.timestamp asc");
 
         Query<Transaction> query = session.createQuery(q.toString(), Transaction.class);
         if(min != null) {

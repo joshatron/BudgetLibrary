@@ -65,7 +65,7 @@ public class TypeDAO {
     public static List<Type> getAllTypes(Session session) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
 
-        Query<Type> query = session.createQuery("from Type t", Type.class);
+        Query<Type> query = session.createQuery("from Type t order by t.name asc", Type.class);
         return query.list();
     }
 
@@ -85,7 +85,7 @@ public class TypeDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(name);
 
-        Query<Type> query = session.createQuery("from Type t where t.name like :name", Type.class);
+        Query<Type> query = session.createQuery("from Type t where t.name like :name order by t.name asc", Type.class);
         query.setParameter("name", "%" + name + "%");
 
         return query.list();

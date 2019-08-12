@@ -80,7 +80,7 @@ public class AccountDAO {
     public static List<Account> getAllAccounts(Session session) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
 
-        Query<Account> query = session.createQuery("from Account", Account.class);
+        Query<Account> query = session.createQuery("from Account a order by a.bank.name asc, a.name asc", Account.class);
         return query.list();
     }
 
@@ -100,7 +100,7 @@ public class AccountDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(bank);
 
-        Query<Account> query = session.createQuery("from Account a where a.bank=:bank", Account.class);
+        Query<Account> query = session.createQuery("from Account a where a.bank=:bank order by a.name asc", Account.class);
         query.setParameter("bank", bank);
 
         return query.list();
@@ -110,7 +110,7 @@ public class AccountDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(name);
 
-        Query<Account> query = session.createQuery("from Account a where a.name like :name", Account.class);
+        Query<Account> query = session.createQuery("from Account a where a.name like :name order by a.name asc", Account.class);
         query.setParameter("name", "%" + name + "%");
 
         return query.list();
@@ -120,7 +120,7 @@ public class AccountDAO {
         DAOValidator.validateSession(session);
         DAOValidator.validateString(bank);
 
-        Query<Account> query = session.createQuery("from Account a where a.bank like :bank", Account.class);
+        Query<Account> query = session.createQuery("from Account a where a.bank like :bank order by a.name asc", Account.class);
         query.setParameter("bank", "%" + bank + "%");
 
         return query.list();
