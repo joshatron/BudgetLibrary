@@ -46,6 +46,24 @@ public class Timestamp {
         this.timestamp = stringToLong(timestamp);
     }
 
+    public int getYear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        Date date = new Date(timestamp * 1000L);
+        return Integer.parseInt(sdf.format(date));
+    }
+
+    public int getMonth() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM");
+        Date date = new Date(timestamp * 1000L);
+        return Integer.parseInt(sdf.format(date));
+    }
+
+    public int getDay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd");
+        Date date = new Date(timestamp * 1000L);
+        return Integer.parseInt(sdf.format(date));
+    }
+
     //Expects format YYYY-MM-DD HH:MM:SS
     private static long stringToLong(String timestamp) {
         Parser parser = new Parser();

@@ -5,6 +5,7 @@ import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.imports.ImportManagerCLI;
+import io.joshatron.budgetlibrary.operations.MonthBreakdown;
 import io.joshatron.budgetlibrary.operations.PrintHandler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -32,7 +33,7 @@ public class App {
 
             LineReader commandReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
-                    .completer(new StringsCompleter("import", "print", "exit"))
+                    .completer(new StringsCompleter("import", "print", "stats", "exit"))
                     .build();
             LineReader fileReader = LineReaderBuilder.builder()
                     .terminal(TerminalBuilder.terminal())
@@ -54,6 +55,9 @@ public class App {
                 }
                 else if(input.equals("print")) {
                     PrintHandler.printTransactions(TransactionDAO.getAllTransactions(session));
+                }
+                else if(input.equals("stats")) {
+                    MonthBreakdown.printMonthBreakdown(TransactionDAO.getAllTransactions(session));
                 }
                 else if(input.equals("exit")) {
                     break;
