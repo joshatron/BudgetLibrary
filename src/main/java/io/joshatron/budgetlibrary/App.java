@@ -5,7 +5,7 @@ import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.imports.ImportManagerCLI;
-import io.joshatron.budgetlibrary.operations.MonthBreakdown;
+import io.joshatron.budgetlibrary.analysis.TimeframeAnalyzer;
 import io.joshatron.budgetlibrary.operations.PrintHandler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -57,7 +57,7 @@ public class App {
                     PrintHandler.printTransactions(TransactionDAO.getAllTransactions(session));
                 }
                 else if(input.equals("stats")) {
-                    MonthBreakdown.printMonthBreakdown(TransactionDAO.getAllTransactions(session));
+                    TimeframeAnalyzer.printMonthBreakdown(TransactionDAO.getAllTransactions(session));
                 }
                 else if(input.equals("exit")) {
                     break;

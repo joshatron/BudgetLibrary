@@ -7,7 +7,7 @@ import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.exception.ErrorCode;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.hibernate.Session;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -37,7 +37,7 @@ public class CliGetter {
                     return VendorDAO.getVendorByName(session, vendorName);
                 }
                 catch(BudgetLibraryException e) {
-                    if(e.getCode() != ErrorCode.NO_RESULT_FOUND) {
+                    if(e.getCode() != BudgetLibraryErrorCode.NO_RESULT_FOUND) {
                         throw e;
                     }
                 }
@@ -49,7 +49,7 @@ public class CliGetter {
             }
         }
         catch(IOException e) {
-            throw new BudgetLibraryException(ErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
+            throw new BudgetLibraryException(BudgetLibraryErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
         }
     }
 
@@ -76,7 +76,7 @@ public class CliGetter {
                     return TypeDAO.getTypeByName(session, typeName);
                 }
                 catch(BudgetLibraryException e) {
-                    if(e.getCode() != ErrorCode.NO_RESULT_FOUND) {
+                    if(e.getCode() != BudgetLibraryErrorCode.NO_RESULT_FOUND) {
                         throw e;
                     }
                 }
@@ -89,7 +89,7 @@ public class CliGetter {
             }
         }
         catch(IOException e) {
-            throw new BudgetLibraryException(ErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
+            throw new BudgetLibraryException(BudgetLibraryErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
         }
     }
 
@@ -116,7 +116,7 @@ public class CliGetter {
                     return AccountDAO.getAccountByName(session, accountName);
                 }
                 catch(BudgetLibraryException e) {
-                    if(e.getCode() != ErrorCode.NO_RESULT_FOUND) {
+                    if(e.getCode() != BudgetLibraryErrorCode.NO_RESULT_FOUND) {
                         throw e;
                     }
                 }
@@ -130,7 +130,7 @@ public class CliGetter {
             }
         }
         catch(IOException e) {
-            throw new BudgetLibraryException(ErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
+            throw new BudgetLibraryException(BudgetLibraryErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
         }
     }
 }

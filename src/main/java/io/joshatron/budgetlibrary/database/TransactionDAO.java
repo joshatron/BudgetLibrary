@@ -2,7 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.exception.ErrorCode;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -118,7 +118,7 @@ public class TransactionDAO {
             DAOValidator.validateAccount(account);
         }
         if(vendor != null && type != null) {
-            throw new BudgetLibraryException(ErrorCode.CONFLICTING_TYPES);
+            throw new BudgetLibraryException(BudgetLibraryErrorCode.CONFLICTING_TYPES);
         }
 
         boolean first = true;

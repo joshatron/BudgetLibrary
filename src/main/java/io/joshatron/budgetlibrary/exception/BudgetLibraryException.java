@@ -2,14 +2,14 @@ package io.joshatron.budgetlibrary.exception;
 
 public class BudgetLibraryException extends Exception {
 
-    private ErrorCode code;
+    private BudgetLibraryErrorCode code;
 
-    public BudgetLibraryException(ErrorCode code) {
+    public BudgetLibraryException(BudgetLibraryErrorCode code) {
         super("The server encountered an error of type: " + code.name());
         this.code = code;
     }
 
-    public ErrorCode getCode() {
+    public BudgetLibraryErrorCode getCode() {
         return code;
     }
 }

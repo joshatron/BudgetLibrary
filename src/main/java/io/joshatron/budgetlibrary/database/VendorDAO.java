@@ -3,7 +3,7 @@ package io.joshatron.budgetlibrary.database;
 import io.joshatron.budgetlibrary.dtos.Type;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.exception.ErrorCode;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -151,7 +151,7 @@ public class VendorDAO {
         List rawMappings = query.list();
 
         if(rawMappings.isEmpty()) {
-            throw new BudgetLibraryException(ErrorCode.NO_RESULT_FOUND);
+            throw new BudgetLibraryException(BudgetLibraryErrorCode.NO_RESULT_FOUND);
         }
 
         int bestDistance = Integer.MAX_VALUE;

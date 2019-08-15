@@ -2,7 +2,7 @@ package io.joshatron.budgetlibrary.database;
 
 import io.joshatron.budgetlibrary.dtos.Account;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.exception.ErrorCode;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class AccountDAO {
 
     public AccountDAO() throws BudgetLibraryException {
-        throw new BudgetLibraryException(ErrorCode.INVALID_INITIALIZATION);
+        throw new BudgetLibraryException(BudgetLibraryErrorCode.INVALID_INITIALIZATION);
     }
 
     public static Account createAccount(Session session, String name, String bank, String description) throws BudgetLibraryException {

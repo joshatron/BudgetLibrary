@@ -4,7 +4,7 @@ import io.joshatron.budgetlibrary.cli.CliGetter;
 import io.joshatron.budgetlibrary.database.VendorDAO;
 import io.joshatron.budgetlibrary.dtos.Vendor;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
-import io.joshatron.budgetlibrary.exception.ErrorCode;
+import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.hibernate.Session;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -26,7 +26,7 @@ public class ImportManagerCLI extends ImportManager {
             vendor = VendorDAO.searchVendorByRawMapping(getSession(), raw);
         }
         catch(BudgetLibraryException e) {
-            if(e.getCode() != ErrorCode.NO_RESULT_FOUND) {
+            if(e.getCode() != BudgetLibraryErrorCode.NO_RESULT_FOUND) {
                 throw e;
             }
         }
@@ -54,7 +54,7 @@ public class ImportManagerCLI extends ImportManager {
             return CliGetter.getVendor(getSession());
         }
         catch(IOException e) {
-            throw new BudgetLibraryException(ErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
+            throw new BudgetLibraryException(BudgetLibraryErrorCode.COULD_NOT_CONNECT_TO_TERMINAL);
         }
     }
 }

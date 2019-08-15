@@ -1,6 +1,6 @@
 package io.joshatron.budgetlibrary.exception;
 
-public enum ErrorCode {
+public enum BudgetLibraryErrorCode {
     INVALID_TRANSACTION,
     INVALID_VENDOR,
     INVALID_TYPE,
