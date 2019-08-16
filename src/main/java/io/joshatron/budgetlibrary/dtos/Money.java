@@ -20,6 +20,10 @@ public class Money {
         this.amount = amount;
     }
 
+    public Money(Money money) {
+        this.amount = money.getAmountInCents();
+    }
+
     //constructor in dollars
     public Money(double amount) {
         this.amount = Math.toIntExact(Math.round(amount * 100));
@@ -51,6 +55,14 @@ public class Money {
 
     public void reverseSign() {
         amount = amount * -1;
+    }
+
+    public void add(Money money) {
+        amount += money.getAmountInCents();
+    }
+
+    public void subtract(Money money) {
+        amount -= money.getAmountInCents();
     }
 
     public String toString() {
