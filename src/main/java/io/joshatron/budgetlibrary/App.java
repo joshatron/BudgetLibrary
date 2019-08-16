@@ -1,8 +1,11 @@
 package io.joshatron.budgetlibrary;
 
+import io.joshatron.budgetlibrary.analysis.TimeframeAnalysis;
 import io.joshatron.budgetlibrary.cli.CliGetter;
 import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
+import io.joshatron.budgetlibrary.dtos.Timestamp;
+import io.joshatron.budgetlibrary.dtos.Transaction;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.imports.ImportManagerCLI;
 import io.joshatron.budgetlibrary.analysis.TimeframeAnalyzer;
@@ -20,6 +23,8 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class App {
     public static void main(String[] args) {
@@ -57,7 +62,26 @@ public class App {
                     PrintHandler.printTransactions(TransactionDAO.getAllTransactions(session));
                 }
                 else if(input.equals("stats")) {
-                    TimeframeAnalyzer.printMonthBreakdown(TransactionDAO.getAllTransactions(session));
+                    List<Transaction> all = TransactionDAO.getAllTransactions(session);
+                    Timestamp first = all.get(0).getTimestamp();
+                    Timestamp last = all.get(all.size() - 1).getTimestamp();
+
+                    int month = first.getMonth();
+                    int year = first.getYear();
+
+                    while(month != last.getMonth() || year != last.getYear()) {
+                        int finalMonth = month;
+                        int finalYear = year;
+                        PrintHandler.printTimeframeAnalysis(TimeframeAnalyzer.gatherStatistics(all.stream()
+                                .filter(t -> t.getTimestamp().getMonth() == finalMonth && t.getTimestamp().getYear() == finalYear)
+                                .collect(Collectors.toList())));
+                        System.out.println();
+                        month++;
+                        if(month == 13) {
+                            month = 1;
+                            year++;
+                        }
+                    }
                 }
                 else if(input.equals("exit")) {
                     break;

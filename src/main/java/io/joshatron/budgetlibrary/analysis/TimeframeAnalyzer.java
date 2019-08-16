@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class TimeframeAnalyzer {
 
-    private static TimeframeAnalysis gatherStatistics(List<Transaction> transactions) {
+    public static TimeframeAnalysis gatherStatistics(List<Transaction> transactions) {
         transactions.sort((t1, t2) -> (int)(t1.getTimestamp().getTimestampLong() - t2.getTimestamp().getTimestampLong()));
         Money in = new Money(0);
         Money out = new Money(0);
