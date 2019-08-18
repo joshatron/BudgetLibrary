@@ -1,6 +1,5 @@
 package io.joshatron.budgetlibrary;
 
-import io.joshatron.budgetlibrary.analysis.TimeframeAnalysis;
 import io.joshatron.budgetlibrary.cli.CliGetter;
 import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;

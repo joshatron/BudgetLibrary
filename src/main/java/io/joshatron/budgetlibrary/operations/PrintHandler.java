@@ -38,6 +38,7 @@ public class PrintHandler {
 
         System.out.println("Total money in: " + analysis.getTotalIn().toString());
         System.out.println("Total money out: " + analysis.getTotalOut().toString());
+        System.out.println();
 
         System.out.println("Spending per vendor:");
         System.out.println("-------------------------------------------------");
@@ -45,6 +46,7 @@ public class PrintHandler {
                 .sorted((e1,e2) -> e1.getKey().getName().compareTo(e2.getKey().getName())).collect(Collectors.toList())) {
             System.out.println(String.format("%-30s%s", entry.getKey().getName(), entry.getValue().toString()));
         }
+        System.out.println();
 
         System.out.println("Spending per type:");
         System.out.println("-------------------------------------------------");
@@ -52,6 +54,7 @@ public class PrintHandler {
                 .sorted((e1,e2) -> e1.getKey().getName().compareTo(e2.getKey().getName())).collect(Collectors.toList())) {
             System.out.println(String.format("%-30s%s", entry.getKey().getName(), entry.getValue().toString()));
         }
+        System.out.println();
 
         System.out.println("Spending per day:");
         System.out.println("-------------------------------------------------");
@@ -59,5 +62,6 @@ public class PrintHandler {
                 .sorted((e1,e2) -> e1.getKey().toString().compareTo(e2.getKey().toString())).collect(Collectors.toList())) {
             System.out.println(String.format("%-30s%s", entry.getKey().toString(), entry.getValue().toString()));
         }
+        System.out.println();
     }
 }

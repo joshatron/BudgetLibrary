@@ -18,5 +18,6 @@
         <mapping class="io.joshatron.budgetlibrary.dtos.Transaction"/>
         <mapping class="io.joshatron.budgetlibrary.dtos.Type"/>
         <mapping class="io.joshatron.budgetlibrary.dtos.Vendor"/>
+        <mapping class="io.joshatron.budgetlibrary.dtos.BudgetCategory"/>
     </session-factory>
 </hibernate-configuration>
