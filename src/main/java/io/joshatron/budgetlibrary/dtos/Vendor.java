@@ -52,9 +52,19 @@ public class Vendor {
     public int getDistanceFromRaw(String raw) {
         int best = Integer.MAX_VALUE;
         for(String mapping : rawMappings) {
-            best = Math.min(new LevenshteinDistance().apply(raw, mapping), best);
+            best = Math.min(getDistance(mapping, raw), best);
         }
 
         return best;
+    }
+
+    /*
+     * The distance is obtained using the levenshtein distance algorithm with one difference.
+     * Most differences seem to be just numbers, but we mostly care about the text when looking at example comparisons,
+     * so first all digits are turned to the number 0 so that ones with just number differences will seem more similar.
+     * And the numbers are turned to 0s, not just deleted to check that the format still looks similar.
+     */
+    private int getDistance(String first, String second) {
+        return new LevenshteinDistance().apply(first.replaceAll("[0-9]", "0"), second.replaceAll("[0-9]", "0"));
     }
 }
