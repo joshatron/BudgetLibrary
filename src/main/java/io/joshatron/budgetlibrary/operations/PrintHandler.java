@@ -3,8 +3,8 @@ package io.joshatron.budgetlibrary.operations;
 import io.joshatron.budgetlibrary.analysis.TimeframeAnalysis;
 import io.joshatron.budgetlibrary.dtos.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,10 +15,11 @@ import java.util.stream.Collectors;
 public class PrintHandler {
 
     public static void printTransactions(List<Transaction> transactions) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         System.out.println("Timestamp      Amount         Account        Vendor                        Type");
         System.out.println("----------------------------------------------------------------------------------------------");
         for(Transaction transaction : transactions) {
-            System.out.println(String.format("%-15s%-15s%-15s%-30s%s", transaction.getTimestamp().getTimestampString(),
+            System.out.println(String.format("%-15s%-15s%-15s%-30s%s", formatter.format(transaction.getTimestamp()),
                     transaction.getAmount().toString(), transaction.getAccount().getName(), transaction.getVendor().getName(), transaction.getVendor().getType().getName()));
         }
     }
@@ -58,7 +59,7 @@ public class PrintHandler {
 
         System.out.println("Spending per day:");
         System.out.println("-------------------------------------------------");
-        for(Map.Entry<Timestamp, Money> entry : analysis.getSpendingPerDay().entrySet().stream()
+        for(Map.Entry<LocalDate, Money> entry : analysis.getSpendingPerDay().entrySet().stream()
                 .sorted((e1,e2) -> e1.getKey().toString().compareTo(e2.getKey().toString())).collect(Collectors.toList())) {
             System.out.println(String.format("%-30s%s", entry.getKey().toString(), entry.getValue().toString()));
         }

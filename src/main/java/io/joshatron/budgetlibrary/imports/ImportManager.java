@@ -6,6 +6,7 @@ import io.joshatron.budgetlibrary.dtos.*;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import org.hibernate.Session;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class ImportManager {
                 List<TransactionImport> transactionImports = importer.addTransactions(fileName);
 
                 for(TransactionImport transactionImport : transactionImports) {
-                    System.out.println("Processing transaction: " + transactionImport.getTimestamp().getTimestampString() +
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+                    System.out.println("Processing transaction: " + formatter.format(transactionImport.getTimestamp()) +
                             ", " + transactionImport.getAmount().toString() + ", " + transactionImport.getRawVendor());
 
                     Vendor vendor = getVendorFromRaw(transactionImport.getRawVendor());

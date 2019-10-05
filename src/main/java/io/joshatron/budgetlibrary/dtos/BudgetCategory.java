@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +17,16 @@ public class BudgetCategory {
     private long id;
     @ElementCollection
     private List<Type> types;
+    @AttributeOverride(name = "amount", column = @Column(name = "goal"))
     @Embedded
     private Money goal;
+    @AttributeOverride(name = "amount", column = @Column(name = "idealGoal"))
     @Embedded
     private Money idealGoal;
+    @Column
+    private LocalDate start;
     @Embedded
-    private Timestamp start;
-    @Embedded
-    private Timestamp end;
+    private LocalDate end;
     //If true, goal set up for spending less than the goal
     //If false, goal set up for saving at least the goal
     @Column

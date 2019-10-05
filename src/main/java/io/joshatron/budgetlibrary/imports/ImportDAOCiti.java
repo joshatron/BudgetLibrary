@@ -1,14 +1,20 @@
 package io.joshatron.budgetlibrary.imports;
 
+import com.joestelmach.natty.Parser;
 import io.joshatron.budgetlibrary.dtos.Money;
-import io.joshatron.budgetlibrary.dtos.Timestamp;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class ImportDAOCiti extends ImportDAO {
 
     @Override
     protected TransactionImport createTransaction(String[] elements) {
         if(elements.length >= 4 && elements[0].equalsIgnoreCase("Cleared")) {
-            Timestamp timestamp = new Timestamp(elements[1]);
+            Parser parser = new Parser();
+            Date date = parser.parse(elements[1]).get(0).getDates().get(0);
+            LocalDate timestamp = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Money amount;
             if(!elements[3].isEmpty()) {
                 amount = new Money(elements[3]);

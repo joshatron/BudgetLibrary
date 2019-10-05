@@ -6,11 +6,12 @@ import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class TransactionDAO {
 
-    public static Transaction createTransaction(Session session, Timestamp timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException {
+    public static Transaction createTransaction(Session session, LocalDate timestamp, Money amount, Vendor vendor, Account account) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
         DAOValidator.validateTimestamp(timestamp);
         DAOValidator.validateMoney(amount);
@@ -31,7 +32,7 @@ public class TransactionDAO {
         return transaction;
     }
 
-    public static void updateTransaction(Session session, long transactionId, Timestamp newTimestamp, Money newAmount, Vendor newVendor, Account newAccount) throws BudgetLibraryException {
+    public static void updateTransaction(Session session, long transactionId, LocalDate newTimestamp, Money newAmount, Vendor newVendor, Account newAccount) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
         if(newVendor != null) {
             DAOValidator.validateVendor(newVendor);
@@ -109,7 +110,7 @@ public class TransactionDAO {
         return query.list();
     }
 
-    public static List<Transaction> searchTransactions(Session session, Timestamp start, Timestamp end, Money min, Money max, Vendor vendor, Account account, Type type) throws BudgetLibraryException {
+    public static List<Transaction> searchTransactions(Session session, LocalDate start, LocalDate end, Money min, Money max, Vendor vendor, Account account, Type type) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
         if(vendor != null) {
             DAOValidator.validateVendor(vendor);
@@ -210,7 +211,7 @@ public class TransactionDAO {
         return query.list();
     }
 
-    public static List<Transaction> searchTransactionsByTimeRange(Session session, Timestamp start, Timestamp end) throws BudgetLibraryException {
+    public static List<Transaction> searchTransactionsByTimeRange(Session session, LocalDate start, LocalDate end) throws BudgetLibraryException {
         DAOValidator.validateSession(session);
 
         StringBuilder q = new StringBuilder();

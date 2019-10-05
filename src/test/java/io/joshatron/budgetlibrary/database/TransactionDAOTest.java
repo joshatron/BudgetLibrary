@@ -9,6 +9,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class TransactionDAOTest {
@@ -35,8 +36,8 @@ public class TransactionDAOTest {
             Account account = AccountDAO.createAccount(session, "checking", "bank", "main checking");
             Type type = TypeDAO.createType(session, "groceries", "food from grocery stores");
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
-            Transaction transaction = TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            Assert.assertEquals(transaction.getTimestamp(), new Timestamp("2019-08-01"));
+            Transaction transaction = TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            Assert.assertEquals(transaction.getTimestamp(), LocalDate.of(2019,8,1));
             Assert.assertEquals(transaction.getAmount(), new Money(34.62));
             Assert.assertEquals(transaction.getVendor(), vendor);
             Assert.assertEquals(transaction.getAccount(), account);
@@ -57,12 +58,12 @@ public class TransactionDAOTest {
             Type type = TypeDAO.createType(session, "groceries", "food from grocery stores");
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
-            Transaction transaction = TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.updateTransaction(session, transaction.getId(), new Timestamp("2019-09-01"), new Money(26.75), vendor2, account2);
+            Transaction transaction = TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.updateTransaction(session, transaction.getId(), LocalDate.of(2019,9,1), new Money(26.75), vendor2, account2);
 
             List<Transaction> transactions = TransactionDAO.getAllTransactions(session);
             Assert.assertEquals(transactions.size(), 1);
-            Assert.assertEquals(transactions.get(0).getTimestamp(), new Timestamp("2019-09-01"));
+            Assert.assertEquals(transactions.get(0).getTimestamp(), LocalDate.of(2019,9,1));
             Assert.assertEquals(transactions.get(0).getAmount(), new Money(26.75));
             Assert.assertEquals(transactions.get(0).getVendor(), vendor2);
             Assert.assertEquals(transactions.get(0).getAccount(), account2);
@@ -77,7 +78,7 @@ public class TransactionDAOTest {
             Account account = AccountDAO.createAccount(session, "checking", "bank", "main checking");
             Type type = TypeDAO.createType(session, "groceries", "food from grocery stores");
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
-            Transaction transaction = TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
+            Transaction transaction = TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
             TransactionDAO.deleteTransaction(session, transaction.getId());
 
             List<Transaction> transactions = TransactionDAO.getAllTransactions(session);
@@ -97,11 +98,11 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
             List<Transaction> transactions = TransactionDAO.getAllTransactions(session);
             Assert.assertEquals(transactions.size(), 5);
@@ -120,11 +121,11 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
             List<Transaction> transactions = TransactionDAO.getTransactionsByVendor(session, vendor);
             Assert.assertEquals(transactions.size(), 2);
@@ -147,11 +148,11 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
             List<Transaction> transactions = TransactionDAO.getTransactionsByType(session, type);
             Assert.assertEquals(transactions.size(), 4);
@@ -172,11 +173,11 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
             List<Transaction> transactions = TransactionDAO.getTransactionsByAccount(session, account);
             Assert.assertEquals(transactions.size(), 2);
@@ -197,17 +198,17 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            Transaction transaction = TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            Transaction transaction = TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
-            List<Transaction> transactions = TransactionDAO.searchTransactions(session, new Timestamp("2019-08-02"), new Timestamp("2019-08-03"),
+            List<Transaction> transactions = TransactionDAO.searchTransactions(session, LocalDate.of(2019,8,2), LocalDate.of(2019,8,3),
                     new Money(40d), new Money(70d), vendor3, account2, null);
             Assert.assertEquals(transactions.size(), 1);
             Assert.assertEquals(transactions.get(0), transaction);
-            transactions = TransactionDAO.searchTransactions(session, new Timestamp("2019-08-02"), new Timestamp("2019-08-03"),
+            transactions = TransactionDAO.searchTransactions(session, LocalDate.of(2019,8,2), LocalDate.of(2019,8,3),
                     new Money(40d), new Money(70d), null, account2, type2);
             Assert.assertEquals(transactions.size(), 1);
             Assert.assertEquals(transactions.get(0), transaction);
@@ -226,15 +227,15 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
-            List<Transaction> transactions = TransactionDAO.searchTransactionsByTimeRange(session, new Timestamp("2019-08-02"), new Timestamp("2019-08-04"));
+            List<Transaction> transactions = TransactionDAO.searchTransactionsByTimeRange(session, LocalDate.of(2019,8,2), LocalDate.of(2019,8,4));
             Assert.assertEquals(transactions.size(), 3);
-            transactions = TransactionDAO.searchTransactionsByTimeRange(session, new Timestamp("2019-07-01"), new Timestamp("2019-09-01"));
+            transactions = TransactionDAO.searchTransactionsByTimeRange(session, LocalDate.of(2019,7,1), LocalDate.of(2019,9,1));
             Assert.assertEquals(transactions.size(), 5);
         } catch(BudgetLibraryException e) {
             Assert.fail("Got exception: " + e.getCode());
@@ -251,11 +252,11 @@ public class TransactionDAOTest {
             Vendor vendor = VendorDAO.createVendor(session, "vons", type);
             Vendor vendor2 = VendorDAO.createVendor(session, "trader joe's", type);
             Vendor vendor3 = VendorDAO.createVendor(session, "shell", type2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-01"), new Money(34.62), vendor, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-02"), new Money(44.62), vendor2, account);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-03"), new Money(54.62), vendor3, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-04"), new Money(64.62), vendor, account2);
-            TransactionDAO.createTransaction(session, new Timestamp("2019-08-05"), new Money(74.62), vendor2, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,1), new Money(34.62), vendor, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,2), new Money(44.62), vendor2, account);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,3), new Money(54.62), vendor3, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,4), new Money(64.62), vendor, account2);
+            TransactionDAO.createTransaction(session, LocalDate.of(2019,8,5), new Money(74.62), vendor2, account2);
 
             List<Transaction> transactions = TransactionDAO.searchTransactionsByMoneyRange(session, new Money(20d), new Money(50d));
             Assert.assertEquals(transactions.size(), 2);

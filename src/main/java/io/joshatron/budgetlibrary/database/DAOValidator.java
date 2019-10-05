@@ -5,6 +5,7 @@ import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryErrorCode;
 import org.hibernate.Session;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class DAOValidator {
@@ -42,7 +43,7 @@ public class DAOValidator {
         }
     }
 
-    public static void validateTimestamp(Timestamp timestamp) throws BudgetLibraryException {
+    public static void validateTimestamp(LocalDate timestamp) throws BudgetLibraryException {
         if(timestamp == null) {
             throw new BudgetLibraryException(BudgetLibraryErrorCode.INVALID_TIMESTAMP);
         }

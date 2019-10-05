@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Data
@@ -14,8 +16,8 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Embedded
-    private Timestamp timestamp;
+    @Column
+    private LocalDate timestamp;
     @Embedded
     private Money amount;
     @ManyToOne
@@ -28,7 +30,8 @@ public class Transaction {
     }
 
     public String toString() {
-        return "Date: " + timestamp.getTimestampString() + " Amount: " + amount.toString() + " Vendor: " + vendor.getName() + " Type: " + vendor.getType();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return "Date: " + formatter.format(timestamp) + " Amount: " + amount.toString() + " Vendor: " + vendor.getName() + " Type: " + vendor.getType();
     }
 }
 

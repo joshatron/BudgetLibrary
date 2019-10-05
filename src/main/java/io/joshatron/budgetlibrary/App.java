@@ -3,7 +3,6 @@ package io.joshatron.budgetlibrary;
 import io.joshatron.budgetlibrary.cli.CliGetter;
 import io.joshatron.budgetlibrary.database.TransactionDAO;
 import io.joshatron.budgetlibrary.dtos.Account;
-import io.joshatron.budgetlibrary.dtos.Timestamp;
 import io.joshatron.budgetlibrary.dtos.Transaction;
 import io.joshatron.budgetlibrary.exception.BudgetLibraryException;
 import io.joshatron.budgetlibrary.imports.ImportManagerCLI;
@@ -22,6 +21,7 @@ import org.jline.terminal.TerminalBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,17 +62,17 @@ public class App {
                 }
                 else if(input.equals("stats")) {
                     List<Transaction> all = TransactionDAO.getAllTransactions(session);
-                    Timestamp first = all.get(0).getTimestamp();
-                    Timestamp last = all.get(all.size() - 1).getTimestamp();
+                    LocalDate first = all.get(0).getTimestamp();
+                    LocalDate last = all.get(all.size() - 1).getTimestamp();
 
-                    int month = first.getMonth();
+                    int month = first.getMonthValue();
                     int year = first.getYear();
 
-                    while(month != last.getMonth() || year != last.getYear()) {
+                    while(month != last.getMonthValue() || year != last.getYear()) {
                         int finalMonth = month;
                         int finalYear = year;
                         PrintHandler.printTimeframeAnalysis(TimeframeAnalyzer.gatherStatistics(all.stream()
-                                .filter(t -> t.getTimestamp().getMonth() == finalMonth && t.getTimestamp().getYear() == finalYear)
+                                .filter(t -> t.getTimestamp().getMonthValue() == finalMonth && t.getTimestamp().getYear() == finalYear)
                                 .collect(Collectors.toList())));
                         System.out.println();
                         month++;

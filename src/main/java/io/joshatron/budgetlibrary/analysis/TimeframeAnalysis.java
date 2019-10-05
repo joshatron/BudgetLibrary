@@ -4,6 +4,7 @@ import io.joshatron.budgetlibrary.dtos.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +16,5 @@ public class TimeframeAnalysis {
     private Money totalOut;
     private Map<Vendor,Money> spendingPerVendor;
     private Map<Type,Money> spendingPerType;
-    private Map<Timestamp,Money> spendingPerDay;
+    private Map<LocalDate,Money> spendingPerDay;
 }

@@ -2,6 +2,8 @@ package io.joshatron.budgetlibrary.analysis;
 
 import io.joshatron.budgetlibrary.dtos.*;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +11,12 @@ import java.util.Map;
 public class TimeframeAnalyzer {
 
     public static TimeframeAnalysis gatherStatistics(List<Transaction> transactions) {
-        transactions.sort((t1, t2) -> (int)(t1.getTimestamp().getTimestampLong() - t2.getTimestamp().getTimestampLong()));
+        transactions.sort(Comparator.comparing(Transaction::getTimestamp));
         Money in = new Money(0);
         Money out = new Money(0);
         Map<Vendor,Money> moneyPerVendor = new HashMap<>();
         Map<Type,Money> moneyPerType = new HashMap<>();
-        Map<Timestamp,Money> moneyPerDay = new HashMap<>();
+        Map<LocalDate,Money> moneyPerDay = new HashMap<>();
 
         for(Transaction transaction : transactions) {
             if(transaction.getAmount().getAmountInCents() > 0) {
