@@ -1,5 +1,5 @@
-Budget
-======
+Budget Library
+==============
 
 A simple budget app. It features csv importing and a pay simulator.
 
