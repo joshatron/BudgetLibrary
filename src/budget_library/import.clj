@@ -17,3 +17,15 @@
    :partner     partner
    :tags        tags
    })
+
+(defn create-partner
+  "Creates partner based on arguments"
+  [name description]
+  {:pre [(string? name)
+         (not (empty? name))
+         (string? description)]}
+  {
+   :id (.toString (UUID/randomUUID))
+   :name name
+   :description description
+   })

@@ -13,6 +13,7 @@ Most analysis will be done on these transactions.
  * ID (UUID)
  * description
  * Amount (in cents)
+ * Day
  * Transaction partner (ID)
  * tags
  
