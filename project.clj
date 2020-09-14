@@ -3,7 +3,8 @@
   :url "https://github.com/joshatron/BudgetLibrary"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [clojure.java-time "0.3.2"]]
   :main ^:skip-aot budget-library.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

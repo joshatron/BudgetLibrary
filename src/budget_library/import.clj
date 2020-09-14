@@ -1,10 +1,13 @@
 (ns budget-library.import
-  (:import (java.util UUID)))
+  (:require [java-time :as t])
+  (:import (java.util UUID)
+           (java.time LocalDateTime)))
 
 (defn create-transaction
   "Creates transaction based on arguments"
-  [description cents partner tags]
+  [description date cents partner tags]
   {:pre [(string? description)
+         (instance? LocalDateTime date)
          (integer? cents)
          (string? partner)
          (not (empty? partner))
@@ -12,6 +15,7 @@
          (every? keyword? tags)]}
   {
    :id          (.toString (UUID/randomUUID))
+   :date        date
    :description description
    :amount      cents
    :partner     partner
