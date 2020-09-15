@@ -5,7 +5,9 @@
 
 (defn create-transaction
   "Creates transaction based on arguments"
-  [description date cents partner tags]
+  ([description cents partner tags]
+   (create-transaction description (t/local-date-time) cents partner tags))
+  ([description date cents partner tags]
   {:pre [(string? description)
          (instance? LocalDateTime date)
          (integer? cents)
@@ -20,7 +22,7 @@
    :amount      cents
    :partner     partner
    :tags        tags
-   })
+   }))
 
 (defn create-partner
   "Creates partner based on arguments"

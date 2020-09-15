@@ -15,8 +15,10 @@
               (:id (i/create-transaction "Test description." (t/local-date-time 2020 9 14) 1586 "SOME-UUID" #{:entertainment :movie})))))
   (testing "Description matches passed"
     (is (= "Test description." (:description (i/create-transaction "Test description." (t/local-date-time 2020 9 14) 1586 "SOME-UUID" #{:entertainment :movie})))))
-  (testing "Description matches passed"
+  (testing "Date matches passed"
     (is (= (t/local-date-time 2020 9 14) (:date (i/create-transaction "Test description." (t/local-date-time 2020 9 14) 1586 "SOME-UUID" #{:entertainment :movie})))))
+  (testing "Date today if not specified"
+    (is (= (t/truncate-to (t/local-date-time) :days) (t/truncate-to (:date (i/create-transaction "Test description." 1586 "SOME-UUID" #{:entertainment :movie})) :days))))
   (testing "Positive amount matches passed"
     (is (= 1586 (:amount (i/create-transaction "Test description." (t/local-date-time 2020 9 14) 1586 "SOME-UUID" #{:entertainment :movie})))))
   (testing "Negative amount matches passed"
@@ -31,6 +33,8 @@
     (is (thrown? AssertionError (i/create-transaction 1234 (t/local-date-time 2020 9 14) 6000 "SOME-UUID" #{:tag1 :tag2}))))
   (testing "Date not local date time"
     (is (thrown? AssertionError (i/create-transaction "Description" "9/14/2020" 6000 "SOME-UUID" #{:tag1 :tag2}))))
+  (testing "Still error check if date not specified"
+    (is (thrown? AssertionError (i/create-transaction "Description" 6000. "SOME-UUID" #{:tag1 :tag2}))))
   (testing "Amount not int"
     (is (thrown? AssertionError (i/create-transaction "Description" (t/local-date-time 2020 9 14) 6000. "SOME-UUID" #{:tag1 :tag2}))))
   (testing "Partner not string"
