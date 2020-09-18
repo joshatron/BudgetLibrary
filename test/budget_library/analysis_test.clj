@@ -4,3 +4,7 @@
             [budget-library.analysis :as a]
             [java-time :as t]))
 
+(deftest ending-on-test
+  (testing "Empty list gets nil"
+    (is (nil? (a/ending-on (t/local-date 2020 1 17) '()))))
+  )
