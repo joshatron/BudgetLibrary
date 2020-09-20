@@ -5,7 +5,7 @@
             [java-time :as t])
   (:import (java.util UUID)))
 
-(def repeating-transactions (iterate (fn [v] {:id          (.toString (UUID/randomUUID))
+(def daily-transactions (iterate (fn [v] {:id          (.toString (UUID/randomUUID))
                                               :date        (t/plus (:date v) (t/days 1))
                                               :description (:description v)
                                               :amount      (+ 100 (:amount v))
@@ -22,4 +22,10 @@
 (deftest ending-on-test
   (testing "Empty list gets nil"
     (is (nil? (a/ending-on (t/local-date 2020 1 17) '()))))
+  (testing "All before date returns same sequence"
+    (is (= (take 3 daily-transactions) (a/ending-on (t/local-date 2020 5 1) (take 3 daily-transactions)))))
+  (testing "Returns only ones before or on date"
+    (is (= (take 2 daily-transactions) (a/ending-on (t/local-date 2020 3 31) (take 3 daily-transactions)))))
+  (testing "All after returns nil"
+    (is (nil? (a/ending-on (t/local-date 2020 1 1) (take 10 daily-transactions)))))
   )
