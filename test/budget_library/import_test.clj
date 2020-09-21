@@ -19,6 +19,8 @@
     (is (= (t/local-date-time 2020 9 14) (:date (i/create-transaction "Test description." (t/local-date-time 2020 9 14) 1586 "SOME-UUID" #{:entertainment :movie})))))
   (testing "Date today if not specified"
     (is (= (t/truncate-to (t/local-date-time) :days) (t/truncate-to (:date (i/create-transaction "Test description." 1586 "SOME-UUID" #{:entertainment :movie})) :days))))
+  (testing "Specify year, month, and day for date"
+    (is (= (t/local-date 1997 10 3) (t/local-date (:date (i/create-transaction "Test description" 1997 10 3 100000 "UUID" #{:tag}))))))
   (testing "Positive amount matches passed"
     (is (= 1586 (:amount (i/create-transaction "Test description." (t/local-date-time 2020 9 14) 1586 "SOME-UUID" #{:entertainment :movie})))))
   (testing "Negative amount matches passed"

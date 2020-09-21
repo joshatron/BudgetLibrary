@@ -7,6 +7,8 @@
   "Creates transaction based on arguments"
   ([description cents partner tags]
    (create-transaction description (t/local-date-time) cents partner tags))
+  ([description year month day cents partner tags]
+   (create-transaction description (t/local-date-time year month day) cents partner tags))
   ([description date cents partner tags]
   {:pre [(string? description)
          (instance? LocalDateTime date)
