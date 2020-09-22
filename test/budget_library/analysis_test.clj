@@ -27,5 +27,14 @@
   (testing "Returns only ones before or on date"
     (is (= (take 2 daily-transactions) (a/ending-on (t/local-date 2020 3 31) (take 3 daily-transactions)))))
   (testing "All after returns nil"
-    (is (nil? (a/ending-on (t/local-date 2020 1 1) (take 10 daily-transactions)))))
-  )
+    (is (nil? (a/ending-on (t/local-date 2020 1 1) (take 10 daily-transactions))))))
+
+(deftest starting-on-test
+  (testing "Empty list gets nil"
+    (is (nil? (a/starting-on (t/local-date 2020 1 1) '()))))
+  (testing "All after date returns same sequence"
+    (is (= (take 3 daily-transactions) (a/starting-on (t/local-date 2020 1 16) (take 3 daily-transactions)))))
+  (testing "Returns only ones on or after date"
+    (is (= (rest (take 3 daily-transactions)) (a/starting-on (t/local-date 2020 3 31) (take 3 daily-transactions)))))
+  (testing "All before returns nil"
+    (is (nil? (a/starting-on (t/local-date 2020 4 30) (take 10 daily-transactions))))))
