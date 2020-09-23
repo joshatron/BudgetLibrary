@@ -38,3 +38,13 @@
     (is (= (rest (take 3 daily-transactions)) (a/starting-on (t/local-date 2020 3 31) (take 3 daily-transactions)))))
   (testing "All before returns nil"
     (is (nil? (a/starting-on (t/local-date 2020 4 30) (take 10 daily-transactions))))))
+
+(deftest in-dates-test
+  (testing "Empty list gets nil"
+    (is (nil? (a/in-dates (t/local-date 2020 1 1) (t/local-date 2021 1 1) '()))))
+  (testing "All in date range returns same sequence"
+    (is (= (take 5 daily-transactions) (a/in-dates (t/local-date 2020 1 1) (t/local-date 2021 1 1) (take 5 daily-transactions)))))
+  (testing "Returns only ones in date range"
+    (is (= (rest (take 4 daily-transactions)) (a/in-dates (t/local-date 2020 3 31) (t/local-date 2020 4 2) (take 5 daily-transactions)))))
+  (testing "All outside returns nil"
+    (is (nil? (a/in-dates (t/local-date 2020 4 30) (t/local-date 2020 5 30) (take 10 daily-transactions))))))

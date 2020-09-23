@@ -20,3 +20,8 @@
   "Filters out all transactions that happen before specified date"
   [date transactions]
   (seq (filter #(on-or-after (:date %) date) transactions)))
+
+(defn in-dates
+  "Filters out all transactions that are not in the date range inclusive"
+  [start end transactions]
+  (seq (filter #(and (on-or-before (:date %) end) (on-or-after (:date %) start)) transactions)))
