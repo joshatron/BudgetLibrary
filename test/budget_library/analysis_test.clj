@@ -48,3 +48,13 @@
     (is (= (rest (take 4 daily-transactions)) (a/in-dates (t/local-date 2020 3 31) (t/local-date 2020 4 2) (take 5 daily-transactions)))))
   (testing "All outside returns nil"
     (is (nil? (a/in-dates (t/local-date 2020 4 30) (t/local-date 2020 5 30) (take 10 daily-transactions))))))
+
+(deftest in-month-test
+  (testing "Empty list gets nil"
+    (is (nil? (a/in-month 2020 1 '()))))
+  (testing "All in range returns same sequence"
+    (is (= (rest (rest (take 7 daily-transactions))) (a/in-month 2020 4 (rest (rest (take 7 daily-transactions)))))))
+  (testing "Only ones in range return same sequence"
+    (is (= (rest (rest (take 32 daily-transactions))) (a/in-month 2020 4 (take 50 daily-transactions)))))
+  (testing "All outside returns nil"
+    (is (nil? (a/in-month 2020 7 (take 10 daily-transactions))))))
