@@ -40,3 +40,18 @@
   "Filters out all transactions that are not in specified month"
   [year month transactions]
   (in-dates (beginning-of-month year month) (end-of-month year month) transactions))
+
+(defn- beginning-of-year
+  "Gets first day of the year"
+  [year]
+  (t/local-date year))
+
+(defn- end-of-year
+  "Gets last day of the year"
+  [year]
+  (t/minus (t/local-date (+ year 1)) (t/days 1)))
+
+(defn in-year
+  "Filters out all transactions that are not in specified year"
+  [year transactions]
+  (in-dates (beginning-of-year year) (end-of-year year) transactions))

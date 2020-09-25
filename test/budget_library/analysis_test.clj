@@ -54,7 +54,18 @@
     (is (nil? (a/in-month 2020 1 '()))))
   (testing "All in range returns same sequence"
     (is (= (rest (rest (take 7 daily-transactions))) (a/in-month 2020 4 (rest (rest (take 7 daily-transactions)))))))
-  (testing "Only ones in range return same sequence"
+  (testing "Only ones in range returned as sequence"
     (is (= (rest (rest (take 32 daily-transactions))) (a/in-month 2020 4 (take 50 daily-transactions)))))
   (testing "All outside returns nil"
     (is (nil? (a/in-month 2020 7 (take 10 daily-transactions))))))
+
+(deftest in-year-test
+  (testing "Empty list gets nil"
+    (is (nil? (a/in-year 2020 '()))))
+  (testing "All in range returns same sequence"
+    (is (= (take 15 daily-transactions) (a/in-year 2020 (take 15 daily-transactions)))))
+  (testing "Only ones in range returned as sequence"
+    (is (= (nthrest (take 642 daily-transactions) 277) (a/in-year 2021 (take 800 daily-transactions)))))
+  (testing "All outside returns nil"
+    (is (nil? (a/in-year 2025 (take 1000 daily-transactions)))))
+  )
