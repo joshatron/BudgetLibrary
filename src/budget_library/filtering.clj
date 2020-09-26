@@ -55,3 +55,13 @@
   "Filters out all transactions that are not in specified year"
   [year transactions]
   (in-dates (beginning-of-year year) (end-of-year year) transactions))
+
+(defn min-amount
+  "Filters out all transactions less than the specified amount"
+  [amount transactions]
+  (seq (filter #(<= amount (:amount %)) transactions)))
+
+(defn max-amount
+  "Filters out all transactions greater than the specified amount"
+  [amount transactions]
+  (seq (filter #(>= amount (:amount %)) transactions)))

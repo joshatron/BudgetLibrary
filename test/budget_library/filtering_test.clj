@@ -15,7 +15,7 @@
                                      {:id          (.toString (UUID/randomUUID))
                                       :date        (t/local-date-time 2020 3 30)
                                       :description "Description."
-                                      :amount      100
+                                      :amount      -1000
                                       :partner     (.toString (UUID/randomUUID))
                                       :tags        #{:tag1 :tag2 :tag3}}))
 
@@ -68,3 +68,23 @@
     (is (= (nthrest (take 642 daily-transactions) 277) (f/in-year 2021 (take 800 daily-transactions)))))
   (testing "All outside returns nil"
     (is (nil? (f/in-year 2025 (take 1000 daily-transactions))))))
+
+(deftest min-amount-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/min-amount 0 '()))))
+  (testing "All over amount returns same sequence"
+    (is (= (take 10 daily-transactions) (f/min-amount -1000 (take 10 daily-transactions)))))
+  (testing "Only returns ones over and equal to amount"
+    (is (= (nthrest (take 10 daily-transactions) 5) (f/min-amount -500 (take 10 daily-transactions)))))
+  (testing "No amounts high enough returns nil"
+    (is (nil? (f/min-amount 1000 (take 15 daily-transactions))))))
+
+(deftest max-amount-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/max-amount 0 '()))))
+  (testing "All under amount return same sequence"
+    (is (= (take 11 daily-transactions) (f/max-amount 0 (take 11 daily-transactions)))))
+  (testing "Only ones less than or equal to amount are returned"
+    (is (= (take 11 daily-transactions) (f/max-amount 0 (take 100 daily-transactions)))))
+  (testing "None matching returns nil"
+    (is (nil? (f/max-amount -10000 (take 5000 daily-transactions))))))
