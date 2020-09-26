@@ -1,4 +1,4 @@
-(ns budget-library.analysis
+(ns budget-library.filtering
   (:require [java-time :as t]))
 
 (defn- on-or-before
