@@ -88,3 +88,23 @@
     (is (= (take 11 daily-transactions) (f/max-amount 0 (take 100 daily-transactions)))))
   (testing "None matching returns nil"
     (is (nil? (f/max-amount -10000 (take 5000 daily-transactions))))))
+
+(deftest positive-only-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/positive-only '()))))
+  (testing "All positive returns same sequence"
+    (is (= (nthrest (take 50 daily-transactions) 10) (f/positive-only (nthrest (take 50 daily-transactions) 10)))))
+  (testing "Only returns ones that the amount is 0 or greater"
+    (is (= (nthrest (take 50 daily-transactions) 10) (f/positive-only (take 50 daily-transactions)))))
+  (testing "None matching returns nil"
+    (is (nil? (f/positive-only (take 5 daily-transactions))))))
+
+(deftest negative-only-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/negative-only '()))))
+  (testing "All negative returns same sequence"
+    (is (= (take 10 daily-transactions) (f/negative-only (take 10 daily-transactions)))))
+  (testing "Only amount of 0 or less gets returned"
+    (is (= (take 11 daily-transactions) (f/negative-only (take 1000 daily-transactions)))))
+  (testing "All positive returns nil"
+    (is (nil? (f/negative-only (nthrest (take 100 daily-transactions) 11))))))

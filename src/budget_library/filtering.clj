@@ -61,7 +61,17 @@
   [amount transactions]
   (seq (filter #(<= amount (:amount %)) transactions)))
 
+(defn positive-only
+  "Filters out all transactions with negative amount"
+  [transactions]
+  (min-amount 0 transactions))
+
 (defn max-amount
   "Filters out all transactions greater than the specified amount"
   [amount transactions]
   (seq (filter #(>= amount (:amount %)) transactions)))
+
+(defn negative-only
+  "Filters out all transactions with positive amount"
+  [transactions]
+  (max-amount 0 transactions))
