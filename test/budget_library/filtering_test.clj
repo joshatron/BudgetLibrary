@@ -9,14 +9,14 @@
                                               :date        (t/plus (:date v) (t/days 1))
                                               :description (:description v)
                                               :amount      (+ 100 (:amount v))
-                                              :partner     (.toString (UUID/randomUUID))
+                                              :partner     (str (inc (Integer/parseInt (:partner v))))
                                               :tags        (:tags v)
                                               })
                                      {:id          (.toString (UUID/randomUUID))
                                       :date        (t/local-date-time 2020 3 30)
                                       :description "Description."
                                       :amount      -1000
-                                      :partner     (.toString (UUID/randomUUID))
+                                      :partner     "1"
                                       :tags        #{:tag1 :tag2 :tag3}}))
 
 (deftest ending-on-test
