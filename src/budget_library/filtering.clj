@@ -75,3 +75,18 @@
   "Filters out all transactions with positive amount"
   [transactions]
   (max-amount 0 transactions))
+
+(defn with-partner
+  "Filters out all transactions not with the specified partner"
+  [partner transactions]
+  (seq (filter #(= partner (:partner %)) transactions)))
+
+(defn- in-list
+  "Returns true if element is in the list"
+  [list element]
+  (some #(= element %) list))
+
+(defn with-partners
+  "Filters out all transactions that don't match any partner"
+  [partners transactions]
+  (seq (filter #(in-list partners (:partner %)) transactions)))

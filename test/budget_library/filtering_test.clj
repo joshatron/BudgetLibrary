@@ -108,3 +108,25 @@
     (is (= (take 11 daily-transactions) (f/negative-only (take 1000 daily-transactions)))))
   (testing "All positive returns nil"
     (is (nil? (f/negative-only (nthrest (take 100 daily-transactions) 11))))))
+
+(deftest with-partner-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/with-partner "1" '()))))
+  (testing "Only with partner returns same sequence"
+    (is (= (take 10 (repeat (first daily-transactions))) (f/with-partner "1" (take 10 (repeat (first daily-transactions)))))))
+  (testing "Only return transactions with partner"
+    (is (= (nthrest (take 3 daily-transactions) 2) (f/with-partner "3" (take 100 daily-transactions)))))
+  (testing "None match return nil"
+    (is (nil? (f/with-partner "-1" (take 1000 daily-transactions))))))
+
+(deftest with-partners-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/with-partners ["1" "2"] '()))))
+  (testing "All have matching partner returns same sequence"
+    (is (= (take 3 daily-transactions) (f/with-partners ["1" "2" "3"] (take 3 daily-transactions)))))
+  (testing "Only matching are returned"
+    (is (= (take 3 daily-transactions) (f/with-partners ["1" "2" "3"] (take 100 daily-transactions)))))
+  (testing "Empty partners returns nil"
+    (is (nil? (f/with-partners [] (take 1000 daily-transactions)))))
+  (testing "None match returns nil"
+    (is (nil? (f/with-partners ["-1" "-2"] (take 100 daily-transactions))))))
