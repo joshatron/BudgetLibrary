@@ -138,3 +138,13 @@
     (is (nil? (f/with-partners [] (take 1000 daily-transactions)))))
   (testing "None match returns nil"
     (is (nil? (f/with-partners ["-1" "-2"] (take 100 daily-transactions))))))
+
+(deftest with-tag-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/with-tag :tag '()))))
+  (testing "All have tag returns same sequence"
+    (is (= (take 2 daily-transactions) (f/with-tag :tag2 (take 2 daily-transactions)))))
+  (testing "Only matching are returned"
+    (is (= (rest (take 3 daily-transactions)) (f/with-tag :tag3 (take 3 daily-transactions)))))
+  (testing "None match returns nil"
+    (is (nil? (f/with-tag :not-a-tag (take 100 daily-transactions))))))

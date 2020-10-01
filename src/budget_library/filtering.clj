@@ -90,3 +90,8 @@
   "Filters out all transactions that don't match any partner"
   [partners transactions]
   (seq (filter #(in-list partners (:partner %)) transactions)))
+
+(defn with-tag
+  "Filters out all transactions that don't have the tag"
+  [tag transactions]
+  (seq (filter #(contains? (:tags %) tag) transactions)))
