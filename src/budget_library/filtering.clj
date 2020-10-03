@@ -95,3 +95,13 @@
   "Filters out all transactions that don't have the tag"
   [tag transactions]
   (seq (filter #(contains? (:tags %) tag) transactions)))
+
+(defn- any-common
+  "Returns true if any elements in both list and set"
+  [list set]
+  (some #(contains? set %) list))
+
+(defn with-tags
+  "Filters out all transactions that don't have the tags"
+  [tags transactions]
+  (seq (filter #(any-common tags (:tags %)) transactions)))
