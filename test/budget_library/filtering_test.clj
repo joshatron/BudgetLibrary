@@ -159,5 +159,10 @@
   (testing "Tags can be set"
     (is (= (rest (take 5 daily-transactions)) (f/with-tags #{:tag3 :tag5} (take 100 daily-transactions)))))
   (testing "None match returns nil"
-    (is (nil? (f/with-tags [:tag :another-tag] (take 50 daily-transactions)))))
-  )
+    (is (nil? (f/with-tags [:tag :another-tag] (take 50 daily-transactions))))))
+
+(deftest get-transaction-test
+  (testing "ID present gets transaction back"
+    (is (= (first (rest (take 2 daily-transactions))) (f/get-transaction (:id (first (rest (take 2 daily-transactions)))) (take 50 daily-transactions)))))
+  (testing "ID not present gets nil"
+    (is (nil? (f/get-transaction "NOT-AN-ID" (take 100 daily-transactions))))))

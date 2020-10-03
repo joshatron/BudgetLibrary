@@ -105,3 +105,8 @@
   "Filters out all transactions that don't have the tags"
   [tags transactions]
   (seq (filter #(any-common tags (:tags %)) transactions)))
+
+(defn get-transaction
+  "Finds the transaction with the specified ID"
+  [id transactions]
+  (first (filter #(= id (:id %)) transactions)))
