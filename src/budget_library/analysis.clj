@@ -9,3 +9,8 @@
   "Adds up all the transaction amounts that are positive"
   [transactions]
   (net-amount (filter #(pos? (:amount %)) transactions)))
+
+(defn total-negative
+  "Adds up all the transaction amounts that are negative"
+  [transactions]
+  (net-amount (filter #(neg? (:amount %)) transactions)))
