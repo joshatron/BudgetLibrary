@@ -126,17 +126,22 @@
   (testing "None match returns nil"
     (is (nil? (f/with-tag :not-a-tag (take 100 daily-transactions))))))
 
-(deftest with-tags-test
+(deftest with-any-tags-test
   (testing "Empty list gets nil"
-    (is (nil? (f/with-tags [:tag] '()))))
+    (is (nil? (f/with-any-tags [:tag] '()))))
   (testing "All with tags gets same sequence"
-    (is (= (take 2 daily-transactions) (f/with-tags [:tag2] (take 2 daily-transactions)))))
+    (is (= (take 2 daily-transactions) (f/with-any-tags [:tag2] (take 2 daily-transactions)))))
   (testing "Only ones with tags gets returned"
-    (is (= (rest (take 5 daily-transactions)) (f/with-tags [:tag3 :tag5] (take 100 daily-transactions)))))
+    (is (= (rest (take 5 daily-transactions)) (f/with-any-tags [:tag3 :tag5] (take 100 daily-transactions)))))
   (testing "Tags can be set"
-    (is (= (rest (take 5 daily-transactions)) (f/with-tags #{:tag3 :tag5} (take 100 daily-transactions)))))
+    (is (= (rest (take 5 daily-transactions)) (f/with-any-tags #{:tag3 :tag5} (take 100 daily-transactions)))))
   (testing "None match returns nil"
-    (is (nil? (f/with-tags [:tag :another-tag] (take 50 daily-transactions))))))
+    (is (nil? (f/with-any-tags [:tag :another-tag] (take 50 daily-transactions))))))
+
+(deftest with-all-tags-test
+  (testing "Empty list gets nil"
+    (is (nil? (f/with-all-tags [:tag] '()))))
+  )
 
 (deftest get-transaction-test
   (testing "ID present gets transaction back"

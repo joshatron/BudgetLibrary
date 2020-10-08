@@ -101,10 +101,15 @@
   [list set]
   (some #(contains? set %) list))
 
-(defn with-tags
+(defn with-any-tags
   "Filters out all transactions that don't have the tags"
   [tags transactions]
   (seq (filter #(any-common tags (:tags %)) transactions)))
+
+(defn with-all-tags
+  "Filters out all transactions that don't have all the tags"
+  [tags transactions]
+  (seq transactions))
 
 (defn get-transaction
   "Finds the transaction with the specified ID"
