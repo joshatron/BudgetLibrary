@@ -141,7 +141,12 @@
 (deftest with-all-tags-test
   (testing "Empty list gets nil"
     (is (nil? (f/with-all-tags [:tag] '()))))
-  )
+  (testing "All with tags gets same sequence"
+    (is (= (rest (take 3 daily-transactions)) (f/with-all-tags [:tag3] (rest (take 3 daily-transactions))))))
+  (testing "Only ones with tags get returned"
+    (is (= (rest (take 2 daily-transactions)) (f/with-all-tags [:tag2 :tag3] (take 50 daily-transactions)))))
+  (testing "None match returns nil"
+    (is (nil? (f/with-all-tags [:tag-one :tag-two] (take 1000 daily-transactions))))))
 
 (deftest get-transaction-test
   (testing "ID present gets transaction back"

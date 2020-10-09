@@ -106,10 +106,15 @@
   [tags transactions]
   (seq (filter #(any-common tags (:tags %)) transactions)))
 
+(defn- all-common
+  "Returns true if all elements in the list are in the set"
+  [list set]
+  (every? #(contains? set %) list))
+
 (defn with-all-tags
   "Filters out all transactions that don't have all the tags"
   [tags transactions]
-  (seq transactions))
+  (seq (filter #(all-common tags (:tags %)) transactions)))
 
 (defn get-transaction
   "Finds the transaction with the specified ID"
