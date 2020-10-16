@@ -1,5 +1,6 @@
 (ns budget-library.test-utils
-  (:require [java-time :as t])
+  (:require [java-time :as t]
+            [clojure.string :as str])
   (:import (java.util UUID)))
 
 (defn- next-tag [tag]
@@ -21,3 +22,15 @@
                                   :amount      -1000
                                   :partner     "1"
                                   :tags        #{:tag1 :tag2}}))
+
+(defn- next-num
+  "Gets next number for infinite partners"
+  [current]
+  (str (inc (Integer/parseInt (last (str/split current #" "))))))
+
+(def infinite-partners (iterate (fn [v] {:id (.toString (UUID/randomUUID))
+                                         :name (str "Partner " (next-num (:name v)))
+                                         :description (str "Description " (next-num (:description v)))})
+                                {:id (.toString (UUID/randomUUID))
+                                 :name "Partner 1"
+                                 :description "Description 1"}))

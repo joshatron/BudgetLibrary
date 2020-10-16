@@ -1,11 +1,13 @@
 (ns budget-library.in-memory-storage)
 
-(def transactions (atom []))
+(def ^:private transactions (atom []))
+(def ^:private partners (atom []))
 
 (defn initialize
   "Initialize in memory storage"
   []
-  (swap! transactions (fn [current] [])))
+  (swap! transactions (fn [current] []))
+  (swap! partners (fn [current] [])))
 
 (defn add-transaction
   "Adds transaction to storage"
@@ -14,7 +16,8 @@
 
 (defn add-partner
   "Adds partner to storage"
-  [partner])
+  [partner]
+  (swap! partners #(conj % partner)))
 
 (defn get-transactions
   "Retrieves all transactions"
@@ -23,7 +26,8 @@
 
 (defn get-partners
   "Retrieves all partners"
-  [])
+  []
+  @partners)
 
 (defn remove-transaction
   "Removes specified transaction"
