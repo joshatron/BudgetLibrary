@@ -31,7 +31,10 @@
 
 (defn remove-transaction
   "Removes specified transaction"
-  [transaction-id])
+  [transaction-id]
+  (swap! transactions
+         (fn [current]
+           (filter #(not= (:id %) transaction-id) current))))
 
 (defn remove-partner
   "Removes specified partner"

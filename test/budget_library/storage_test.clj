@@ -4,14 +4,19 @@
             [budget-library.import :as i]
             [budget-library.in-memory-storage :as s]))
 
+(defn initialize-test
+  "Initialize the environment for the test"
+  []
+  (s/initialize))
+
 (deftest add-transaction-test
   (testing "Add one transaction"
-    (s/initialize)
+    (initialize-test)
     (is (empty? (s/get-transactions)))
     (s/add-transaction (first daily-transactions))
     (is (= (take 1 daily-transactions) (seq (s/get-transactions)))))
   (testing "Add multiple transactions"
-    (s/initialize)
+    (initialize-test)
     (is (empty? (s/get-transactions)))
     (s/add-transaction (first daily-transactions))
     (s/add-transaction (first (rest daily-transactions)))
@@ -19,14 +24,31 @@
 
 (deftest add-partner-test
   (testing "Add one partner"
-    (s/initialize)
+    (initialize-test)
     (is (empty? (s/get-partners)))
     (s/add-partner (first infinite-partners))
     (is (= (take 1 infinite-partners) (seq (s/get-partners)))))
   (testing "Add multiple partners"
-    (s/initialize)
+    (initialize-test)
     (is (empty? (s/get-partners)))
     (s/add-partner (first infinite-partners))
     (s/add-partner (first (rest infinite-partners)))
     (is (= (take 2 infinite-partners) (seq (s/get-partners))))))
 
+(deftest remove-transaction-test
+  (testing "Remove existing transaction"
+    (initialize-test)
+    (s/add-transaction (first daily-transactions))
+    (s/add-transaction (first (rest daily-transactions)))
+    (s/add-transaction (first (rest (rest daily-transactions))))
+    (s/remove-transaction (:id (first (rest daily-transactions))))
+    (is (= 2 (count (s/get-transactions))))
+    (is (= (first daily-transactions) (first (s/get-transactions))))
+    (is (= (first (rest (rest daily-transactions))) (first (rest (s/get-transactions))))))
+  (testing "Remove nonexistant transaction"
+    (initialize-test)
+    (s/add-transaction (first daily-transactions))
+    (s/add-transaction (first (rest daily-transactions)))
+    (s/remove-transaction "NOT-AN-ID")
+    (is (= 2 (count (s/get-transactions))))
+    (is (= (take 2 daily-transactions) (s/get-transactions)))))
