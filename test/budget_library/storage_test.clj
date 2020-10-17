@@ -52,3 +52,18 @@
     (s/remove-transaction "NOT-AN-ID")
     (is (= 2 (count (s/get-transactions))))
     (is (= (take 2 daily-transactions) (s/get-transactions)))))
+
+(deftest remove-partner-test
+  (testing "Remove existing partner"
+    (initialize-test)
+    (s/add-partner (first infinite-partners))
+    (s/add-partner (first (rest infinite-partners)))
+    (s/add-partner (first (rest (rest infinite-partners))))
+    (s/remove-partner (:id (first infinite-partners)))
+    (is (= (take 2 (rest infinite-partners)) (s/get-partners))))
+  (testing "Remove nonexistant partner"
+    (initialize-test)
+    (s/add-partner (first infinite-partners))
+    (s/add-partner (first (rest infinite-partners)))
+    (s/remove-partner "NOT-AN-ID")
+    (is (= (take 2 infinite-partners) (s/get-partners)))))

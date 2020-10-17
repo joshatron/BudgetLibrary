@@ -38,4 +38,7 @@
 
 (defn remove-partner
   "Removes specified partner"
-  [partner-id])
+  [partner-id]
+  (swap! partners
+         (fn [current]
+           (filter #(not= (:id %) partner-id) current))))
